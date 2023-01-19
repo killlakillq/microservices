@@ -38,7 +38,9 @@ export class AuthController {
 
 	@Post('login')
 	public async login(@Body() { login, password }: CreateUserDto): Promise<LoginUserResponseDto> {
-		const loginUserResponse: IServiceUserLoginResponse = await firstValueFrom(this.authClient.send('login-user', { login, password }));
+		const loginUserResponse: IServiceUserLoginResponse = await firstValueFrom(
+			this.authClient.send('login-user', { login, password }),
+		);
 		if (loginUserResponse.status !== HttpStatus.ACCEPTED) {
 			throw new HttpException(
 				{
@@ -49,7 +51,7 @@ export class AuthController {
 				loginUserResponse.status,
 			);
 		}
-		
+
 		return {
 			message: loginUserResponse.message,
 			data: {

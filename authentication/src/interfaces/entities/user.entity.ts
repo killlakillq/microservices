@@ -11,7 +11,7 @@ export class UserEntity extends BaseEntity {
 	@UpdateDateColumn()
 	updateAt: Date;
 
-	@Column()
+	@Column({ unique: true })
 	email: string;
 
 	@Column()

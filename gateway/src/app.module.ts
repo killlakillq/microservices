@@ -1,14 +1,16 @@
 import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
 import { ClientProxyFactory } from '@nestjs/microservices';
 import { AuthController } from './auth.controller';
-import { AuthGuard } from './services/guards/authorization.guard';
+import { ConfigService } from './services/config/config.service';
 
 @Module({
-	imports: [],
+	imports: [
+		ConfigModule.forRoot(),
+	],
 	controllers: [AuthController],
 	providers: [
+		ConfigService,
 		{
 			provide: 'AUTH_SERVICE',
 			useFactory: (configService: ConfigService) => {
@@ -16,10 +18,6 @@ import { AuthGuard } from './services/guards/authorization.guard';
 				return ClientProxyFactory.create(authServiceOptions);
 			},
 			inject: [ConfigService],
-		},
-		{
-			provide: APP_GUARD,
-			useClass: AuthGuard,
 		},
 	],
 })

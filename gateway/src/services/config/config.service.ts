@@ -1,6 +1,7 @@
 import { Transport } from '@nestjs/microservices';
 
 export class ConfigService {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private readonly envConfig: { [key: string]: any } = null;
 
 	constructor() {
@@ -9,13 +10,14 @@ export class ConfigService {
 		};
 		this.envConfig.authService = {
 			options: {
-				port: process.env.AUTH_SERVICE_POST,
 				host: process.env.AUTH_SERVICE_HOST,
+				port: process.env.AUTH_SERVICE_PORT,
 			},
 			transport: Transport.TCP,
 		};
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	get(key: string): any {
 		return this.envConfig[key];
 	}

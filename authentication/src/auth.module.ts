@@ -9,6 +9,7 @@ import { JwtConfigService } from './services/config/jwt-config.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './services/strategies/jwt.strategy';
 import { ConfigModule } from '@nestjs/config';
+import { ConfigService } from './services/config/config.service';
 
 @Module({
 	imports: [
@@ -24,7 +25,7 @@ import { ConfigModule } from '@nestjs/config';
 			useClass: TypeOrmConfigService,
 		}),
 	],
-	providers: [AuthService, JwtService, JwtStrategy],
+	providers: [AuthService, JwtService, JwtStrategy, ConfigService],
 	controllers: [AuthController],
 })
 export class AuthModule {}
