@@ -15,10 +15,12 @@ import { ConfigModule } from '@nestjs/config';
 		ConfigModule.forRoot(),
 		PassportModule,
 		JwtModule.registerAsync({
+			imports: [ConfigModule],
 			useClass: JwtConfigService,
 		}),
 		TypeOrmModule.forFeature([UserEntity]),
 		TypeOrmModule.forRootAsync({
+			imports: [ConfigModule],
 			useClass: TypeOrmConfigService,
 		}),
 	],
