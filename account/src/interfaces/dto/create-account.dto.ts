@@ -1,17 +1,9 @@
-import { IsString, IsEmail, IsObject } from "@nestjs/class-validator";
+import { IsString, IsNumber } from '@nestjs/class-validator';
 
-export class CreateAccountDto {
-	@IsEmail()
+export class CreateAccountDto  {
 	@IsString()
 	login: string;
 
 	@IsString()
 	name: string;
-
-	// @IsObject()
-	card: {
-		number: string;
-		cvc: string;
-		expirationDate: string;
-	};
 }

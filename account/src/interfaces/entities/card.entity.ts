@@ -1,21 +1,20 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, JoinColumn, OneToOne } from 'typeorm';
-import { AccountEntity } from './account.entity';
+import { BaseEntity, Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { AccountEntity } from "./account.entity";
 
 @Entity({ name: 'Card' })
 export class CardEntity extends BaseEntity {
-	@PrimaryGeneratedColumn()
+	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@Column({ unique: true, length: 16 })
+	@Column({ unique: true, nullable: false, length: 16 })
 	number: string;
 
-	@Column()
-	expirationDate: string;
-
-	@Column({ unique: true })
+	@Column({ unique: true, nullable: false, length: 3 })
 	cvc: string;
 
+	@Column({ nullable: false, length: 5 })
+	expirationDate: string;
+
 	@OneToOne(() => AccountEntity, (account) => account.card)
-	@JoinColumn()
 	account: AccountEntity;
 }

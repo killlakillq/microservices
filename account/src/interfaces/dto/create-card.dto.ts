@@ -1,4 +1,4 @@
-import { IsEmail, IsObject, IsString } from '@nestjs/class-validator';
+import { IsString } from '@nestjs/class-validator';
 
 export class CreateCardDto {
 	@IsString()
@@ -6,7 +6,7 @@ export class CreateCardDto {
 
 	@IsString()
 	cvc: string;
-	
+
 	@IsString()
 	expirationDate: string;
 }
