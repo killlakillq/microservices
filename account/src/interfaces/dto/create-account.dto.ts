@@ -1,9 +1,14 @@
-import { IsString, IsNumber } from '@nestjs/class-validator';
+import { IsNumber, IsObject } from 'class-validator';
+import { cardType, paymentMethod } from '../enums/card.enum';
 
-export class CreateAccountDto  {
-	@IsString()
-	login: string;
+export class CreateAccountDto {
+	@IsNumber()
+	balance: number;
 
-	@IsString()
-	name: string;
+	@IsObject()
+	card: {
+		number: string;
+		type: cardType;
+		payment: paymentMethod;
+	};
 }

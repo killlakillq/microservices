@@ -1,27 +1,20 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { CardEntity } from './card.entity';
+import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { CardEntity } from "./card.entity";
+import { TaxEntity } from './tax.entity';
 
-@Entity({ name: 'Account' })
+@Entity()
 export class AccountEntity extends BaseEntity {
-	@PrimaryGeneratedColumn()
+	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@Column({ unique: true })
-	login: string;
-
-	@Column()
-	name: string;
-
-	@Column()
-	address: string;
-
-	@Column()
+	@Column({ default: 0 })
 	balance: number;
 
-	@CreateDateColumn()
-	registrationDate: Date;
-
-	@OneToOne(() => CardEntity, (card) => card.account, { cascade: true })
+	@OneToOne(() => CardEntity, (card) => card.account)
 	@JoinColumn()
 	card: CardEntity;
+
+	@OneToOne(() => TaxEntity, (tax) => tax.account)
+	@JoinColumn()
+	taxes: TaxEntity;
 }

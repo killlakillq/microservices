@@ -1,9 +1,7 @@
 
-import { Injectable } from '@nestjs/common/decorators';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
-import { AccountEntity } from 'src/interfaces/entities/account.entity';
-import { CardEntity } from 'src/interfaces/entities/card.entity';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -19,7 +17,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 			database: this.configService.get('TYPEORM_DATABASE'),
 			synchronize: true,
 			logging: true,
-			entities: [CardEntity, AccountEntity],
+			entities: [],
 			subscribers: [],
 			migrations: [],
 		};
