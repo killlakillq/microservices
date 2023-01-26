@@ -1,20 +1,17 @@
-import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { CardEntity } from "./card.entity";
-import { TaxEntity } from './tax.entity';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'Account' })
 export class AccountEntity extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@Column({ default: 0 })
+	@Column()
+	name: string;
+
+	@Column()
+	surname: string;
+
+	@Column()
 	balance: number;
-
-	@OneToOne(() => CardEntity, (card) => card.account)
-	@JoinColumn()
-	card: CardEntity;
-
-	@OneToOne(() => TaxEntity, (tax) => tax.account)
-	@JoinColumn()
-	taxes: TaxEntity;
 }
+
