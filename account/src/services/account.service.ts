@@ -14,13 +14,14 @@ export class AccountService {
 
 	public async balanceReplenishment(sum: number) {
 		const dataSource = this.accountRepository.createQueryBuilder();
-		await dataSource
+		const updatedBalance = await dataSource
 			.insert()
 			.into(AccountEntity)
 			.values({
 				balance: sum,
 			})
 			.execute();
+		return await updatedBalance.raw();
 	}
 
 	public async payForInternet(personalAccount: number, sum: number) {
@@ -37,3 +38,6 @@ export class AccountService {
 		return await this.internetPayment.internetPay(sum);
 	}
 }
+
+
+// todo: add methods for utilities and mobile bills. add interfaces for account service and error handling
