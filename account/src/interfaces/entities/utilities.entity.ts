@@ -1,19 +1,23 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, BaseEntity, Column } from 'typeorm';
+import { UtilitiesType } from '../enums/utilities-type.enum';
 
 @Entity({ name: 'Utilities' })
 export class UtilitiesEntity extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@Column({ unique: true })
+	@Column({ unique: true, nullable: false })
 	personalAccount: number;
 
-	@Column()
+	@Column({ nullable: false })
+	type: UtilitiesType;
+
+	@Column({ nullable: false })
 	nameSurname: string;
 
-	@Column()
-	address: string;
+	@Column({ default: 0 })
+	sum: number;
 
-	@Column()
-	sum: string;
+	@Column({ nullable: false })
+	address: string;
 }

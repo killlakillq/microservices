@@ -1,36 +1,39 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {  Repository } from 'typeorm';
-import { InternetEntity } from './../interfaces/entities/internet.entity';
-import { MobileEntity } from './../interfaces/entities/mobile.entity';
-import { UtilitiesEntity } from './../interfaces/entities/utilities.entity';
-import { Internet } from './../interfaces/internet.interface';
-import { Mobile } from './../interfaces/mobile.interface';
-import { Utilities } from './../interfaces/utilities.interface';
+import { Repository } from 'typeorm';
+import { AccountEntity } from './../interfaces/entities/account.entity';
+import { InternetPayment, MobilePayment, UtilitiesPayment } from './payment.service';
 
+@Injectable()
+export class AccountService {
+	private readonly internetPayment: InternetPayment;
+	private readonly MobilePayment: MobilePayment;
+	private readonly UtilitiesPayment: UtilitiesPayment;
 
-export class InternetPayment implements Internet {
-	constructor(@InjectRepository(InternetEntity) private readonly internetRepository: Repository<InternetEntity>) {}
-	
-	public async getInternetBalance(personalAccount: number): Promise<InternetEntity> {
-		return await this.internetRepository.findOneBy({ personalAccount });
+	constructor(@InjectRepository(AccountEntity) private readonly accountRepository: Repository<AccountEntity>) {}
+
+	public async balanceReplenishment(sum: number) {
+		const dataSource = this.accountRepository.createQueryBuilder();
+		await dataSource
+			.insert()
+			.into(AccountEntity)
+			.values({
+				balance: sum,
+			})
+			.execute();
 	}
 
-	public async internetPay(sum: number): Promise<InternetEntity> {
-		const dataSource = this.internetRepository.createQueryBuilder();
-		const updatedBalance = await dataSource.insert().into(InternetEntity).values([{
-			balance: sum,
-		}]).execute();
-		return await updatedBalance.raw();
+	public async payForInternet(personalAccount: number, sum: number) {
+		const findAccount = await this.internetPayment.checkInternetBalance(personalAccount);
+		if (!findAccount) {
+			throw new NotFoundException();
+		}
+		const dataSource = this.accountRepository.createQueryBuilder();
+		await dataSource
+			.update(AccountEntity)
+			.set({ balance: () => 'balance - :sum' })
+			.setParameter('sum', sum)
+			.execute();
+		return await this.internetPayment.internetPay(sum);
 	}
 }
-
-export class MobilePayment implements Mobile {
-	constructor(@InjectRepository(MobileEntity) private readonly mobileRepository: Repository<MobileEntity>) {}
-}
-
-export class UtilitiesPayment implements Utilities {
-	constructor(
-		@InjectRepository(UtilitiesEntity) private readonly utilitiesRepository: Repository<UtilitiesEntity>,
-	) {}
-}
-// todo: remove classes in other module and will write account service by these classes here

@@ -10,4 +10,7 @@ export class MobileEntity extends BaseEntity {
 
 	@Column()
 	operator: string;
+
+	@Column({ default: 0 })
+	balance: number;
 }

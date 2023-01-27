@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountController } from './account.controller';
 import { InternetEntity } from './interfaces/entities/internet.entity';
-import { InternetPayment } from './services/account.service';
+import { AccountService } from './services/account.service';
 import { ConfigService } from './services/config/config.service';
 import { TypeOrmConfigService } from './services/config/orm-config.service';
 
@@ -17,6 +17,6 @@ import { TypeOrmConfigService } from './services/config/orm-config.service';
 		}),
 	],
 	controllers: [AccountController],
-	providers: [InternetPayment, ConfigService],
+	providers: [AccountService, ConfigService],
 })
 export class AccountModule {}
