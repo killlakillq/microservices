@@ -2,6 +2,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
+import { AccountEntity } from '../../interfaces/entities/account.entity';
+import { InternetEntity } from '../../interfaces/entities/internet.entity';
+import { MobileEntity } from '../../interfaces/entities/mobile.entity';
+import { UtilitiesEntity } from '../../interfaces/entities/utilities.entity';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -17,7 +21,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 			database: this.configService.get('TYPEORM_DATABASE'),
 			synchronize: true,
 			logging: true,
-			entities: [],
+			entities: [AccountEntity, InternetEntity, MobileEntity, UtilitiesEntity],
 			subscribers: [],
 			migrations: [],
 		};

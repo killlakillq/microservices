@@ -11,9 +11,12 @@ export class InternetEntity extends BaseEntity {
 	@Column({ default: 0 })
 	balance: number;
 
-	@Column()
-	nameSurname: string;
-
+	@Column({ nullable: false })
+	name: string;
+	
+	@Column({ nullable: false })
+	surname: string;
+	
 	@Column()
 	address: string;
 }

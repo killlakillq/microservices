@@ -5,7 +5,7 @@ import { UtilitiesEntity } from './utilities.entity';
 
 @Entity({ name: 'Account' })
 export class AccountEntity extends BaseEntity {
-	@PrimaryGeneratedColumn('uuid')
+	@PrimaryGeneratedColumn()
 	id: string;
 
 	@Column()

@@ -1,4 +1,3 @@
-
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { InternetEntity } from '../interfaces/entities/internet.entity';

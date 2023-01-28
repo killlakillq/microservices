@@ -13,7 +13,10 @@ export class UtilitiesEntity extends BaseEntity {
 	type: UtilitiesType;
 
 	@Column({ nullable: false })
-	nameSurname: string;
+	name: string;
+	
+	@Column({ nullable: false })
+	surname: string;
 
 	@Column({ default: 0 })
 	sum: number;
