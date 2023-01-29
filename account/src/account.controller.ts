@@ -33,7 +33,7 @@ export class AccountController {
 
 	@Post('replenishBalance')
 	public async balanceReplenishment(@Body() sum: number): Promise<AccountResponse> {
-		// try {
+		try {
 			const balance = await this.accountService.balanceReplenishment(sum);
 			console.log(balance);
 			
@@ -43,14 +43,14 @@ export class AccountController {
 				data: balance,
 				errors: null,
 			};
-		// } catch (error) {
-		// 	return {
-		// 		status: 403,
-		// 		message: 'oops, something went wrong',
-		// 		data: null,
-		// 		errors: error,
-		// 	};
-		// }
+		} catch (error) {
+			return {
+				status: 403,
+				message: 'oops, something went wrong',
+				data: null,
+				errors: error,
+			};
+		}
 	}
 
 	public async checkInternetBalance(personalAccount: number): Promise<AccountResponse> {
