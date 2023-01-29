@@ -1,4 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
+import { AddInternetClientDto } from 'src/interfaces/dto/add-internet-client.dto';
+import { AddMobileClientDto } from 'src/interfaces/dto/add-mobile-client.dto';
+import { AddTaxDto } from 'src/interfaces/dto/add-tax.dto';
 import { Repository } from 'typeorm';
 import { InternetEntity } from '../interfaces/entities/internet.entity';
 import { MobileEntity } from '../interfaces/entities/mobile.entity';
@@ -10,6 +13,10 @@ import { Utilities } from '../interfaces/utilities.interface';
 
 export class InternetPayment implements Internet {
 	constructor(@InjectRepository(InternetEntity) private readonly internetRepository: Repository<InternetEntity>) {}
+
+	public async addInternetClient(dto: AddInternetClientDto): Promise<AddInternetClientDto> {
+		return await this.internetRepository.save({ ...dto });
+	}
 
 	public async checkInternetBalance(personalAccount: number): Promise<InternetEntity> {
 		return await this.internetRepository.findOneBy({ personalAccount });
@@ -32,6 +39,10 @@ export class InternetPayment implements Internet {
 
 export class MobilePayment implements Mobile {
 	constructor(@InjectRepository(MobileEntity) private readonly mobileRepository: Repository<MobileEntity>) {}
+
+	public async addMobileClient(dto: AddMobileClientDto): Promise<AddMobileClientDto> {
+		return await this.mobileRepository.save({ ...dto });
+	}
 
 	public async checkMobileBalance(phoneNumber: number): Promise<MobileEntity> {
 		return await this.mobileRepository.findOneBy({ phoneNumber });
@@ -56,6 +67,10 @@ export class UtilitiesPayment implements Utilities {
 	constructor(
 		@InjectRepository(UtilitiesEntity) private readonly utilitiesRepository: Repository<UtilitiesEntity>,
 	) {}
+
+	public async addTax(dto: AddTaxDto): Promise<AddTaxDto> {
+		return await this.utilitiesRepository.save({ ...dto });
+	}
 
 	public async checkUtilitiesTaxes(personalAccount: number, type: UtilitiesType): Promise<UtilitiesEntity> {
 		return await this.utilitiesRepository.findOneBy({ personalAccount, type });

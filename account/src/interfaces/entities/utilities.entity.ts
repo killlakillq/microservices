@@ -6,7 +6,7 @@ export class UtilitiesEntity extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@Column({ unique: true, nullable: false })
+	@Column({ unique: true, width: 10 })
 	personalAccount: number;
 
 	@Column({ nullable: false })
@@ -14,7 +14,7 @@ export class UtilitiesEntity extends BaseEntity {
 
 	@Column({ nullable: false })
 	name: string;
-	
+
 	@Column({ nullable: false })
 	surname: string;
 

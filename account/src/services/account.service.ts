@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AddInternetClientDto } from 'src/interfaces/dto/add-internet-client.dto';
+import { AddMobileClientDto } from 'src/interfaces/dto/add-mobile-client.dto';
+import { AddTaxDto } from 'src/interfaces/dto/add-tax.dto';
+import { CreateAccountDto } from 'src/interfaces/dto/create-account.dto';
 import { Repository } from 'typeorm';
 import { AccountEntity } from './../interfaces/entities/account.entity';
 import { UtilitiesType } from './../interfaces/enums/utilities-type.enum';
@@ -7,20 +11,42 @@ import { InternetPayment, MobilePayment, UtilitiesPayment } from './payment.serv
 
 @Injectable()
 export class AccountService {
-	private readonly internetPayment: InternetPayment;
-	private readonly mobilePayment: MobilePayment;
-	private readonly utilitiesPayment: UtilitiesPayment;
+	constructor(
+		@InjectRepository(AccountEntity) private readonly accountRepository: Repository<AccountEntity>,
+		private readonly internetPayment: InternetPayment,
+		private readonly mobilePayment: MobilePayment,
+		private readonly utilitiesPayment: UtilitiesPayment,
+	) {}
 
-	constructor(@InjectRepository(AccountEntity) private readonly accountRepository: Repository<AccountEntity>) {}
+	public async createAccount(dto: CreateAccountDto): Promise<CreateAccountDto> {
+		return await this.accountRepository.save({ ...dto });
+	}
+
+	public async addInternetClient(dto: AddInternetClientDto) {
+		return await this.internetPayment.addInternetClient(dto);
+	}
+
+	public async addMobileClient(dto: AddMobileClientDto) {
+		return await this.mobilePayment.addMobileClient(dto);
+	}
+
+	public async addTax(dto: AddTaxDto) {
+		return await this.utilitiesPayment.addTax(dto);
+	}
 
 	public async balanceReplenishment(sum: number) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		let numberFromJson: any = 0;
+		Object.values(sum).forEach((val) => (numberFromJson += val));
+
 		const dataSource = this.accountRepository.createQueryBuilder();
-		const updatedBalance = await dataSource
+		const updatedData = await dataSource
 			.update(AccountEntity)
 			.set({ balance: () => 'balance + :sum' })
-			.setParameter('sum', sum)
+			.setParameter('sum', numberFromJson)
 			.execute();
-		return await updatedBalance.raw();
+		return updatedData.raw;
+		// return empty array = need fix
 	}
 
 	public async checkInternetBalance(personalAccount: number) {

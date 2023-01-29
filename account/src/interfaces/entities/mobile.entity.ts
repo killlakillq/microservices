@@ -5,7 +5,7 @@ export class MobileEntity extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@Column({ unique: true, nullable: false })
+	@Column({ unique: true, width: 10 })
 	phoneNumber: number;
 
 	@Column()

@@ -9,6 +9,7 @@ import { UtilitiesEntity } from './interfaces/entities/utilities.entity';
 import { AccountService } from './services/account.service';
 import { ConfigService } from './services/config/config.service';
 import { TypeOrmConfigService } from './services/config/orm-config.service';
+import { InternetPayment, MobilePayment, UtilitiesPayment } from './services/payment.service';
 
 @Module({
 	imports: [
@@ -20,6 +21,6 @@ import { TypeOrmConfigService } from './services/config/orm-config.service';
 		}),
 	],
 	controllers: [AccountController],
-	providers: [AccountService, ConfigService],
+	providers: [AccountService, ConfigService, InternetPayment, MobilePayment, UtilitiesPayment],
 })
 export class AccountModule {}

@@ -5,7 +5,7 @@ export class InternetEntity extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@Column({ unique: true })
+	@Column({ unique: true, width: 10 })
 	personalAccount: number;
 
 	@Column({ default: 0 })
@@ -13,10 +13,10 @@ export class InternetEntity extends BaseEntity {
 
 	@Column({ nullable: false })
 	name: string;
-	
+
 	@Column({ nullable: false })
 	surname: string;
-	
+
 	@Column()
 	address: string;
 }
