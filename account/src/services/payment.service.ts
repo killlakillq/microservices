@@ -1,15 +1,15 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { AddInternetClientDto } from 'src/interfaces/dto/add-internet-client.dto';
-import { AddMobileClientDto } from 'src/interfaces/dto/add-mobile-client.dto';
-import { AddTaxDto } from 'src/interfaces/dto/add-tax.dto';
+import { AddInternetClientDto } from './../interfaces/dto/add-internet-client.dto';
+import { AddMobileClientDto } from './../interfaces/dto/add-mobile-client.dto';
 import { Repository } from 'typeorm';
-import { InternetEntity } from '../interfaces/entities/internet.entity';
 import { MobileEntity } from '../interfaces/entities/mobile.entity';
 import { UtilitiesEntity } from '../interfaces/entities/utilities.entity';
 import { UtilitiesType } from '../interfaces/enums/utilities-type.enum';
 import { Internet } from '../interfaces/internet.interface';
 import { Mobile } from '../interfaces/mobile.interface';
 import { Utilities } from '../interfaces/utilities.interface';
+import { AddTaxDto } from '../interfaces/dto/add-tax.dto';
+import { InternetEntity } from '../interfaces/entities/internet.entity';
 
 export class InternetPayment implements Internet {
 	constructor(@InjectRepository(InternetEntity) private readonly internetRepository: Repository<InternetEntity>) {}

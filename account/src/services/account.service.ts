@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AddInternetClientDto } from 'src/interfaces/dto/add-internet-client.dto';
-import { AddMobileClientDto } from 'src/interfaces/dto/add-mobile-client.dto';
-import { AddTaxDto } from 'src/interfaces/dto/add-tax.dto';
-import { CreateAccountDto } from 'src/interfaces/dto/create-account.dto';
+import { AddInternetClientDto } from './../interfaces/dto/add-internet-client.dto';
+import { AddMobileClientDto } from './../interfaces/dto/add-mobile-client.dto';
+import { AddTaxDto } from './../interfaces/dto/add-tax.dto';
+import { CreateAccountDto } from './../interfaces/dto/create-account.dto';
 import { Repository } from 'typeorm';
 import { AccountEntity } from './../interfaces/entities/account.entity';
 import { UtilitiesType } from './../interfaces/enums/utilities-type.enum';
