@@ -34,19 +34,22 @@ export class AccountService {
 		return await this.utilitiesPayment.addTax(dto);
 	}
 
-	public async balanceReplenishment(sum: number) {
+	public async checkBalance(name: string, surname: string) {
+		return await this.accountRepository.findOneBy({ name, surname });
+	}
+
+	public async balanceReplenishment(sum: number): Promise<AccountEntity[]> {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		let numberFromJson: any = 0;
-		Object.values(sum).forEach((val) => (numberFromJson += val));
+		let total: any = 0;
+		Object.values(sum).forEach((val) => (total += val));
 
 		const dataSource = this.accountRepository.createQueryBuilder();
-		const updatedData = await dataSource
+		await dataSource
 			.update(AccountEntity)
 			.set({ balance: () => 'balance + :sum' })
-			.setParameter('sum', numberFromJson)
+			.setParameter('sum', total)
 			.execute();
-		return updatedData.raw;
-		// return empty array = need fix
+		return await this.accountRepository.find({ select: { balance: true } });
 	}
 
 	public async checkInternetBalance(personalAccount: number) {

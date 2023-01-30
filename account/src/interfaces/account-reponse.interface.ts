@@ -6,7 +6,7 @@ import { UtilitiesEntity } from "./entities/utilities.entity";
 export interface AccountResponse {
 	status: number;
 	message: string;
-	data: AccountEntity | InternetEntity | MobileEntity | UtilitiesEntity | null;
+	data: AccountEntity[] | InternetEntity | MobileEntity | UtilitiesEntity | null;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	errors: { [key: string]: any } | null;
 }

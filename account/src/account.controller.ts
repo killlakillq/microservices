@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
+import { MessagePattern } from '@nestjs/microservices';
 import { AccountResponse } from './interfaces/account-reponse.interface';
 import { AddInternetClientDto } from './interfaces/dto/add-internet-client.dto';
 import { AddMobileClientDto } from './interfaces/dto/add-mobile-client.dto';
@@ -11,32 +12,35 @@ import { AccountService } from './services/account.service';
 export class AccountController {
 	constructor(private readonly accountService: AccountService) {}
 
-	@Post('create')
-	public async createAccount(@Body() dto: CreateAccountDto): Promise<CreateAccountDto> {
+	@MessagePattern('create-account')
+	public async createAccount(dto: CreateAccountDto) {
 		return await this.accountService.createAccount({ ...dto });
 	}
 
-	@Post('newInternetClient')
-	public async addInternetClient(@Body() dto: AddInternetClientDto): Promise<AddInternetClientDto> {
+	@MessagePattern('new-internet-client')
+	public async addInternetClient(dto: AddInternetClientDto) {
 		return await this.accountService.addInternetClient(dto);
 	}
 
-	@Post('newMobileClient')
-	public async addMobileClient(@Body() dto: AddMobileClientDto) {
+	@MessagePattern('new-mobile-client')
+	public async addMobileClient(dto: AddMobileClientDto) {
 		return await this.accountService.addMobileClient(dto);
 	}
 
-	@Post('newUtilitiesTax')
-	public async addTax(@Body() dto: AddTaxDto) {
+	@MessagePattern('new-utilities-tax')
+	public async addTax(dto: AddTaxDto) {
 		return await this.accountService.addTax(dto);
 	}
 
-	@Post('replenishBalance')
-	public async balanceReplenishment(@Body() sum: number): Promise<AccountResponse> {
+	@MessagePattern('check-balance')
+	public async checkBalance(name: string, surname: string) {
+		return await this.accountService.checkBalance(name, surname);
+	}
+
+	@MessagePattern('balance-replenishment')
+	public async balanceReplenishment(sum: number): Promise<AccountResponse> {
 		try {
 			const balance = await this.accountService.balanceReplenishment(sum);
-			console.log(balance);
-			
 			return {
 				status: 202,
 				message: 'the account balance was successfully replenished',
