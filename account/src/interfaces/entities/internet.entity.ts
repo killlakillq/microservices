@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToOne } from 'typeorm';
+import { AccountEntity } from './account.entity';
 
 @Entity({ name: 'Internet' })
 export class InternetEntity extends BaseEntity {
@@ -19,4 +20,7 @@ export class InternetEntity extends BaseEntity {
 
 	@Column()
 	address: string;
+	
+	@OneToOne(() => AccountEntity, (account) => account.internetPersonalAccount)
+	account: AccountEntity; 
 }

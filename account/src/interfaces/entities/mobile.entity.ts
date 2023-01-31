@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToOne } from 'typeorm';
+import { AccountEntity } from './account.entity';
 
 @Entity({ name: 'Mobile' })
 export class MobileEntity extends BaseEntity {
@@ -13,4 +14,7 @@ export class MobileEntity extends BaseEntity {
 
 	@Column({ default: 0 })
 	balance: number;
+
+	@OneToOne(() => AccountEntity, (mobile) => mobile.phoneNumber)
+	account: AccountEntity;
 }

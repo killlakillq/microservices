@@ -10,6 +10,7 @@ import { Mobile } from '../interfaces/mobile.interface';
 import { Utilities } from '../interfaces/utilities.interface';
 import { AddTaxDto } from '../interfaces/dto/add-tax.dto';
 import { InternetEntity } from '../interfaces/entities/internet.entity';
+import { PayForInternetDto } from '../interfaces/dto/pay-for-internet.dto';
 
 export class InternetPayment implements Internet {
 	constructor(@InjectRepository(InternetEntity) private readonly internetRepository: Repository<InternetEntity>) {}
@@ -22,18 +23,15 @@ export class InternetPayment implements Internet {
 		return await this.internetRepository.findOneBy({ personalAccount });
 	}
 
-	public async internetPay(sum: number): Promise<InternetEntity> {
+	public async internetPay({ personalAccount, sum }: PayForInternetDto): Promise<InternetEntity[]> {
 		const dataSource = this.internetRepository.createQueryBuilder();
-		const updatedBalance = await dataSource
-			.insert()
-			.into(InternetEntity)
-			.values([
-				{
-					balance: sum,
-				},
-			])
+		await dataSource
+			.update(InternetEntity)
+			.set({ balance: () => 'balance + :sum' })
+			.setParameter('sum', sum)
+			.where({ personalAccount })
 			.execute();
-		return await updatedBalance.raw();
+		return await this.internetRepository.find({ select: { balance: true }});
 	}
 }
 
