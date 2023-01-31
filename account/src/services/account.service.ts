@@ -13,8 +13,9 @@ import { MobileEntity } from '../interfaces/entities/mobile.entity';
 import { UtilitiesEntity } from '../interfaces/entities/utilities.entity';
 import { PayForInternetDto } from '../interfaces/dto/pay-for-internet.dto';
 import { IncrementOrDecrementAccountBalanceDto } from '../interfaces/dto/increment-decrement-account-balance.dto';
+import { NotAcceptableException } from '@nestjs/common/exceptions';
 
-// balance running in minus, need fix
+// balance running in minus, need fix //@ fix for replenishment internet balance
 // need release relations with table that accounts will be with personal accounts and phone numbers
 // replenish balances only with personal account or phone number
 
@@ -27,20 +28,20 @@ export class AccountService {
 		private readonly utilitiesPayment: UtilitiesPayment,
 	) {}
 
-	public async createAccount(dto: CreateAccountDto): Promise<CreateAccountDto> {
-		return await this.accountRepository.save({ ...dto });
+	public async createAccount(createAccountDto: CreateAccountDto): Promise<CreateAccountDto> {
+		return await this.accountRepository.save({ ...createAccountDto });
 	}
 
-	public async addInternetClient(dto: AddInternetClientDto): Promise<AddInternetClientDto> {
-		return await this.internetPayment.addInternetClient(dto);
+	public async addInternetClient(addInternetClientDto: AddInternetClientDto): Promise<AddInternetClientDto> {
+		return await this.internetPayment.addInternetClient(addInternetClientDto);
 	}
 
-	public async addMobileClient(dto: AddMobileClientDto): Promise<AddMobileClientDto> {
-		return await this.mobilePayment.addMobileClient(dto);
+	public async addMobileClient(addMobileClientDto: AddMobileClientDto): Promise<AddMobileClientDto> {
+		return await this.mobilePayment.addMobileClient(addMobileClientDto);
 	}
 
-	public async addTax(dto: AddTaxDto): Promise<AddTaxDto> {
-		return await this.utilitiesPayment.addTax(dto);
+	public async addTax(addTaxDto: AddTaxDto): Promise<AddTaxDto> {
+		return await this.utilitiesPayment.addTax(addTaxDto);
 	}
 
 	public async checkBalance(name: string, surname: string): Promise<AccountEntity> {
@@ -66,6 +67,13 @@ export class AccountService {
 		{ name, surname, sum }: IncrementOrDecrementAccountBalanceDto,
 		incrementInternetBalanceDto: PayForInternetDto,
 	): Promise<AccountEntity[]> {
+		const account = await this.accountRepository.find();
+		const findBalance = account.find((index) => index.balance);
+		
+		if (findBalance.balance < 0 || sum < 0) {
+			throw new NotAcceptableException();
+		}
+
 		const dataSource = this.accountRepository.createQueryBuilder();
 		await dataSource
 			.update(AccountEntity)
@@ -73,8 +81,10 @@ export class AccountService {
 			.setParameter('sum', sum)
 			.where({ name, surname })
 			.execute();
+
+
 		await this.internetPayment.internetPay(incrementInternetBalanceDto);
-		return await this.accountRepository.find({ select: { balance: true } });
+		return await this.accountRepository.find({ select: { balance: true }, relations: { internet: true } });
 	}
 
 	public async checkInternetBalance(personalAccount: number): Promise<InternetEntity> {

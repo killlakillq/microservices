@@ -19,13 +19,13 @@ export class AccountEntity extends BaseEntity {
 
 	@OneToOne(() => InternetEntity, (internet) => internet.personalAccount)
 	@JoinColumn()
-	internetPersonalAccount: InternetEntity;
+	internet: InternetEntity;
 
 	@OneToOne(() => UtilitiesEntity, (utilities) => utilities.personalAccount)
 	@JoinColumn()
-	utilitiesPersonalAccount: UtilitiesEntity;
+	utilities: UtilitiesEntity;
 
 	@OneToOne(() => MobileEntity, (mobile) => mobile.phoneNumber)
 	@JoinColumn()
-	phoneNumber: MobileEntity;
+	mobile: MobileEntity;
 }

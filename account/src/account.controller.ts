@@ -93,7 +93,6 @@ export class AccountController {
 				decrementAccountBalanceDto,
 				incrementInternetBalanceDto,
 			);
-			console.log(internetAccount);
 			return {
 				status: 202,
 				message: 'the internet balance was successfully paid',

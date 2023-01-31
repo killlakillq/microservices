@@ -11,6 +11,7 @@ import { Utilities } from '../interfaces/utilities.interface';
 import { AddTaxDto } from '../interfaces/dto/add-tax.dto';
 import { InternetEntity } from '../interfaces/entities/internet.entity';
 import { PayForInternetDto } from '../interfaces/dto/pay-for-internet.dto';
+import { NotAcceptableException } from '@nestjs/common';
 
 export class InternetPayment implements Internet {
 	constructor(@InjectRepository(InternetEntity) private readonly internetRepository: Repository<InternetEntity>) {}
@@ -24,14 +25,21 @@ export class InternetPayment implements Internet {
 	}
 
 	public async internetPay({ personalAccount, sum }: PayForInternetDto): Promise<InternetEntity[]> {
+		const internet = await this.internetRepository.find();
+		const findBalance = internet.find((index) => index.balance);
+		
+		if (findBalance.balance < 0) {
+			throw new NotAcceptableException();
+		}
+
 		const dataSource = this.internetRepository.createQueryBuilder();
 		await dataSource
 			.update(InternetEntity)
-			.set({ balance: () => 'balance + :sum' })
+			.set({ balance: () => 'balance + :sum'})
 			.setParameter('sum', sum)
 			.where({ personalAccount })
 			.execute();
-		return await this.internetRepository.find({ select: { balance: true }});
+		return await this.internetRepository.find({ select: { balance: true}});
 	}
 }
 

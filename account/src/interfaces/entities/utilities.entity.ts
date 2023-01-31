@@ -25,6 +25,6 @@ export class UtilitiesEntity extends BaseEntity {
 	@Column({ nullable: false })
 	address: string;
 
-	@OneToOne(() => AccountEntity, (utilities) => utilities.utilitiesPersonalAccount)
+	@OneToOne(() => AccountEntity, (account) => account.utilities)
 	account: AccountEntity;
 }

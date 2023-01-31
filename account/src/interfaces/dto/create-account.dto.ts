@@ -1,7 +1,4 @@
-import { IsNumber, IsObject, IsOptional, IsString } from 'class-validator';
-import { InternetEntity } from '../entities/internet.entity';
-import { MobileEntity } from '../entities/mobile.entity';
-import { UtilitiesEntity } from '../entities/utilities.entity';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateAccountDto {
 	@IsString()
@@ -14,15 +11,15 @@ export class CreateAccountDto {
 	balance: number;
 
 	@IsOptional()
-	@IsObject()
-	internetPersonalAccount?: InternetEntity;
+	@IsNumber()
+	internetPersonalAccount?: number;
 
 	@IsOptional()
-	@IsObject()
-	utilitiesPersonalAccount?: UtilitiesEntity;
+	@IsNumber()
+	utilitiesPersonalAccount?: number;
 
 	@IsOptional()
-	@IsObject()
-	phoneNumber?: MobileEntity;
+	@IsNumber()
+	phoneNumber?: number;
 }
 

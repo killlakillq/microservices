@@ -21,6 +21,6 @@ export class InternetEntity extends BaseEntity {
 	@Column()
 	address: string;
 	
-	@OneToOne(() => AccountEntity, (account) => account.internetPersonalAccount)
+	@OneToOne(() => AccountEntity, (account) => account.internet)
 	account: AccountEntity; 
 }

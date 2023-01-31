@@ -15,6 +15,6 @@ export class MobileEntity extends BaseEntity {
 	@Column({ default: 0 })
 	balance: number;
 
-	@OneToOne(() => AccountEntity, (mobile) => mobile.phoneNumber)
+	@OneToOne(() => AccountEntity, (account) => account.mobile)
 	account: AccountEntity;
 }
