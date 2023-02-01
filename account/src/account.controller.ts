@@ -1,12 +1,12 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { AccountResponse } from './interfaces/account-reponse.interface';
+import { AccountBalanceDto } from './interfaces/dto/account-balance.dto';
 import { AddInternetClientDto } from './interfaces/dto/add-internet-client.dto';
 import { AddMobileClientDto } from './interfaces/dto/add-mobile-client.dto';
 import { AddTaxDto } from './interfaces/dto/add-tax.dto';
 import { CreateAccountDto } from './interfaces/dto/create-account.dto';
-import { PayForInternetDto } from './interfaces/dto/pay-for-internet.dto';
-import { IncrementOrDecrementAccountBalanceDto } from './interfaces/dto/increment-decrement-account-balance.dto';
+import { InternetBalanceDto } from './interfaces/dto/internet-balance.dto';
 import { UtilitiesType } from './interfaces/enums/utilities-type.enum';
 import { AccountService } from './services/account.service';
 
@@ -14,15 +14,13 @@ import { AccountService } from './services/account.service';
 export class AccountController {
 	constructor(private readonly accountService: AccountService) {}
 
-	// @MessagePattern('create-account')
-	@Post('/create')
-	public async createAccount(@Body() dto: CreateAccountDto) {
+	@MessagePattern('create-account')
+	public async createAccount(dto: CreateAccountDto) {
 		return await this.accountService.createAccount({ ...dto });
 	}
 
-	// @MessagePattern('new-internet-client')
-	@Post('/add')
-	public async addInternetClient(@Body() dto: AddInternetClientDto) {
+	@MessagePattern('new-internet-client')
+	public async addInternetClient(dto: AddInternetClientDto) {
 		return await this.accountService.addInternetClient(dto);
 	}
 
@@ -41,11 +39,8 @@ export class AccountController {
 		return await this.accountService.checkBalance(name, surname);
 	}
 
-	// @MessagePattern('balance-replenishment')
-	@Post('/replenish')
-	public async balanceReplenishment(
-		@Body() incrementAccountBalanceDto: IncrementOrDecrementAccountBalanceDto,
-	): Promise<AccountResponse> {
+	@MessagePattern('balance-replenishment')
+	public async balanceReplenishment(incrementAccountBalanceDto: AccountBalanceDto): Promise<AccountResponse> {
 		try {
 			const balance = await this.accountService.balanceReplenishment(incrementAccountBalanceDto);
 			return {
@@ -64,6 +59,7 @@ export class AccountController {
 		}
 	}
 
+	@MessagePattern('check-internet-balance')
 	public async checkInternetBalance(personalAccount: number): Promise<AccountResponse> {
 		try {
 			const checkBalance = await this.accountService.checkInternetBalance(personalAccount);
@@ -83,10 +79,10 @@ export class AccountController {
 		}
 	}
 
-	@Post('/internetpay')
+	@MessagePattern('pay-for-internet')
 	public async payForInternet(
-		@Body() decrementAccountBalanceDto: IncrementOrDecrementAccountBalanceDto,
-		@Body() incrementInternetBalanceDto: PayForInternetDto,
+		decrementAccountBalanceDto: AccountBalanceDto,
+		incrementInternetBalanceDto: InternetBalanceDto,
 	): Promise<AccountResponse> {
 		try {
 			const internetAccount = await this.accountService.payForInternet(

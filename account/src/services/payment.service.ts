@@ -10,7 +10,7 @@ import { Mobile } from '../interfaces/mobile.interface';
 import { Utilities } from '../interfaces/utilities.interface';
 import { AddTaxDto } from '../interfaces/dto/add-tax.dto';
 import { InternetEntity } from '../interfaces/entities/internet.entity';
-import { PayForInternetDto } from '../interfaces/dto/pay-for-internet.dto';
+import { InternetBalanceDto } from '../interfaces/dto/internet-balance.dto';
 import { NotAcceptableException } from '@nestjs/common';
 
 export class InternetPayment implements Internet {
@@ -24,22 +24,25 @@ export class InternetPayment implements Internet {
 		return await this.internetRepository.findOneBy({ personalAccount });
 	}
 
-	public async internetPay({ personalAccount, sum }: PayForInternetDto): Promise<InternetEntity[]> {
+	public async internetPay({ personalAccount, sum }: InternetBalanceDto): Promise<{ balance: number }> {
 		const internet = await this.internetRepository.find();
 		const findBalance = internet.find((index) => index.balance);
-		
-		if (findBalance.balance < 0) {
+
+		if (findBalance.balance < 0 || sum < 0) {
 			throw new NotAcceptableException();
 		}
 
 		const dataSource = this.internetRepository.createQueryBuilder();
 		await dataSource
 			.update(InternetEntity)
-			.set({ balance: () => 'balance + :sum'})
+			.set({ balance: () => 'balance + :sum' })
 			.setParameter('sum', sum)
 			.where({ personalAccount })
 			.execute();
-		return await this.internetRepository.find({ select: { balance: true}});
+		const returnBalance = await this.internetRepository.findOneBy({ personalAccount });
+		return {
+			balance: returnBalance.balance,
+		}
 	}
 }
 

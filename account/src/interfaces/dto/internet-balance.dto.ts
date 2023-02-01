@@ -1,6 +1,6 @@
 import { IsNumber } from "class-validator";
 
-export class PayForInternetDto {
+export class InternetBalanceDto {
 	@IsNumber()
 	personalAccount: number;
 

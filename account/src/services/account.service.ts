@@ -11,13 +11,9 @@ import { InternetPayment, MobilePayment, UtilitiesPayment } from './payment.serv
 import { InternetEntity } from '../interfaces/entities/internet.entity';
 import { MobileEntity } from '../interfaces/entities/mobile.entity';
 import { UtilitiesEntity } from '../interfaces/entities/utilities.entity';
-import { PayForInternetDto } from '../interfaces/dto/pay-for-internet.dto';
-import { IncrementOrDecrementAccountBalanceDto } from '../interfaces/dto/increment-decrement-account-balance.dto';
+import { InternetBalanceDto } from '../interfaces/dto/internet-balance.dto';
+import { AccountBalanceDto } from '../interfaces/dto/account-balance.dto';
 import { NotAcceptableException } from '@nestjs/common/exceptions';
-
-// balance running in minus, need fix //@ fix for replenishment internet balance
-// need release relations with table that accounts will be with personal accounts and phone numbers
-// replenish balances only with personal account or phone number
 
 @Injectable()
 export class AccountService {
@@ -48,11 +44,7 @@ export class AccountService {
 		return await this.accountRepository.findOneBy({ name, surname });
 	}
 
-	public async balanceReplenishment({
-		name,
-		surname,
-		sum,
-	}: IncrementOrDecrementAccountBalanceDto): Promise<AccountEntity[]> {
+	public async balanceReplenishment({ name, surname, sum }: AccountBalanceDto): Promise<{ balance: number }> {
 		const dataSource = this.accountRepository.createQueryBuilder();
 		await dataSource
 			.update(AccountEntity)
@@ -60,16 +52,15 @@ export class AccountService {
 			.setParameter('sum', sum)
 			.where({ name, surname })
 			.execute();
-		return await this.accountRepository.find({ select: { balance: true } });
+
+		const returnBalance = await this.accountRepository.findOneBy({ name, surname });
+		return { balance: returnBalance.balance };
 	}
 
-	public async payForInternet(
-		{ name, surname, sum }: IncrementOrDecrementAccountBalanceDto,
-		incrementInternetBalanceDto: PayForInternetDto,
-	): Promise<AccountEntity[]> {
+	public async withdrawalFromTheBalance({ name, surname, sum }: AccountBalanceDto): Promise<{ balance: number }> {
 		const account = await this.accountRepository.find();
 		const findBalance = account.find((index) => index.balance);
-		
+
 		if (findBalance.balance < 0 || sum < 0) {
 			throw new NotAcceptableException();
 		}
@@ -82,9 +73,16 @@ export class AccountService {
 			.where({ name, surname })
 			.execute();
 
+		const returnBalance = await this.accountRepository.findOneBy({ name, surname });
+		return { balance: returnBalance.balance };
+	}
 
-		await this.internetPayment.internetPay(incrementInternetBalanceDto);
-		return await this.accountRepository.find({ select: { balance: true }, relations: { internet: true } });
+	public async payForInternet(
+		decrementAccountBalanceDto: AccountBalanceDto,
+		incrementInternetBalanceDto: InternetBalanceDto,
+	) {
+		await this.withdrawalFromTheBalance(decrementAccountBalanceDto);
+		return await this.internetPayment.internetPay(incrementInternetBalanceDto);
 	}
 
 	public async checkInternetBalance(personalAccount: number): Promise<InternetEntity> {
