@@ -12,6 +12,8 @@ import { AddTaxDto } from '../interfaces/dto/add-tax.dto';
 import { InternetEntity } from '../interfaces/entities/internet.entity';
 import { InternetBalanceDto } from '../interfaces/dto/internet-balance.dto';
 import { NotAcceptableException } from '@nestjs/common';
+import { MobileBalanceDto } from '../interfaces/dto/mobile-balance.dto';
+import { UtilitiesTaxesDto } from '../interfaces/dto/utilities-taxes.dto';
 
 export class InternetPayment implements Internet {
 	constructor(@InjectRepository(InternetEntity) private readonly internetRepository: Repository<InternetEntity>) {}
@@ -42,7 +44,7 @@ export class InternetPayment implements Internet {
 		const returnBalance = await this.internetRepository.findOneBy({ personalAccount });
 		return {
 			balance: returnBalance.balance,
-		}
+		};
 	}
 }
 
@@ -57,18 +59,25 @@ export class MobilePayment implements Mobile {
 		return await this.mobileRepository.findOneBy({ phoneNumber });
 	}
 
-	public async topUpTheAccount(sum: number): Promise<MobileEntity> {
+	public async replenishMobileAccount({ phoneNumber, sum }: MobileBalanceDto): Promise<{ balance: number }> {
+		const mobile = await this.mobileRepository.find();
+		const findBalance = mobile.find((index) => index.balance);
+
+		if (findBalance.balance < 0 || sum < 0) {
+			throw new NotAcceptableException();
+		}
+
 		const dataSource = this.mobileRepository.createQueryBuilder();
-		const updatedBalance = await dataSource
-			.insert()
-			.into(MobileEntity)
-			.values([
-				{
-					balance: sum,
-				},
-			])
+		await dataSource
+			.update(MobileEntity)
+			.set({ balance: () => 'balance + :sum' })
+			.setParameter('sum', sum)
+			.where({ phoneNumber })
 			.execute();
-		return await updatedBalance.raw();
+		const returnBalance = await this.mobileRepository.findOneBy({ phoneNumber });
+		return {
+			balance: returnBalance.balance,
+		};
 	}
 }
 
@@ -85,9 +94,20 @@ export class UtilitiesPayment implements Utilities {
 		return await this.utilitiesRepository.findOneBy({ personalAccount, type });
 	}
 
-	public async payForUtilities(personalAccount: number, type: UtilitiesType, sum: number): Promise<UtilitiesEntity> {
+	public async payForUtilities({
+		personalAccount,
+		type,
+		sum,
+	}: UtilitiesTaxesDto): Promise<{ personalAccount: number; type: UtilitiesType; message: string }> {
+		const utilities = await this.utilitiesRepository.find();
+		const findBalance = utilities.find((index) => index.sum);
+
+		if (findBalance.sum > sum || sum < 0) {
+			throw new NotAcceptableException();
+		}
+
 		const dataSource = this.utilitiesRepository.createQueryBuilder();
-		const updatedTax = await dataSource
+		await dataSource
 			.delete()
 			.from(UtilitiesEntity)
 			.where(['pesonalAccount = :personalAccount', 'type = :type', 'sum = :sum'], {
@@ -96,6 +116,10 @@ export class UtilitiesPayment implements Utilities {
 				sum: sum,
 			})
 			.execute();
-		return await updatedTax.raw();
+		return {
+			type: type,
+			personalAccount: personalAccount,
+			message: `${type} was successfuly paid.`,
+		};
 	}
 }

@@ -14,6 +14,8 @@ import { UtilitiesEntity } from '../interfaces/entities/utilities.entity';
 import { InternetBalanceDto } from '../interfaces/dto/internet-balance.dto';
 import { AccountBalanceDto } from '../interfaces/dto/account-balance.dto';
 import { NotAcceptableException } from '@nestjs/common/exceptions';
+import { MobileBalanceDto } from '../interfaces/dto/mobile-balance.dto';
+import { UtilitiesTaxesDto } from '../interfaces/dto/utilities-taxes.dto';
 
 @Injectable()
 export class AccountService {
@@ -77,43 +79,39 @@ export class AccountService {
 		return { balance: returnBalance.balance };
 	}
 
+	public async checkInternetBalance(personalAccount: number): Promise<InternetEntity> {
+		return await this.internetPayment.checkInternetBalance(personalAccount);
+	}
+
 	public async payForInternet(
 		decrementAccountBalanceDto: AccountBalanceDto,
 		incrementInternetBalanceDto: InternetBalanceDto,
-	) {
+	): Promise<{ balance: number }> {
 		await this.withdrawalFromTheBalance(decrementAccountBalanceDto);
 		return await this.internetPayment.internetPay(incrementInternetBalanceDto);
-	}
-
-	public async checkInternetBalance(personalAccount: number): Promise<InternetEntity> {
-		return await this.internetPayment.checkInternetBalance(personalAccount);
 	}
 
 	public async checkMobileBalance(phoneNumber: number): Promise<MobileEntity> {
 		return await this.mobilePayment.checkMobileBalance(phoneNumber);
 	}
 
-	public async mobileAccountTopUp(sum: number): Promise<MobileEntity> {
-		const dataSource = this.accountRepository.createQueryBuilder();
-		await dataSource
-			.update(AccountEntity)
-			.set({ balance: () => 'balance - :sum' })
-			.setParameter('sum', sum)
-			.execute();
-		return await this.mobilePayment.topUpTheAccount(sum);
+	public async replenishMobileAccount(
+		decrementAccountBalanceDto: AccountBalanceDto,
+		incrementInternetBalanceDto: MobileBalanceDto,
+	): Promise<{ balance: number }> {
+		await this.withdrawalFromTheBalance(decrementAccountBalanceDto);
+		return await this.mobilePayment.replenishMobileAccount(incrementInternetBalanceDto);
 	}
 
 	public async checkUtilitiesTaxes(personalAccount: number, type: UtilitiesType): Promise<UtilitiesEntity> {
 		return await this.utilitiesPayment.checkUtilitiesTaxes(personalAccount, type);
 	}
 
-	public async payForUtilities(personalAccount: number, type: UtilitiesType, sum: number): Promise<UtilitiesEntity> {
-		const dataSource = this.accountRepository.createQueryBuilder();
-		await dataSource
-			.update(AccountEntity)
-			.set({ balance: () => 'balance - :sum' })
-			.setParameter('sum', sum)
-			.execute();
-		return await this.utilitiesPayment.payForUtilities(personalAccount, type, sum);
+	public async payForUtilities(
+		decrementAccountBalanceDto: AccountBalanceDto,
+		payForTaxes: UtilitiesTaxesDto,
+	): Promise<{ personalAccount: number; type: UtilitiesType; message: string }> {
+		await this.withdrawalFromTheBalance(decrementAccountBalanceDto);
+		return await this.utilitiesPayment.payForUtilities(payForTaxes);
 	}
 }
