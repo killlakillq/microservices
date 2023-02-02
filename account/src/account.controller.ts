@@ -1,14 +1,14 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { AccountResponse } from './interfaces/account-reponse.interface';
 import { AccountBalanceDto } from './interfaces/dto/account-balance.dto';
 import { AddInternetClientDto } from './interfaces/dto/add-internet-client.dto';
 import { AddMobileClientDto } from './interfaces/dto/add-mobile-client.dto';
+import { AddPhoneNumberToAccountDto } from './interfaces/dto/add-phone-number-to-account.dto';
 import { AddTaxDto } from './interfaces/dto/add-tax.dto';
 import { CreateAccountDto } from './interfaces/dto/create-account.dto';
 import { InternetBalanceDto } from './interfaces/dto/internet-balance.dto';
 import { MobileBalanceDto } from './interfaces/dto/mobile-balance.dto';
-import { UpdateAccountDto } from './interfaces/dto/update-account.dto';
 import { UtilitiesTaxesDto } from './interfaces/dto/utilities-taxes.dto';
 import { UtilitiesType } from './interfaces/enums/utilities-type.enum';
 import { AccountService } from './services/account.service';
@@ -18,9 +18,9 @@ export class AccountController {
 	constructor(private readonly accountService: AccountService) {}
 
 	@MessagePattern('create-account')
-	public async createAccount(dto: CreateAccountDto): Promise<AccountResponse> {
+	public async createAccount(createAccountDto: CreateAccountDto): Promise<AccountResponse> {
 		try {
-			const create = this.accountService.createAccount(dto);
+			const create = this.accountService.createAccount(createAccountDto);
 			return {
 				status: 202,
 				message: 'the account was successfully created.',
@@ -38,9 +38,9 @@ export class AccountController {
 	}
 
 	@MessagePattern('new-internet-client')
-	public async addInternetClient(dto: AddInternetClientDto): Promise<AccountResponse> {
+	public async addInternetClient(addInternetClientDto: AddInternetClientDto): Promise<AccountResponse> {
 		try {
-			const create = this.accountService.addInternetClient(dto);
+			const create = this.accountService.addInternetClient(addInternetClientDto);
 			return {
 				status: 202,
 				message: 'the client was successfully created.',
@@ -78,9 +78,9 @@ export class AccountController {
 	}
 
 	@MessagePattern('new-utilities-tax')
-	public async addTax(dto: AddTaxDto): Promise<AccountResponse> {
+	public async addTax(addTaxDto: AddTaxDto): Promise<AccountResponse> {
 		try {
-			const create = await this.accountService.addTax(dto);
+			const create = await this.accountService.addTax(addTaxDto);
 			return {
 				status: 202,
 				message: 'the tax was successfully added.',
@@ -137,10 +137,14 @@ export class AccountController {
 		}
 	}
 
-	@Post('/')
-	public async addPhoneNumber(@Body() update: UpdateAccountDto) {
-		const account = await this.accountService.addPhoneNumber(update);
+	@MessagePattern('add-phone-number')
+	public async addPhoneNumber(
+		AddPhoneNumberToAccountDto: AddPhoneNumberToAccountDto,
+		findPhoneNumber: AddPhoneNumberToAccountDto,
+	) {
+		const account = await this.accountService.addPhoneNumber(AddPhoneNumberToAccountDto, findPhoneNumber);
 		console.log(account);
+		return account;
 	}
 
 	@MessagePattern('check-internet-balance')

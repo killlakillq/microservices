@@ -14,6 +14,7 @@ import { InternetBalanceDto } from '../interfaces/dto/internet-balance.dto';
 import { NotAcceptableException } from '@nestjs/common';
 import { MobileBalanceDto } from '../interfaces/dto/mobile-balance.dto';
 import { UtilitiesTaxesDto } from '../interfaces/dto/utilities-taxes.dto';
+import { AddPhoneNumberToAccountDto } from '../interfaces/dto/add-phone-number-to-account.dto';
 
 export class InternetPayment implements Internet {
 	constructor(@InjectRepository(InternetEntity) private readonly internetRepository: Repository<InternetEntity>) {}
@@ -78,6 +79,10 @@ export class MobilePayment implements Mobile {
 		return {
 			balance: returnBalance.balance,
 		};
+	}
+
+	public async findPhoneNumber({ name, surname, phoneNumber, operator }: AddPhoneNumberToAccountDto): Promise<MobileEntity> {
+		return await this.mobileRepository.findOneBy({ name, surname, phoneNumber, operator });
 	}
 }
 

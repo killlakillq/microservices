@@ -16,7 +16,7 @@ import { AccountBalanceDto } from '../interfaces/dto/account-balance.dto';
 import { NotAcceptableException } from '@nestjs/common/exceptions';
 import { MobileBalanceDto } from '../interfaces/dto/mobile-balance.dto';
 import { UtilitiesTaxesDto } from '../interfaces/dto/utilities-taxes.dto';
-import { UpdateAccountDto } from '../interfaces/dto/update-account.dto';
+import { AddPhoneNumberToAccountDto } from '../interfaces/dto/add-phone-number-to-account.dto';
 
 @Injectable()
 export class AccountService {
@@ -80,24 +80,20 @@ export class AccountService {
 		return { balance: returnBalance.balance };
 	}
 
-
-	// don't work
-	public async addPhoneNumber({ name, surname, phoneNumber, operator }: UpdateAccountDto) {
+	public async addPhoneNumber(
+		{ name, surname }: AddPhoneNumberToAccountDto,
+		findPhoneNumberDto: AddPhoneNumberToAccountDto,
+	) {
+		const findMobile = await this.mobilePayment.findPhoneNumber(findPhoneNumberDto);
 		const dataSource = this.accountRepository.createQueryBuilder();
-		await dataSource
-			.update(AccountEntity)
-			.set({
-				mobile: {
-					phoneNumber: phoneNumber,
-					operator: operator,
-				},
-			})
-			.where({ name, surname })
-			.execute();
+		await dataSource.update(AccountEntity).set({ mobile: findMobile }).where({ name, surname }).execute();
 
-		const returnNumber = await this.accountRepository.findOneBy({ name, surname });
-		console.log(returnNumber);
-		return { mobile: returnNumber.mobile };
+		const returnAccount = await this.accountRepository.findOneBy({ name, surname });
+		return {
+			name: returnAccount.name,
+			surname: returnAccount.surname,
+			mobile: findMobile.phoneNumber,
+		};
 	}
 
 	public async checkInternetBalance(personalAccount: number): Promise<InternetEntity> {
