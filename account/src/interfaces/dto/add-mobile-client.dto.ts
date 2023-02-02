@@ -2,7 +2,7 @@ import { IsNumber, IsString } from 'class-validator';
 
 export class AddMobileClientDto {
 	@IsNumber()
-	phoneNumber: number;
+	phoneNumber: string;
 
 	@IsString()
 	operator: string;

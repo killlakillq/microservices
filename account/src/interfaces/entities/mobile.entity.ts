@@ -6,8 +6,8 @@ export class MobileEntity extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@Column({ unique: true, width: 10 })
-	phoneNumber: number;
+	@Column({ unique: true, length: 10 })
+	phoneNumber: string;
 
 	@Column()
 	operator: string;

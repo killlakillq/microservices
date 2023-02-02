@@ -55,7 +55,7 @@ export class MobilePayment implements Mobile {
 		return await this.mobileRepository.save({ ...dto });
 	}
 
-	public async checkMobileBalance(phoneNumber: number): Promise<MobileEntity> {
+	public async checkMobileBalance(phoneNumber: string): Promise<MobileEntity> {
 		return await this.mobileRepository.findOneBy({ phoneNumber });
 	}
 

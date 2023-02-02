@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { AccountResponse } from './interfaces/account-reponse.interface';
 import { AccountBalanceDto } from './interfaces/dto/account-balance.dto';
@@ -8,6 +8,7 @@ import { AddTaxDto } from './interfaces/dto/add-tax.dto';
 import { CreateAccountDto } from './interfaces/dto/create-account.dto';
 import { InternetBalanceDto } from './interfaces/dto/internet-balance.dto';
 import { MobileBalanceDto } from './interfaces/dto/mobile-balance.dto';
+import { UpdateAccountDto } from './interfaces/dto/update-account.dto';
 import { UtilitiesTaxesDto } from './interfaces/dto/utilities-taxes.dto';
 import { UtilitiesType } from './interfaces/enums/utilities-type.enum';
 import { AccountService } from './services/account.service';
@@ -136,6 +137,12 @@ export class AccountController {
 		}
 	}
 
+	@Post('/')
+	public async addPhoneNumber(@Body() update: UpdateAccountDto) {
+		const account = await this.accountService.addPhoneNumber(update);
+		console.log(account);
+	}
+
 	@MessagePattern('check-internet-balance')
 	public async checkInternetBalance(personalAccount: number): Promise<AccountResponse> {
 		try {
@@ -183,7 +190,7 @@ export class AccountController {
 	}
 
 	@MessagePattern('check-mobile-balance')
-	public async checkMobileBalance(phoneNumber: number): Promise<AccountResponse> {
+	public async checkMobileBalance(phoneNumber: string): Promise<AccountResponse> {
 		try {
 			const checkBalance = await this.accountService.checkMobileBalance(phoneNumber);
 			return {

@@ -2,7 +2,7 @@ import { IsNumber } from "class-validator";
 
 export class MobileBalanceDto {
 	@IsNumber()
-	phoneNumber: number;
+	phoneNumber: string;
 
 	@IsNumber()
 	sum: number;

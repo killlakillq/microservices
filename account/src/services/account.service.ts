@@ -16,6 +16,7 @@ import { AccountBalanceDto } from '../interfaces/dto/account-balance.dto';
 import { NotAcceptableException } from '@nestjs/common/exceptions';
 import { MobileBalanceDto } from '../interfaces/dto/mobile-balance.dto';
 import { UtilitiesTaxesDto } from '../interfaces/dto/utilities-taxes.dto';
+import { UpdateAccountDto } from '../interfaces/dto/update-account.dto';
 
 @Injectable()
 export class AccountService {
@@ -79,6 +80,26 @@ export class AccountService {
 		return { balance: returnBalance.balance };
 	}
 
+
+	// don't work
+	public async addPhoneNumber({ name, surname, phoneNumber, operator }: UpdateAccountDto) {
+		const dataSource = this.accountRepository.createQueryBuilder();
+		await dataSource
+			.update(AccountEntity)
+			.set({
+				mobile: {
+					phoneNumber: phoneNumber,
+					operator: operator,
+				},
+			})
+			.where({ name, surname })
+			.execute();
+
+		const returnNumber = await this.accountRepository.findOneBy({ name, surname });
+		console.log(returnNumber);
+		return { mobile: returnNumber.mobile };
+	}
+
 	public async checkInternetBalance(personalAccount: number): Promise<InternetEntity> {
 		return await this.internetPayment.checkInternetBalance(personalAccount);
 	}
@@ -91,7 +112,7 @@ export class AccountService {
 		return await this.internetPayment.internetPay(incrementInternetBalanceDto);
 	}
 
-	public async checkMobileBalance(phoneNumber: number): Promise<MobileEntity> {
+	public async checkMobileBalance(phoneNumber: string): Promise<MobileEntity> {
 		return await this.mobilePayment.checkMobileBalance(phoneNumber);
 	}
 

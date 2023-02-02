@@ -4,6 +4,6 @@ import { MobileEntity } from "./entities/mobile.entity";
 
 export interface Mobile {
 	addMobileClient: (dto: AddMobileClientDto) => Promise<AddMobileClientDto>;
-	checkMobileBalance: (phoneNumber: number) => Promise<MobileEntity>;
+	checkMobileBalance: (phoneNumber: string) => Promise<MobileEntity>;
 	replenishMobileAccount: ({ phoneNumber, sum }: MobileBalanceDto) => Promise<{ balance: number }>;
 }
