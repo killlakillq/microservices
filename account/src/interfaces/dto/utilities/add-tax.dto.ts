@@ -1,6 +1,5 @@
 import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { UtilitiesType } from '../enums/utilities-type.enum';
-
+import { UtilitiesType } from '../../enums/utilities-type.enum';
 
 export class AddTaxDto {
 	@IsNumber()

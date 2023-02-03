@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AddInternetClientDto } from './../interfaces/dto/add-internet-client.dto';
-import { AddMobileClientDto } from './../interfaces/dto/add-mobile-client.dto';
-import { AddTaxDto } from './../interfaces/dto/add-tax.dto';
-import { CreateAccountDto } from './../interfaces/dto/create-account.dto';
+import { AddInternetClientDto } from '../interfaces/dto/internet/add-internet-client.dto';
+import { AddMobileClientDto } from '../interfaces/dto/mobile/add-mobile-client.dto';
+import { AddTaxDto } from '../interfaces/dto/utilities/add-tax.dto';
+import { CreateAccountDto } from '../interfaces/dto/account/create-account.dto';
 import { Repository } from 'typeorm';
 import { AccountEntity } from './../interfaces/entities/account.entity';
 import { UtilitiesType } from './../interfaces/enums/utilities-type.enum';
@@ -11,13 +11,13 @@ import { InternetPayment, MobilePayment, UtilitiesPayment } from './payment.serv
 import { InternetEntity } from '../interfaces/entities/internet.entity';
 import { MobileEntity } from '../interfaces/entities/mobile.entity';
 import { UtilitiesEntity } from '../interfaces/entities/utilities.entity';
-import { InternetBalanceDto } from '../interfaces/dto/internet-balance.dto';
-import { AccountBalanceDto } from '../interfaces/dto/account-balance.dto';
+import { InternetBalanceDto } from '../interfaces/dto/internet/internet-balance.dto';
+import { AccountBalanceDto } from '../interfaces/dto/account/account-balance.dto';
 import { NotAcceptableException } from '@nestjs/common/exceptions';
-import { MobileBalanceDto } from '../interfaces/dto/mobile-balance.dto';
-import { UtilitiesTaxesDto } from '../interfaces/dto/utilities-taxes.dto';
-import { AddPhoneNumberToAccountDto } from '../interfaces/dto/add-phone-number-to-account.dto';
-import { AddPersonalAccountDto } from '../interfaces/dto/add-personal-account.dto';
+import { MobileBalanceDto } from '../interfaces/dto/mobile/mobile-balance.dto';
+import { UtilitiesTaxesDto } from '../interfaces/dto/utilities/utilities-taxes.dto';
+import { AddPhoneNumberToAccountDto } from '../interfaces/dto/account/add-phone-number-to-account.dto';
+import { AddPersonalAccountDto } from '../interfaces/dto/account/add-personal-account.dto';
 
 @Injectable()
 export class AccountService {
@@ -116,7 +116,7 @@ export class AccountService {
 	public async addUtilitiesPersonalAccount(
 		{ name, surname }: AddPersonalAccountDto,
 		findPersonalAccountDto: AddPersonalAccountDto,
-	): Promise<{ name: string, surname: string, utilities: number }> {
+	): Promise<{ name: string; surname: string; utilities: number }> {
 		const utilities = await this.utilitiesPayment.findPersonalAccount(findPersonalAccountDto);
 		const dataSource = this.accountRepository.createQueryBuilder();
 		await dataSource.update(AccountEntity).set({ utilities: utilities }).where({ name, surname }).execute();

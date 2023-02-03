@@ -1,15 +1,15 @@
 {
-  "name": "microservices",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Denrox/nestjs-microservices-example.git"
-  },
-  "author": "",
-  "license": "ISC"
+     "name": "microservices",
+     "version": "1.0.0",
+     "description": "",
+     "main": "index.js",
+     "scripts": {
+          "test": "echo \"Error: no test specified\" && exit 1"
+     },
+     "repository": {
+          "type": "git",
+          "url": "https://github.com/killlakillq/microservices.git"
+     },
+     "author": "",
+     "license": "ISC"
 }

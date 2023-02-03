@@ -1,16 +1,16 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { AccountResponse } from './interfaces/account-reponse.interface';
-import { AccountBalanceDto } from './interfaces/dto/account-balance.dto';
-import { AddInternetClientDto } from './interfaces/dto/add-internet-client.dto';
-import { AddMobileClientDto } from './interfaces/dto/add-mobile-client.dto';
-import { AddPersonalAccountDto } from './interfaces/dto/add-personal-account.dto';
-import { AddPhoneNumberToAccountDto } from './interfaces/dto/add-phone-number-to-account.dto';
-import { AddTaxDto } from './interfaces/dto/add-tax.dto';
-import { CreateAccountDto } from './interfaces/dto/create-account.dto';
-import { InternetBalanceDto } from './interfaces/dto/internet-balance.dto';
-import { MobileBalanceDto } from './interfaces/dto/mobile-balance.dto';
-import { UtilitiesTaxesDto } from './interfaces/dto/utilities-taxes.dto';
+import { AccountBalanceDto } from './interfaces/dto/account/account-balance.dto';
+import { AddInternetClientDto } from './interfaces/dto/internet/add-internet-client.dto';
+import { AddMobileClientDto } from './interfaces/dto/mobile/add-mobile-client.dto';
+import { AddPersonalAccountDto } from './interfaces/dto/account/add-personal-account.dto';
+import { AddPhoneNumberToAccountDto } from './interfaces/dto/account/add-phone-number-to-account.dto';
+import { AddTaxDto } from './interfaces/dto/utilities/add-tax.dto';
+import { CreateAccountDto } from './interfaces/dto/account/create-account.dto';
+import { InternetBalanceDto } from './interfaces/dto/internet/internet-balance.dto';
+import { MobileBalanceDto } from './interfaces/dto/mobile/mobile-balance.dto';
+import { UtilitiesTaxesDto } from './interfaces/dto/utilities/utilities-taxes.dto';
 import { UtilitiesType } from './interfaces/enums/utilities-type.enum';
 import { AccountService } from './services/account.service';
 
@@ -193,7 +193,10 @@ export class AccountController {
 		findPersonalAccountDto: AddPersonalAccountDto,
 	): Promise<AccountResponse> {
 		try {
-			const utilities = await this.accountService.addUtilitiesPersonalAccount(addPersonalAccountDto, findPersonalAccountDto);
+			const utilities = await this.accountService.addUtilitiesPersonalAccount(
+				addPersonalAccountDto,
+				findPersonalAccountDto,
+			);
 			return {
 				status: 202,
 				message: 'personal account was successfully added to account.',

@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { AddInternetClientDto } from './../interfaces/dto/add-internet-client.dto';
-import { AddMobileClientDto } from './../interfaces/dto/add-mobile-client.dto';
+import { AddInternetClientDto } from '../interfaces/dto/internet/add-internet-client.dto';
+import { AddMobileClientDto } from '../interfaces/dto/mobile/add-mobile-client.dto';
 import { Repository } from 'typeorm';
 import { MobileEntity } from '../interfaces/entities/mobile.entity';
 import { UtilitiesEntity } from '../interfaces/entities/utilities.entity';
@@ -8,14 +8,14 @@ import { UtilitiesType } from '../interfaces/enums/utilities-type.enum';
 import { Internet } from '../interfaces/internet.interface';
 import { Mobile } from '../interfaces/mobile.interface';
 import { Utilities } from '../interfaces/utilities.interface';
-import { AddTaxDto } from '../interfaces/dto/add-tax.dto';
+import { AddTaxDto } from '../interfaces/dto/utilities/add-tax.dto';
 import { InternetEntity } from '../interfaces/entities/internet.entity';
-import { InternetBalanceDto } from '../interfaces/dto/internet-balance.dto';
+import { InternetBalanceDto } from '../interfaces/dto/internet/internet-balance.dto';
 import { NotAcceptableException } from '@nestjs/common';
-import { MobileBalanceDto } from '../interfaces/dto/mobile-balance.dto';
-import { UtilitiesTaxesDto } from '../interfaces/dto/utilities-taxes.dto';
-import { AddPhoneNumberToAccountDto } from '../interfaces/dto/add-phone-number-to-account.dto';
-import { AddPersonalAccountDto } from '../interfaces/dto/add-personal-account.dto';
+import { MobileBalanceDto } from '../interfaces/dto/mobile/mobile-balance.dto';
+import { UtilitiesTaxesDto } from '../interfaces/dto/utilities/utilities-taxes.dto';
+import { AddPhoneNumberToAccountDto } from '../interfaces/dto/account/add-phone-number-to-account.dto';
+import { AddPersonalAccountDto } from '../interfaces/dto/account/add-personal-account.dto';
 
 export class InternetPayment implements Internet {
 	constructor(@InjectRepository(InternetEntity) private readonly internetRepository: Repository<InternetEntity>) {}
@@ -50,7 +50,9 @@ export class InternetPayment implements Internet {
 	}
 
 	public async findPersonalAccount({
-		name, surname, personalAccount
+		name,
+		surname,
+		personalAccount,
 	}: AddPersonalAccountDto): Promise<InternetEntity> {
 		return await this.internetRepository.findOneBy({ name, surname, personalAccount });
 	}
@@ -88,7 +90,12 @@ export class MobilePayment implements Mobile {
 		};
 	}
 
-	public async findPhoneNumber({ name, surname, phoneNumber, operator }: AddPhoneNumberToAccountDto): Promise<MobileEntity> {
+	public async findPhoneNumber({
+		name,
+		surname,
+		phoneNumber,
+		operator,
+	}: AddPhoneNumberToAccountDto): Promise<MobileEntity> {
 		return await this.mobileRepository.findOneBy({ name, surname, phoneNumber, operator });
 	}
 }
@@ -135,7 +142,11 @@ export class UtilitiesPayment implements Utilities {
 		};
 	}
 
-	public async findPersonalAccount({ name, surname, personalAccount }: AddPersonalAccountDto): Promise<UtilitiesEntity> {
+	public async findPersonalAccount({
+		name,
+		surname,
+		personalAccount,
+	}: AddPersonalAccountDto): Promise<UtilitiesEntity> {
 		return await this.utilitiesRepository.findOneBy({ name, surname, personalAccount });
-	} 
+	}
 }

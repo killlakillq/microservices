@@ -1,6 +1,6 @@
-import { AddPersonalAccountDto } from './dto/add-personal-account.dto';
-import { AddTaxDto } from './dto/add-tax.dto';
-import { UtilitiesTaxesDto } from './dto/utilities-taxes.dto';
+import { AddPersonalAccountDto } from './dto/account/add-personal-account.dto';
+import { AddTaxDto } from './dto/utilities/add-tax.dto';
+import { UtilitiesTaxesDto } from './dto/utilities/utilities-taxes.dto';
 import { UtilitiesEntity } from './entities/utilities.entity';
 import { UtilitiesType } from './enums/utilities-type.enum';
 
