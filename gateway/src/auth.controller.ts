@@ -1,7 +1,7 @@
 import { Body, Controller, HttpException, HttpStatus, Inject, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { CreateUserResponseDto } from './interfaces/dto/create-user-response.dto';
+import { CreateUserResponseDto } from './interfaces/dto/authentication/create-user-response.dto';
 import { CreateUserDto } from './interfaces/dto/create-user.dto';
 import { LoginUserResponseDto } from './interfaces/dto/login-user-response.dto';
 import { IServiceUserCreateResponse } from './interfaces/service-user-create-response.interface';

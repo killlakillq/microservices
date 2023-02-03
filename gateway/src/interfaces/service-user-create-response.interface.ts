@@ -1,9 +1,9 @@
-import { IUser } from './user.interface';
+import { User } from './user.interface';
 
-export interface IServiceUserCreateResponse {
+export interface ServiceUserCreateResponse {
 	status: number;
 	message: string;
-	user: IUser | null;
+	user: User | null;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	errors: { [key: string]: any };
 }
