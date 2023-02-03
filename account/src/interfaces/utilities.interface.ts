@@ -1,3 +1,4 @@
+import { AddPersonalAccountDto } from './dto/add-personal-account.dto';
 import { AddTaxDto } from './dto/add-tax.dto';
 import { UtilitiesTaxesDto } from './dto/utilities-taxes.dto';
 import { UtilitiesEntity } from './entities/utilities.entity';
@@ -11,4 +12,5 @@ export interface Utilities {
 		type,
 		sum,
 	}: UtilitiesTaxesDto) => Promise<{ personalAccount: number; type: UtilitiesType; message: string }>;
+	findPersonalAccount: ({ name, surname, personalAccount }: AddPersonalAccountDto) => Promise<UtilitiesEntity>;
 }

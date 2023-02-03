@@ -17,6 +17,7 @@ import { NotAcceptableException } from '@nestjs/common/exceptions';
 import { MobileBalanceDto } from '../interfaces/dto/mobile-balance.dto';
 import { UtilitiesTaxesDto } from '../interfaces/dto/utilities-taxes.dto';
 import { AddPhoneNumberToAccountDto } from '../interfaces/dto/add-phone-number-to-account.dto';
+import { AddPersonalAccountDto } from '../interfaces/dto/add-personal-account.dto';
 
 @Injectable()
 export class AccountService {
@@ -80,19 +81,51 @@ export class AccountService {
 		return { balance: returnBalance.balance };
 	}
 
-	public async addPhoneNumber(
-		{ name, surname }: AddPhoneNumberToAccountDto,
-		findPhoneNumberDto: AddPhoneNumberToAccountDto,
-	) {
-		const findMobile = await this.mobilePayment.findPhoneNumber(findPhoneNumberDto);
+	public async addInternetPersonalAccount(
+		{ name, surname }: AddPersonalAccountDto,
+		findPersonalAccountDto: AddPersonalAccountDto,
+	): Promise<{ name: string; surname: string; internet: number }> {
+		const internet = await this.internetPayment.findPersonalAccount(findPersonalAccountDto);
 		const dataSource = this.accountRepository.createQueryBuilder();
-		await dataSource.update(AccountEntity).set({ mobile: findMobile }).where({ name, surname }).execute();
+		await dataSource.update(AccountEntity).set({ internet: internet }).where({ name, surname }).execute();
 
 		const returnAccount = await this.accountRepository.findOneBy({ name, surname });
 		return {
 			name: returnAccount.name,
 			surname: returnAccount.surname,
-			mobile: findMobile.phoneNumber,
+			internet: internet.personalAccount,
+		};
+	}
+
+	public async addPhoneNumber(
+		{ name, surname }: AddPhoneNumberToAccountDto,
+		findPhoneNumberDto: AddPhoneNumberToAccountDto,
+	): Promise<{ name: string; surname: string; mobile: string }> {
+		const mobile = await this.mobilePayment.findPhoneNumber(findPhoneNumberDto);
+		const dataSource = this.accountRepository.createQueryBuilder();
+		await dataSource.update(AccountEntity).set({ mobile: mobile }).where({ name, surname }).execute();
+
+		const returnAccount = await this.accountRepository.findOneBy({ name, surname });
+		return {
+			name: returnAccount.name,
+			surname: returnAccount.surname,
+			mobile: mobile.phoneNumber,
+		};
+	}
+
+	public async addUtilitiesPersonalAccount(
+		{ name, surname }: AddPersonalAccountDto,
+		findPersonalAccountDto: AddPersonalAccountDto,
+	): Promise<{ name: string, surname: string, utilities: number }> {
+		const utilities = await this.utilitiesPayment.findPersonalAccount(findPersonalAccountDto);
+		const dataSource = this.accountRepository.createQueryBuilder();
+		await dataSource.update(AccountEntity).set({ utilities: utilities }).where({ name, surname }).execute();
+
+		const returnAccount = await this.accountRepository.findOneBy({ name, surname });
+		return {
+			name: returnAccount.name,
+			surname: returnAccount.surname,
+			utilities: utilities.personalAccount,
 		};
 	}
 

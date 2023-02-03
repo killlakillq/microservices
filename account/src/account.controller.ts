@@ -4,6 +4,7 @@ import { AccountResponse } from './interfaces/account-reponse.interface';
 import { AccountBalanceDto } from './interfaces/dto/account-balance.dto';
 import { AddInternetClientDto } from './interfaces/dto/add-internet-client.dto';
 import { AddMobileClientDto } from './interfaces/dto/add-mobile-client.dto';
+import { AddPersonalAccountDto } from './interfaces/dto/add-personal-account.dto';
 import { AddPhoneNumberToAccountDto } from './interfaces/dto/add-phone-number-to-account.dto';
 import { AddTaxDto } from './interfaces/dto/add-tax.dto';
 import { CreateAccountDto } from './interfaces/dto/create-account.dto';
@@ -137,14 +138,76 @@ export class AccountController {
 		}
 	}
 
+	@MessagePattern('add-internet-personal-account')
+	public async addInternetPersonalAccount(
+		addPersonalAccountDto: AddPersonalAccountDto,
+		findPersonalAccountDto: AddPersonalAccountDto,
+	): Promise<AccountResponse> {
+		try {
+			const internet = await this.accountService.addInternetPersonalAccount(
+				addPersonalAccountDto,
+				findPersonalAccountDto,
+			);
+			return {
+				status: 202,
+				message: 'personal account was successfully added to account.',
+				data: internet,
+				errors: null,
+			};
+		} catch (error) {
+			return {
+				status: 403,
+				message: 'oops, something went wrong.',
+				data: null,
+				errors: error,
+			};
+		}
+	}
+
 	@MessagePattern('add-phone-number')
 	public async addPhoneNumber(
 		AddPhoneNumberToAccountDto: AddPhoneNumberToAccountDto,
 		findPhoneNumber: AddPhoneNumberToAccountDto,
-	) {
-		const account = await this.accountService.addPhoneNumber(AddPhoneNumberToAccountDto, findPhoneNumber);
-		console.log(account);
-		return account;
+	): Promise<AccountResponse> {
+		try {
+			const mobile = await this.accountService.addPhoneNumber(AddPhoneNumberToAccountDto, findPhoneNumber);
+			return {
+				status: 202,
+				message: 'phone number was successfully added to account.',
+				data: mobile,
+				errors: null,
+			};
+		} catch (error) {
+			return {
+				status: 403,
+				message: 'oops, something went wrong.',
+				data: null,
+				errors: error,
+			};
+		}
+	}
+
+	@MessagePattern('add-utilities-personal-account')
+	public async addUtilitiesPersonalAccount(
+		addPersonalAccountDto: AddPersonalAccountDto,
+		findPersonalAccountDto: AddPersonalAccountDto,
+	): Promise<AccountResponse> {
+		try {
+			const utilities = await this.accountService.addUtilitiesPersonalAccount(addPersonalAccountDto, findPersonalAccountDto);
+			return {
+				status: 202,
+				message: 'personal account was successfully added to account.',
+				data: utilities,
+				errors: null,
+			};
+		} catch (error) {
+			return {
+				status: 403,
+				message: 'oops, something went wrong.',
+				data: null,
+				errors: error,
+			};
+		}
 	}
 
 	@MessagePattern('check-internet-balance')

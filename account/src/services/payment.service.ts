@@ -15,6 +15,7 @@ import { NotAcceptableException } from '@nestjs/common';
 import { MobileBalanceDto } from '../interfaces/dto/mobile-balance.dto';
 import { UtilitiesTaxesDto } from '../interfaces/dto/utilities-taxes.dto';
 import { AddPhoneNumberToAccountDto } from '../interfaces/dto/add-phone-number-to-account.dto';
+import { AddPersonalAccountDto } from '../interfaces/dto/add-personal-account.dto';
 
 export class InternetPayment implements Internet {
 	constructor(@InjectRepository(InternetEntity) private readonly internetRepository: Repository<InternetEntity>) {}
@@ -46,6 +47,12 @@ export class InternetPayment implements Internet {
 		return {
 			balance: returnBalance.balance,
 		};
+	}
+
+	public async findPersonalAccount({
+		name, surname, personalAccount
+	}: AddPersonalAccountDto): Promise<InternetEntity> {
+		return await this.internetRepository.findOneBy({ name, surname, personalAccount });
 	}
 }
 
@@ -124,7 +131,11 @@ export class UtilitiesPayment implements Utilities {
 		return {
 			type: type,
 			personalAccount: personalAccount,
-			message: `${type} was successfuly paid.`,
+			message: `${type} was successfully paid.`,
 		};
 	}
+
+	public async findPersonalAccount({ name, surname, personalAccount }: AddPersonalAccountDto): Promise<UtilitiesEntity> {
+		return await this.utilitiesRepository.findOneBy({ name, surname, personalAccount });
+	} 
 }
