@@ -1,6 +1,6 @@
-import { User } from '../../user.interface';
+import { User } from "../../user.interface";
 
-export class CreateUserResponseDto {
+export class UserResponseDto {
 	message: string;
 	data: {
 		user: User;

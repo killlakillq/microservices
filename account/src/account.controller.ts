@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
-import { AccountResponse } from './interfaces/account-reponse.interface';
+import { AccountResponseDto } from './interfaces/dto/account/account-reponse.dto';
 import { AccountBalanceDto } from './interfaces/dto/account/account-balance.dto';
 import { AddInternetClientDto } from './interfaces/dto/internet/add-internet-client.dto';
 import { AddMobileClientDto } from './interfaces/dto/mobile/add-mobile-client.dto';
@@ -19,7 +19,7 @@ export class AccountController {
 	constructor(private readonly accountService: AccountService) {}
 
 	@MessagePattern('create-account')
-	public async createAccount(createAccountDto: CreateAccountDto): Promise<AccountResponse> {
+	public async createAccount(createAccountDto: CreateAccountDto): Promise<AccountResponseDto> {
 		try {
 			const create = this.accountService.createAccount(createAccountDto);
 			return {
@@ -39,7 +39,7 @@ export class AccountController {
 	}
 
 	@MessagePattern('new-internet-client')
-	public async addInternetClient(addInternetClientDto: AddInternetClientDto): Promise<AccountResponse> {
+	public async addInternetClient(addInternetClientDto: AddInternetClientDto): Promise<AccountResponseDto> {
 		try {
 			const create = this.accountService.addInternetClient(addInternetClientDto);
 			return {
@@ -59,7 +59,7 @@ export class AccountController {
 	}
 
 	@MessagePattern('new-mobile-client')
-	public async addMobileClient(dto: AddMobileClientDto): Promise<AccountResponse> {
+	public async addMobileClient(dto: AddMobileClientDto): Promise<AccountResponseDto> {
 		try {
 			const create = await this.accountService.addMobileClient(dto);
 			return {
@@ -79,7 +79,7 @@ export class AccountController {
 	}
 
 	@MessagePattern('new-utilities-tax')
-	public async addTax(addTaxDto: AddTaxDto): Promise<AccountResponse> {
+	public async addTax(addTaxDto: AddTaxDto): Promise<AccountResponseDto> {
 		try {
 			const create = await this.accountService.addTax(addTaxDto);
 			return {
@@ -99,9 +99,9 @@ export class AccountController {
 	}
 
 	@MessagePattern('check-balance')
-	public async checkBalance(name: string, surname: string): Promise<AccountResponse> {
+	public async checkAccountBalance(name: string, surname: string): Promise<AccountResponseDto> {
 		try {
-			const check = await this.accountService.checkBalance(name, surname);
+			const check = await this.accountService.checkAccountBalance(name, surname);
 			return {
 				status: 202,
 				message: 'the tax was successfully added.',
@@ -119,7 +119,7 @@ export class AccountController {
 	}
 
 	@MessagePattern('balance-replenishment')
-	public async balanceReplenishment(incrementAccountBalanceDto: AccountBalanceDto): Promise<AccountResponse> {
+	public async balanceReplenishment(incrementAccountBalanceDto: AccountBalanceDto): Promise<AccountResponseDto> {
 		try {
 			const balance = await this.accountService.balanceReplenishment(incrementAccountBalanceDto);
 			return {
@@ -142,7 +142,7 @@ export class AccountController {
 	public async addInternetPersonalAccount(
 		addPersonalAccountDto: AddPersonalAccountDto,
 		findPersonalAccountDto: AddPersonalAccountDto,
-	): Promise<AccountResponse> {
+	): Promise<AccountResponseDto> {
 		try {
 			const internet = await this.accountService.addInternetPersonalAccount(
 				addPersonalAccountDto,
@@ -168,7 +168,7 @@ export class AccountController {
 	public async addPhoneNumber(
 		AddPhoneNumberToAccountDto: AddPhoneNumberToAccountDto,
 		findPhoneNumber: AddPhoneNumberToAccountDto,
-	): Promise<AccountResponse> {
+	): Promise<AccountResponseDto> {
 		try {
 			const mobile = await this.accountService.addPhoneNumber(AddPhoneNumberToAccountDto, findPhoneNumber);
 			return {
@@ -191,7 +191,7 @@ export class AccountController {
 	public async addUtilitiesPersonalAccount(
 		addPersonalAccountDto: AddPersonalAccountDto,
 		findPersonalAccountDto: AddPersonalAccountDto,
-	): Promise<AccountResponse> {
+	): Promise<AccountResponseDto> {
 		try {
 			const utilities = await this.accountService.addUtilitiesPersonalAccount(
 				addPersonalAccountDto,
@@ -214,7 +214,7 @@ export class AccountController {
 	}
 
 	@MessagePattern('check-internet-balance')
-	public async checkInternetBalance(personalAccount: number): Promise<AccountResponse> {
+	public async checkInternetBalance(personalAccount: number): Promise<AccountResponseDto> {
 		try {
 			const checkBalance = await this.accountService.checkInternetBalance(personalAccount);
 			return {
@@ -237,7 +237,7 @@ export class AccountController {
 	public async payForInternet(
 		decrementAccountBalanceDto: AccountBalanceDto,
 		incrementInternetBalanceDto: InternetBalanceDto,
-	): Promise<AccountResponse> {
+	): Promise<AccountResponseDto> {
 		try {
 			const internetAccount = await this.accountService.payForInternet(
 				decrementAccountBalanceDto,
@@ -260,7 +260,7 @@ export class AccountController {
 	}
 
 	@MessagePattern('check-mobile-balance')
-	public async checkMobileBalance(phoneNumber: string): Promise<AccountResponse> {
+	public async checkMobileBalance(phoneNumber: string): Promise<AccountResponseDto> {
 		try {
 			const checkBalance = await this.accountService.checkMobileBalance(phoneNumber);
 			return {
@@ -283,7 +283,7 @@ export class AccountController {
 	public async replenishMobileAccount(
 		decrementAccountBalanceDto: AccountBalanceDto,
 		incrementInternetBalanceDto: MobileBalanceDto,
-	): Promise<AccountResponse> {
+	): Promise<AccountResponseDto> {
 		try {
 			const mobileAccount = await this.accountService.replenishMobileAccount(
 				decrementAccountBalanceDto,
@@ -306,7 +306,7 @@ export class AccountController {
 	}
 
 	@MessagePattern('check-utilities-taxes')
-	public async checkUtilitiesTaxes(personalAccount: number, type: UtilitiesType): Promise<AccountResponse> {
+	public async checkUtilitiesTaxes(personalAccount: number, type: UtilitiesType): Promise<AccountResponseDto> {
 		try {
 			const taxes = await this.accountService.checkUtilitiesTaxes(personalAccount, type);
 			if (!taxes) {
@@ -337,7 +337,7 @@ export class AccountController {
 	public async payForUtilities(
 		decrementAccountBalanceDto: AccountBalanceDto,
 		payForTaxes: UtilitiesTaxesDto,
-	): Promise<AccountResponse> {
+	): Promise<AccountResponseDto> {
 		try {
 			const billing = await this.accountService.payForUtilities(decrementAccountBalanceDto, payForTaxes);
 			return {

@@ -1,17 +1,33 @@
-import { Body, Controller, HttpException, HttpStatus, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Inject, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { CreateAccountResponseDto } from './interfaces/dto/account/create-account-response.dto';
+import { AddInternetClientDto } from './interfaces/dto/account/add-internet-client.dto';
+import { AddMobileClientDto } from './interfaces/dto/account/add-mobile-client.dto';
+import { AddTaxDto } from './interfaces/dto/account/add-utilities-tax.dto';
 import { CreateAccountDto } from './interfaces/dto/account/create-account.dto';
-import { ServiceAccountCreateResponse } from './interfaces/service-account-create-response.interface';
+import { ServiceAccountResponse } from './interfaces/responses/service-account-response.interface';
+import { ServiceInternetResponse } from './interfaces/responses/service-internet-response.interface';
+import { ServiceMobileResponse } from './interfaces/responses/service-mobile-add-client-response.interface';
+import { ServiceUtilitiesResponse } from './interfaces/responses/service-utilities-response';
+import { AccountResponseDto } from './interfaces/dto/account/responses/account-response.dto';
+import { InternetResponseDto } from './interfaces/dto/account/responses/internet-response.dto';
+import { MobileResponseDto } from './interfaces/dto/account/responses/mobile-response.dto';
+import { UtilitiesResponseDto } from './interfaces/dto/account/responses/utilities-response.dto';
+import { UtilitiesType } from './interfaces/enums/utilities-type.enum';
+import { AccountBalanceDto } from './interfaces/dto/account/account-balance.dto';
+import { AddPersonalAccountDto } from './interfaces/dto/account/add-personal-account.dto';
+import { AddPhoneNumberToAccountDto } from './interfaces/dto/account/add-phone-number-to-account.dto';
+import { InternetBalanceDto } from './interfaces/dto/account/internet-balance.dto';
+import { MobileBalanceDto } from './interfaces/dto/account/mobile-balance.dto';
+import { UtilitiesTaxesDto } from './interfaces/dto/account/utilities-taxes.dto';
 
 @Controller('account')
 export class AccountController {
 	constructor(@Inject('ACCOUNT_SERVICE') private readonly accountClient: ClientProxy) {}
 
-	@Post('/createaccount')
-	public async createAccount(@Body() createAccountDto: CreateAccountDto): Promise<CreateAccountResponseDto> {
-		const createAccountResponse: ServiceAccountCreateResponse = await firstValueFrom(
+	@Post('createaccount')
+	public async createAccount(@Body() createAccountDto: CreateAccountDto): Promise<AccountResponseDto> {
+		const createAccountResponse: ServiceAccountResponse = await firstValueFrom(
 			this.accountClient.send('create-account', createAccountDto),
 		);
 		if (createAccountResponse.status !== HttpStatus.CREATED) {
@@ -29,6 +45,386 @@ export class AccountController {
 			message: createAccountResponse.message,
 			data: {
 				account: createAccountResponse.account,
+			},
+			errors: null,
+		};
+	}
+
+	@Post('addinternetclient')
+	public async addInternetClient(@Body() addInternetClientDto: AddInternetClientDto): Promise<InternetResponseDto> {
+		const addInternetClientResponse: ServiceInternetResponse = await firstValueFrom(
+			this.accountClient.send('new-internet-client', addInternetClientDto),
+		);
+		if (addInternetClientResponse.status !== HttpStatus.CREATED) {
+			throw new HttpException(
+				{
+					message: addInternetClientResponse.message,
+					data: null,
+					errors: addInternetClientResponse.errors,
+				},
+				addInternetClientResponse.status,
+			);
+		}
+		return {
+			message: addInternetClientResponse.message,
+			data: {
+				internet: addInternetClientResponse.internet,
+			},
+			errors: null,
+		};
+	}
+
+	@Post('addmobileclient')
+	public async addMobileClient(@Body() addMobileClientDto: AddMobileClientDto): Promise<MobileResponseDto> {
+		const addMobileClientResponse: ServiceMobileResponse = await firstValueFrom(
+			this.accountClient.send('new-mobile-client', addMobileClientDto),
+		);
+		if (addMobileClientResponse.status !== HttpStatus.CREATED) {
+			throw new HttpException(
+				{
+					message: addMobileClientResponse.message,
+					data: null,
+					errors: addMobileClientResponse.errors,
+				},
+				addMobileClientResponse.status,
+			);
+		}
+		return {
+			message: addMobileClientResponse.message,
+			data: {
+				mobile: addMobileClientResponse.mobile,
+			},
+			errors: null,
+		};
+	}
+
+	@Post('addtax')
+	public async addTax(@Body() addTaxDto: AddTaxDto): Promise<UtilitiesResponseDto> {
+		const addUtilitiesTaxResponse: ServiceUtilitiesResponse = await firstValueFrom(
+			this.accountClient.send('new-utilities-tax', addTaxDto),
+		);
+		if (addUtilitiesTaxResponse.status !== HttpStatus.CREATED) {
+			throw new HttpException(
+				{
+					message: addUtilitiesTaxResponse.message,
+					data: null,
+					errors: addUtilitiesTaxResponse.errors,
+				},
+				addUtilitiesTaxResponse.status,
+			);
+		}
+		return {
+			message: addUtilitiesTaxResponse.message,
+			data: {
+				utilities: addUtilitiesTaxResponse.utilities,
+			},
+			errors: null,
+		};
+	}
+
+	@Get('checkaccountbalance')
+	public async checkAccountBalance(@Body() name: string, surname: string): Promise<AccountResponseDto> {
+		const checkAccountBalanceResponse: ServiceAccountResponse = await firstValueFrom(
+			this.accountClient.send('check-balance', { name, surname }),
+		);
+		if (checkAccountBalanceResponse.status !== HttpStatus.ACCEPTED) {
+			throw new HttpException(
+				{
+					message: checkAccountBalanceResponse.message,
+					data: null,
+					errors: checkAccountBalanceResponse.errors,
+				},
+				checkAccountBalanceResponse.status,
+			);
+		}
+		return {
+			message: checkAccountBalanceResponse.message,
+			data: {
+				account: checkAccountBalanceResponse.account,
+			},
+			errors: null,
+		};
+	}
+
+	@Post('balancereplenishment')
+	public async balanceReplenishment(
+		@Body() incrementAccountBalanceDto: AccountBalanceDto,
+	): Promise<AccountResponseDto> {
+		const balanceReplenishmentResponse: ServiceAccountResponse = await firstValueFrom(
+			this.accountClient.send('balance-replenishment', incrementAccountBalanceDto),
+		);
+		if (balanceReplenishmentResponse.status !== HttpStatus.ACCEPTED) {
+			throw new HttpException(
+				{
+					message: balanceReplenishmentResponse.message,
+					data: null,
+					errors: balanceReplenishmentResponse.errors,
+				},
+				balanceReplenishmentResponse.status,
+			);
+		}
+		return {
+			message: balanceReplenishmentResponse.message,
+			data: {
+				account: balanceReplenishmentResponse.account,
+			},
+			errors: null,
+		};
+	}
+
+	@Post('addinternetpersonalaccount')
+	public async addInternetPersonalAccount(
+		@Body() addPersonalAccountDto: AddPersonalAccountDto,
+		@Body() findPersonalAccountDto: AddPersonalAccountDto,
+	): Promise<InternetResponseDto> {
+		const balanceReplenishmentResponse: ServiceInternetResponse = await firstValueFrom(
+			this.accountClient.send('add-internet-personal-account', {
+				addPersonalAccountDto,
+				findPersonalAccountDto,
+			}),
+		);
+		if (balanceReplenishmentResponse.status !== HttpStatus.ACCEPTED) {
+			throw new HttpException(
+				{
+					message: balanceReplenishmentResponse.message,
+					data: null,
+					errors: balanceReplenishmentResponse.errors,
+				},
+				balanceReplenishmentResponse.status,
+			);
+		}
+		return {
+			message: balanceReplenishmentResponse.message,
+			data: {
+				internet: balanceReplenishmentResponse.internet,
+			},
+			errors: null,
+		};
+	}
+
+	@Post('addphonenumber')
+	public async addPhoneNumber(
+		@Body() addPhoneNumberToAccountDto: AddPhoneNumberToAccountDto,
+		@Body() findPhoneNumber: AddPhoneNumberToAccountDto,
+	): Promise<MobileResponseDto> {
+		const addPhoneNumberResponse: ServiceMobileResponse = await firstValueFrom(
+			this.accountClient.send('add-phone-number', {
+				addPhoneNumberToAccountDto,
+				findPhoneNumber,
+			}),
+		);
+		if (addPhoneNumberResponse.status !== HttpStatus.ACCEPTED) {
+			throw new HttpException(
+				{
+					message: addPhoneNumberResponse.message,
+					data: null,
+					errors: addPhoneNumberResponse.errors,
+				},
+				addPhoneNumberResponse.status,
+			);
+		}
+		return {
+			message: addPhoneNumberResponse.message,
+			data: {
+				mobile: addPhoneNumberResponse.mobile,
+			},
+			errors: null,
+		};
+	}
+
+	@Post('addutilitiespersonalaccount')
+	public async addUtilitiesPersonalAccount(
+		@Body() addPersonalAccountDto: AddPersonalAccountDto,
+		@Body() findPersonalAccountDto: AddPersonalAccountDto,
+	): Promise<UtilitiesResponseDto> {
+		const addUtilitiesPersonalAccountResponse: ServiceUtilitiesResponse = await firstValueFrom(
+			this.accountClient.send('add-utilities-personal-account', {
+				addPersonalAccountDto,
+				findPersonalAccountDto,
+			}),
+		);
+		if (addUtilitiesPersonalAccountResponse.status !== HttpStatus.ACCEPTED) {
+			throw new HttpException(
+				{
+					message: addUtilitiesPersonalAccountResponse.message,
+					data: null,
+					errors: addUtilitiesPersonalAccountResponse.errors,
+				},
+				addUtilitiesPersonalAccountResponse.status,
+			);
+		}
+		return {
+			message: addUtilitiesPersonalAccountResponse.message,
+			data: {
+				utilities: addUtilitiesPersonalAccountResponse.utilities,
+			},
+			errors: null,
+		};
+	}
+
+	@Get('checkinternetbalance')
+	public async checkInternetBalance(@Body() personalAccount: number): Promise<InternetResponseDto> {
+		const checkInternetBalanceResponse: ServiceInternetResponse = await firstValueFrom(
+			this.accountClient.send('check-internet-balance', personalAccount),
+		);
+		if (checkInternetBalanceResponse.status !== HttpStatus.ACCEPTED) {
+			throw new HttpException(
+				{
+					message: checkInternetBalanceResponse.message,
+					data: null,
+					errors: checkInternetBalanceResponse.errors,
+				},
+				checkInternetBalanceResponse.status,
+			);
+		}
+		return {
+			message: checkInternetBalanceResponse.message,
+			data: {
+				internet: checkInternetBalanceResponse.internet,
+			},
+			errors: null,
+		};
+	}
+
+	@Post('payforinternet')
+	public async payForInternet(
+		@Body() decrementAccountBalanceDto: AccountBalanceDto,
+		@Body() incrementInternetBalanceDto: InternetBalanceDto,
+	): Promise<InternetResponseDto> {
+		const payForInternetResponse: ServiceInternetResponse = await firstValueFrom(
+			this.accountClient.send('check-internet-balance', {
+				decrementAccountBalanceDto,
+				incrementInternetBalanceDto,
+			}),
+		);
+		if (payForInternetResponse.status !== HttpStatus.ACCEPTED) {
+			throw new HttpException(
+				{
+					message: payForInternetResponse.message,
+					data: null,
+					errors: payForInternetResponse.errors,
+				},
+				payForInternetResponse.status,
+			);
+		}
+		return {
+			message: payForInternetResponse.message,
+			data: {
+				internet: payForInternetResponse.internet,
+			},
+			errors: null,
+		};
+	}
+
+	@Get('checkmobilebalance')
+	public async checkMobileBalance(@Body() phoneNumber: string): Promise<MobileResponseDto> {
+		const checkMobileBalanceResponse: ServiceMobileResponse = await firstValueFrom(
+			this.accountClient.send('check-mobile-balance', phoneNumber),
+		);
+		if (checkMobileBalanceResponse.status !== HttpStatus.ACCEPTED) {
+			throw new HttpException(
+				{
+					message: checkMobileBalanceResponse.message,
+					data: null,
+					errors: checkMobileBalanceResponse.errors,
+				},
+				checkMobileBalanceResponse.status,
+			);
+		}
+		return {
+			message: checkMobileBalanceResponse.message,
+			data: {
+				mobile: checkMobileBalanceResponse.mobile,
+			},
+			errors: null,
+		};
+	}
+
+	@Post('replenishmobileaccount')
+	public async replenishMobileAccount(
+		@Body() decrementAccountBalanceDto: AccountBalanceDto,
+		@Body() incrementInternetBalanceDto: MobileBalanceDto,
+	): Promise<MobileResponseDto> {
+		const replenishMobileAccount: ServiceMobileResponse = await firstValueFrom(
+			this.accountClient.send('replenish-mobile-account', {
+				decrementAccountBalanceDto,
+				incrementInternetBalanceDto,
+			}),
+		);
+		if (replenishMobileAccount.status !== HttpStatus.ACCEPTED) {
+			throw new HttpException(
+				{
+					message: replenishMobileAccount.message,
+					data: null,
+					errors: replenishMobileAccount.errors,
+				},
+				replenishMobileAccount.status,
+			);
+		}
+		return {
+			message: replenishMobileAccount.message,
+			data: {
+				mobile: replenishMobileAccount.mobile,
+			},
+			errors: null,
+		};
+	}
+
+	@Get('checkutilitiestaxes')
+	public async checkUtilitiesTaxes(
+		@Body() personalAccount: number,
+		@Body() type: UtilitiesType,
+	): Promise<UtilitiesResponseDto> {
+		const checkUtilitiesTaxesResponse: ServiceUtilitiesResponse = await firstValueFrom(
+			this.accountClient.send('check-utilities-taxes', {
+				personalAccount,
+				type,
+			}),
+		);
+		if (checkUtilitiesTaxesResponse.status !== HttpStatus.ACCEPTED) {
+			throw new HttpException(
+				{
+					message: checkUtilitiesTaxesResponse.message,
+					data: null,
+					errors: checkUtilitiesTaxesResponse.errors,
+				},
+				checkUtilitiesTaxesResponse.status,
+			);
+		}
+		return {
+			message: checkUtilitiesTaxesResponse.message,
+			data: {
+				utilities: checkUtilitiesTaxesResponse.utilities,
+			},
+			errors: null,
+		};
+	}
+
+	@Post('payforutilities')
+	public async payForUtilities(
+		@Body() decrementAccountBalanceDto: AccountBalanceDto,
+		@Body() payForTaxes: UtilitiesTaxesDto,
+	): Promise<UtilitiesResponseDto> {
+		const payForUtilitiesResponse: ServiceUtilitiesResponse = await firstValueFrom(
+			this.accountClient.send('pay-for-utilities', {
+				decrementAccountBalanceDto,
+				payForTaxes,
+			}),
+		);
+		if (payForUtilitiesResponse.status !== HttpStatus.ACCEPTED) {
+			throw new HttpException(
+				{
+					message: payForUtilitiesResponse.message,
+					data: null,
+					errors: payForUtilitiesResponse.errors,
+				},
+				payForUtilitiesResponse.status,
+			);
+		}
+		return {
+			message: payForUtilitiesResponse.message,
+			data: {
+				utilities: payForUtilitiesResponse.utilities,
 			},
 			errors: null,
 		};

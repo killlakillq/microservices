@@ -1,6 +1,6 @@
-import { Account } from './account.interface';
+import { Account } from '../account.interface';
 
-export interface ServiceAccountCreateResponse {
+export interface ServiceAccountResponse {
 	status: number;
 	message: string;
 	account: Account | null;

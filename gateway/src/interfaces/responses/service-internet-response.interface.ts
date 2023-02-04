@@ -1,9 +1,9 @@
-import { User } from './user.interface';
+import { Internet } from '../internet.interface';
 
-export interface ServiceUserCreateResponse {
+export interface ServiceInternetResponse {
 	status: number;
 	message: string;
-	user: User | null;
+	internet: Internet | null;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	errors: { [key: string]: any };
 }

@@ -1,9 +1,9 @@
-import { User } from './user.interface';
+import { Mobile } from '../mobile.interface';
 
-export interface ServiceUserLoginResponse {
+export interface ServiceMobileResponse {
 	status: number;
 	message: string;
-	user: User | null;
+	mobile: Mobile | null;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	errors: { [key: string]: any };
 }

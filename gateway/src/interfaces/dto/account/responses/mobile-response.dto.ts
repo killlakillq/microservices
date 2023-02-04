@@ -1,10 +1,8 @@
-import { IUser } from "../user.interface";
+import { Mobile } from '../../../mobile.interface';
 
-export interface LoginUserResponseDto {
+export interface MobileResponseDto {
 	message: string;
-	data: {
-		user: IUser;
-	};
+	data: { mobile: Mobile };
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	errors: { [key: string]: any };
 }

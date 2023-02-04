@@ -44,7 +44,7 @@ export class AccountService {
 		return await this.utilitiesPayment.addTax(addTaxDto);
 	}
 
-	public async checkBalance(name: string, surname: string): Promise<AccountEntity> {
+	public async checkAccountBalance(name: string, surname: string): Promise<AccountEntity> {
 		return await this.accountRepository.findOneBy({ name, surname });
 	}
 
