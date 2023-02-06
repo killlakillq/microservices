@@ -5,27 +5,32 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './services/config/orm-config.service';
 import { UserEntity } from './interfaces/entities/user.entity';
 import { JwtModule, JwtService } from '@nestjs/jwt';
-import { JwtConfigService } from './services/config/jwt-config.service';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './services/strategies/jwt.strategy';
+import { AccessTokenStrategy } from './services/strategies/accessToken.strategy';
 import { ConfigModule } from '@nestjs/config';
 import { ConfigService } from './services/config/config.service';
+import { RefreshTokenStrategy } from './services/strategies/refreshToken.strategy';
+import { CryptoConfigService } from './services/config/crypto-config.service';
 
 @Module({
 	imports: [
 		ConfigModule.forRoot(),
 		PassportModule,
-		JwtModule.registerAsync({
-			imports: [ConfigModule],
-			useClass: JwtConfigService,
-		}),
+		JwtModule.register({}),
 		TypeOrmModule.forFeature([UserEntity]),
 		TypeOrmModule.forRootAsync({
 			imports: [ConfigModule],
 			useClass: TypeOrmConfigService,
 		}),
 	],
-	providers: [AuthService, JwtService, JwtStrategy, ConfigService],
+	providers: [
+		AuthService,
+		JwtService,
+		AccessTokenStrategy,
+		RefreshTokenStrategy,
+		CryptoConfigService,
+		ConfigService,
+	],
 	controllers: [AuthController],
 })
 export class AuthModule {}

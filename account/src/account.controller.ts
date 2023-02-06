@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { AccountResponseDto } from './interfaces/dto/account/account-reponse.dto';
 import { AccountBalanceDto } from './interfaces/dto/account/account-balance.dto';
@@ -18,6 +18,7 @@ import { AccountService } from './services/account.service';
 export class AccountController {
 	constructor(private readonly accountService: AccountService) {}
 
+	@UsePipes(new ValidationPipe())
 	@MessagePattern('create-account')
 	public async createAccount(createAccountDto: CreateAccountDto): Promise<AccountResponseDto> {
 		try {
@@ -38,6 +39,7 @@ export class AccountController {
 		}
 	}
 
+	@UsePipes(new ValidationPipe())
 	@MessagePattern('new-internet-client')
 	public async addInternetClient(addInternetClientDto: AddInternetClientDto): Promise<AccountResponseDto> {
 		try {
@@ -58,6 +60,7 @@ export class AccountController {
 		}
 	}
 
+	@UsePipes(new ValidationPipe())
 	@MessagePattern('new-mobile-client')
 	public async addMobileClient(dto: AddMobileClientDto): Promise<AccountResponseDto> {
 		try {
@@ -78,6 +81,7 @@ export class AccountController {
 		}
 	}
 
+	@UsePipes(new ValidationPipe())
 	@MessagePattern('new-utilities-tax')
 	public async addTax(addTaxDto: AddTaxDto): Promise<AccountResponseDto> {
 		try {
@@ -98,6 +102,7 @@ export class AccountController {
 		}
 	}
 
+	@UsePipes(new ValidationPipe())
 	@MessagePattern('check-balance')
 	public async checkAccountBalance(name: string, surname: string): Promise<AccountResponseDto> {
 		try {
@@ -118,6 +123,7 @@ export class AccountController {
 		}
 	}
 
+	@UsePipes(new ValidationPipe())
 	@MessagePattern('balance-replenishment')
 	public async balanceReplenishment(incrementAccountBalanceDto: AccountBalanceDto): Promise<AccountResponseDto> {
 		try {
@@ -138,16 +144,13 @@ export class AccountController {
 		}
 	}
 
+	@UsePipes(new ValidationPipe())
 	@MessagePattern('add-internet-personal-account')
 	public async addInternetPersonalAccount(
 		addPersonalAccountDto: AddPersonalAccountDto,
-		findPersonalAccountDto: AddPersonalAccountDto,
 	): Promise<AccountResponseDto> {
 		try {
-			const internet = await this.accountService.addInternetPersonalAccount(
-				addPersonalAccountDto,
-				findPersonalAccountDto,
-			);
+			const internet = await this.accountService.addInternetPersonalAccount(addPersonalAccountDto);
 			return {
 				status: 202,
 				message: 'personal account was successfully added to account.',
@@ -164,13 +167,11 @@ export class AccountController {
 		}
 	}
 
+	@UsePipes(new ValidationPipe())
 	@MessagePattern('add-phone-number')
-	public async addPhoneNumber(
-		AddPhoneNumberToAccountDto: AddPhoneNumberToAccountDto,
-		findPhoneNumber: AddPhoneNumberToAccountDto,
-	): Promise<AccountResponseDto> {
+	public async addPhoneNumber(AddPhoneNumberToAccountDto: AddPhoneNumberToAccountDto): Promise<AccountResponseDto> {
 		try {
-			const mobile = await this.accountService.addPhoneNumber(AddPhoneNumberToAccountDto, findPhoneNumber);
+			const mobile = await this.accountService.addPhoneNumber(AddPhoneNumberToAccountDto);
 			return {
 				status: 202,
 				message: 'phone number was successfully added to account.',
@@ -187,16 +188,13 @@ export class AccountController {
 		}
 	}
 
+	@UsePipes(new ValidationPipe())
 	@MessagePattern('add-utilities-personal-account')
 	public async addUtilitiesPersonalAccount(
-		addPersonalAccountDto: AddPersonalAccountDto,
 		findPersonalAccountDto: AddPersonalAccountDto,
 	): Promise<AccountResponseDto> {
 		try {
-			const utilities = await this.accountService.addUtilitiesPersonalAccount(
-				addPersonalAccountDto,
-				findPersonalAccountDto,
-			);
+			const utilities = await this.accountService.addUtilitiesPersonalAccount(findPersonalAccountDto);
 			return {
 				status: 202,
 				message: 'personal account was successfully added to account.',
@@ -213,6 +211,7 @@ export class AccountController {
 		}
 	}
 
+	@UsePipes(new ValidationPipe())
 	@MessagePattern('check-internet-balance')
 	public async checkInternetBalance(personalAccount: number): Promise<AccountResponseDto> {
 		try {
@@ -233,6 +232,7 @@ export class AccountController {
 		}
 	}
 
+	@UsePipes(new ValidationPipe())
 	@MessagePattern('pay-for-internet')
 	public async payForInternet(
 		decrementAccountBalanceDto: AccountBalanceDto,
@@ -259,6 +259,7 @@ export class AccountController {
 		}
 	}
 
+	@UsePipes(new ValidationPipe())
 	@MessagePattern('check-mobile-balance')
 	public async checkMobileBalance(phoneNumber: string): Promise<AccountResponseDto> {
 		try {
@@ -279,6 +280,7 @@ export class AccountController {
 		}
 	}
 
+	@UsePipes(new ValidationPipe())
 	@MessagePattern('replenish-mobile-account')
 	public async replenishMobileAccount(
 		decrementAccountBalanceDto: AccountBalanceDto,
@@ -305,6 +307,7 @@ export class AccountController {
 		}
 	}
 
+	@UsePipes(new ValidationPipe())
 	@MessagePattern('check-utilities-taxes')
 	public async checkUtilitiesTaxes(personalAccount: number, type: UtilitiesType): Promise<AccountResponseDto> {
 		try {
@@ -333,6 +336,7 @@ export class AccountController {
 		}
 	}
 
+	@UsePipes(new ValidationPipe())
 	@MessagePattern('pay-for-utilities')
 	public async payForUtilities(
 		decrementAccountBalanceDto: AccountBalanceDto,

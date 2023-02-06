@@ -9,10 +9,10 @@ import { ServiceAuthenticationResponse } from './interfaces/responses/service-au
 export class AuthController {
 	constructor(@Inject('AUTH_SERVICE') private readonly authClient: ClientProxy) {}
 
-	@Post('register')
-	public async register(@Body() dto: CreateUserDto): Promise<UserResponseDto> {
+	@Post('register-user')
+	public async registerUser(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
 		const createUserResponse: ServiceAuthenticationResponse = await firstValueFrom(
-			this.authClient.send('register-user', dto),
+			this.authClient.send('register-user', createUserDto),
 		);
 		if (createUserResponse.status !== HttpStatus.CREATED) {
 			throw new HttpException(
@@ -35,9 +35,9 @@ export class AuthController {
 	}
 
 	@Post('login')
-	public async login(@Body() { login, password }: CreateUserDto): Promise<UserResponseDto> {
+	public async loginUser(@Body()  createUserDto: CreateUserDto): Promise<UserResponseDto> {
 		const loginUserResponse: ServiceAuthenticationResponse = await firstValueFrom(
-			this.authClient.send('login-user', { login, password }),
+			this.authClient.send('login-user', createUserDto),
 		);
 		if (loginUserResponse.status !== HttpStatus.ACCEPTED) {
 			throw new HttpException(

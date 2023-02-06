@@ -9,18 +9,18 @@ export class ConfigService {
 			port: process.env.PORT,
 		};
 		this.envConfig.authService = {
+			transport: Transport.REDIS,
 			options: {
 				host: process.env.AUTH_SERVICE_HOST,
 				port: process.env.AUTH_SERVICE_PORT,
 			},
-			transport: Transport.TCP,
 		};
 		this.envConfig.accountService = {
+			transport: Transport.TCP,
 			options: {
 				host: process.env.ACCOUNT_SERVICE_HOST,
 				port: process.env.ACCOUNT_SERVICE_PORT
 			},
-			transport: Transport.TCP,
 		}
 	}
 

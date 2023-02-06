@@ -1,50 +1,54 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { compare, genSalt, hash } from 'bcrypt';
-import { CreateUserDto } from '../interfaces/dto/create-user.dto';
 import { Repository } from 'typeorm';
+import { CreateUserDto } from '../interfaces/dto/create-user.dto';
 import { UserEntity } from '../interfaces/entities/user.entity';
+import { CryptoConfigService } from './config/crypto-config.service';
 
 @Injectable()
 export class AuthService {
 	constructor(
 		@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>,
 		private readonly jwtService: JwtService,
-	) 
-	{}
+		private readonly cryptoConfigService: CryptoConfigService,
+		private readonly configService: ConfigService,
+	) {}
 
-	public async createUser(dto: CreateUserDto): Promise<UserEntity> {
-		const salt = await genSalt(10);
+	public async registerUser(createUserDto: CreateUserDto): Promise<UserEntity> {
+
+		const encrypted  = this.cryptoConfigService.encrypt(createUserDto.password);
+
 		const newUser = {
-			email: dto.login,
-			password: await hash(dto.password, salt),
+			email: createUserDto.login,
+			password: encrypted,
 		};
-
-		return this.userRepository.save(newUser);
+		return await this.userRepository.save(newUser);
 	}
 
-	public async findUser(email: string): Promise<UserEntity> {
-		return await this.userRepository.findOneBy({ email });
-	}
-
-	public async validateUser(email: string, password: string): Promise<Pick<UserEntity, 'email'>> {
-		const user = await this.findUser(email);
+	public async validate(email: string, password: string): Promise<Pick<UserEntity, 'email'>> {
+		const user = await this.userRepository.findOneBy({ email });
 		if (!user) {
 			throw new NotFoundException();
+		
 		}
-		const isCorrectPassword = await compare(password, user.password);
-		if (!isCorrectPassword) {
+		const decrypted = this.cryptoConfigService.decrypt(password);
+		if (decrypted !== password) {
 			throw new UnauthorizedException();
 		}
-		return { email: user.email };
+		return { email: user.email }
 	}
 
-	public async login(email: string) {
-		const payload = { email };
-
+	public async getTokens(email: string): Promise<{ accessToken: string; refreshToken: string }> {
+		const id = await this.userRepository.findOneBy({ email });
+		const [accessToken, refreshToken] = await Promise.all([
+			this.jwtService.signAsync({ id: id.id, email }, { secret: this.configService.get('JWT_ACCESS_SECRET'), expiresIn: '15m' }),
+			this.jwtService.signAsync({ id: id.id, email }, { secret: this.configService.get('JWT_REFRESH_SECRET'), expiresIn: '7d' }),
+		]);
 		return {
-			access_token: await this.jwtService.signAsync(payload),
+			accessToken,
+			refreshToken,
 		};
 	}
 }

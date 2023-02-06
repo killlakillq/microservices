@@ -82,14 +82,20 @@ export class AccountService {
 	}
 
 	public async addInternetPersonalAccount(
-		{ name, surname }: AddPersonalAccountDto,
-		findPersonalAccountDto: AddPersonalAccountDto,
+		addPersonalAccountDto: AddPersonalAccountDto,
 	): Promise<{ name: string; surname: string; internet: number }> {
-		const internet = await this.internetPayment.findPersonalAccount(findPersonalAccountDto);
+		const internet = await this.internetPayment.findPersonalAccount(addPersonalAccountDto);
 		const dataSource = this.accountRepository.createQueryBuilder();
-		await dataSource.update(AccountEntity).set({ internet: internet }).where({ name, surname }).execute();
+		await dataSource
+			.update(AccountEntity)
+			.set({ internet: internet })
+			.where({ name: addPersonalAccountDto.name, surname: addPersonalAccountDto.surname })
+			.execute();
 
-		const returnAccount = await this.accountRepository.findOneBy({ name, surname });
+		const returnAccount = await this.accountRepository.findOneBy({
+			name: addPersonalAccountDto.name,
+			surname: addPersonalAccountDto.surname,
+		});
 		return {
 			name: returnAccount.name,
 			surname: returnAccount.surname,
@@ -98,14 +104,20 @@ export class AccountService {
 	}
 
 	public async addPhoneNumber(
-		{ name, surname }: AddPhoneNumberToAccountDto,
-		findPhoneNumberDto: AddPhoneNumberToAccountDto,
+		addPhoneNumberToAccountDto: AddPhoneNumberToAccountDto,
 	): Promise<{ name: string; surname: string; mobile: string }> {
-		const mobile = await this.mobilePayment.findPhoneNumber(findPhoneNumberDto);
+		const mobile = await this.mobilePayment.findPhoneNumber(addPhoneNumberToAccountDto);
 		const dataSource = this.accountRepository.createQueryBuilder();
-		await dataSource.update(AccountEntity).set({ mobile: mobile }).where({ name, surname }).execute();
+		await dataSource
+			.update(AccountEntity)
+			.set({ mobile: mobile })
+			.where({ name: addPhoneNumberToAccountDto.name, surname: addPhoneNumberToAccountDto.surname })
+			.execute();
 
-		const returnAccount = await this.accountRepository.findOneBy({ name, surname });
+		const returnAccount = await this.accountRepository.findOneBy({
+			name: addPhoneNumberToAccountDto.name,
+			surname: addPhoneNumberToAccountDto.surname,
+		});
 		return {
 			name: returnAccount.name,
 			surname: returnAccount.surname,
@@ -114,14 +126,20 @@ export class AccountService {
 	}
 
 	public async addUtilitiesPersonalAccount(
-		{ name, surname }: AddPersonalAccountDto,
-		findPersonalAccountDto: AddPersonalAccountDto,
+		addPersonalAccountDto: AddPersonalAccountDto,
 	): Promise<{ name: string; surname: string; utilities: number }> {
-		const utilities = await this.utilitiesPayment.findPersonalAccount(findPersonalAccountDto);
+		const utilities = await this.utilitiesPayment.findPersonalAccount(addPersonalAccountDto);
 		const dataSource = this.accountRepository.createQueryBuilder();
-		await dataSource.update(AccountEntity).set({ utilities: utilities }).where({ name, surname }).execute();
+		await dataSource
+			.update(AccountEntity)
+			.set({ utilities: utilities })
+			.where({ name: addPersonalAccountDto.name, surname: addPersonalAccountDto.surname })
+			.execute();
 
-		const returnAccount = await this.accountRepository.findOneBy({ name, surname });
+		const returnAccount = await this.accountRepository.findOneBy({
+			name: addPersonalAccountDto.name,
+			surname: addPersonalAccountDto.surname,
+		});
 		return {
 			name: returnAccount.name,
 			surname: returnAccount.surname,

@@ -20,8 +20,8 @@ import { AddPersonalAccountDto } from '../interfaces/dto/account/add-personal-ac
 export class InternetPayment implements Internet {
 	constructor(@InjectRepository(InternetEntity) private readonly internetRepository: Repository<InternetEntity>) {}
 
-	public async addInternetClient(dto: AddInternetClientDto): Promise<AddInternetClientDto> {
-		return await this.internetRepository.save({ ...dto });
+	public async addInternetClient(addInternetClientDto: AddInternetClientDto): Promise<AddInternetClientDto> {
+		return await this.internetRepository.save({ ...addInternetClientDto });
 	}
 
 	public async checkInternetBalance(personalAccount: number): Promise<InternetEntity> {
@@ -61,8 +61,8 @@ export class InternetPayment implements Internet {
 export class MobilePayment implements Mobile {
 	constructor(@InjectRepository(MobileEntity) private readonly mobileRepository: Repository<MobileEntity>) {}
 
-	public async addMobileClient(dto: AddMobileClientDto): Promise<AddMobileClientDto> {
-		return await this.mobileRepository.save({ ...dto });
+	public async addMobileClient(addMobileClientDto: AddMobileClientDto): Promise<AddMobileClientDto> {
+		return await this.mobileRepository.save({ ...addMobileClientDto });
 	}
 
 	public async checkMobileBalance(phoneNumber: string): Promise<MobileEntity> {
@@ -105,8 +105,8 @@ export class UtilitiesPayment implements Utilities {
 		@InjectRepository(UtilitiesEntity) private readonly utilitiesRepository: Repository<UtilitiesEntity>,
 	) {}
 
-	public async addTax(dto: AddTaxDto): Promise<AddTaxDto> {
-		return await this.utilitiesRepository.save({ ...dto });
+	public async addTax(addTaxDto: AddTaxDto): Promise<AddTaxDto> {
+		return await this.utilitiesRepository.save({ ...addTaxDto });
 	}
 
 	public async checkUtilitiesTaxes(personalAccount: number, type: UtilitiesType): Promise<UtilitiesEntity> {

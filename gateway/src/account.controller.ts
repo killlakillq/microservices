@@ -123,7 +123,7 @@ export class AccountController {
 	}
 
 	@Get('checkaccountbalance')
-	public async checkAccountBalance(@Body() name: string, surname: string): Promise<AccountResponseDto> {
+	public async checkAccountBalance(@Body() name: string, @Body() surname: string): Promise<AccountResponseDto> {
 		const checkAccountBalanceResponse: ServiceAccountResponse = await firstValueFrom(
 			this.accountClient.send('check-balance', { name, surname }),
 		);
@@ -175,12 +175,10 @@ export class AccountController {
 	@Post('addinternetpersonalaccount')
 	public async addInternetPersonalAccount(
 		@Body() addPersonalAccountDto: AddPersonalAccountDto,
-		@Body() findPersonalAccountDto: AddPersonalAccountDto,
 	): Promise<InternetResponseDto> {
 		const balanceReplenishmentResponse: ServiceInternetResponse = await firstValueFrom(
 			this.accountClient.send('add-internet-personal-account', {
 				addPersonalAccountDto,
-				findPersonalAccountDto,
 			}),
 		);
 		if (balanceReplenishmentResponse.status !== HttpStatus.ACCEPTED) {
@@ -205,12 +203,10 @@ export class AccountController {
 	@Post('addphonenumber')
 	public async addPhoneNumber(
 		@Body() addPhoneNumberToAccountDto: AddPhoneNumberToAccountDto,
-		@Body() findPhoneNumber: AddPhoneNumberToAccountDto,
 	): Promise<MobileResponseDto> {
 		const addPhoneNumberResponse: ServiceMobileResponse = await firstValueFrom(
 			this.accountClient.send('add-phone-number', {
 				addPhoneNumberToAccountDto,
-				findPhoneNumber,
 			}),
 		);
 		if (addPhoneNumberResponse.status !== HttpStatus.ACCEPTED) {
@@ -235,12 +231,10 @@ export class AccountController {
 	@Post('addutilitiespersonalaccount')
 	public async addUtilitiesPersonalAccount(
 		@Body() addPersonalAccountDto: AddPersonalAccountDto,
-		@Body() findPersonalAccountDto: AddPersonalAccountDto,
 	): Promise<UtilitiesResponseDto> {
 		const addUtilitiesPersonalAccountResponse: ServiceUtilitiesResponse = await firstValueFrom(
 			this.accountClient.send('add-utilities-personal-account', {
 				addPersonalAccountDto,
-				findPersonalAccountDto,
 			}),
 		);
 		if (addUtilitiesPersonalAccountResponse.status !== HttpStatus.ACCEPTED) {

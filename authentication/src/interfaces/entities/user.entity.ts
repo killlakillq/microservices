@@ -1,17 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateDateColumn, CreateDateColumn } from 'typeorm';
+import { IsEmail } from 'class-validator';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity({ name: 'User' })
 export class UserEntity extends BaseEntity {
-	@PrimaryGeneratedColumn()
+	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@CreateDateColumn()
-	createAt: Date;
-
-	@UpdateDateColumn()
-	updateAt: Date;
-
 	@Column({ unique: true })
+	@IsEmail()
 	email: string;
 
 	@Column()
