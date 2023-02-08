@@ -9,7 +9,7 @@ import { ServiceAuthenticationResponse } from './interfaces/responses/service-au
 export class AuthController {
 	constructor(@Inject('AUTH_SERVICE') private readonly authClient: ClientProxy) {}
 
-	@Post('register-user')
+	@Post('signup')
 	public async registerUser(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
 		const createUserResponse: ServiceAuthenticationResponse = await firstValueFrom(
 			this.authClient.send('register-user', createUserDto),
@@ -28,14 +28,14 @@ export class AuthController {
 		return {
 			message: createUserResponse.message,
 			data: {
-				user: createUserResponse.user,
+				user: createUserResponse.user, // empty object
 			},
 			errors: null,
 		};
 	}
 
-	@Post('login')
-	public async loginUser(@Body()  createUserDto: CreateUserDto): Promise<UserResponseDto> {
+	@Post('signin')
+	public async loginUser(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
 		const loginUserResponse: ServiceAuthenticationResponse = await firstValueFrom(
 			this.authClient.send('login-user', createUserDto),
 		);
@@ -53,7 +53,7 @@ export class AuthController {
 		return {
 			message: loginUserResponse.message,
 			data: {
-				user: loginUserResponse.user,
+				user: loginUserResponse.user, // empty object
 			},
 			errors: null,
 		};

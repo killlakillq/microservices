@@ -9,7 +9,7 @@ export class ConfigService {
 			port: process.env.PORT,
 		};
 		this.envConfig.authService = {
-			transport: Transport.REDIS,
+			transport: Transport.TCP,
 			options: {
 				host: process.env.AUTH_SERVICE_HOST,
 				port: process.env.AUTH_SERVICE_PORT,
@@ -19,9 +19,9 @@ export class ConfigService {
 			transport: Transport.TCP,
 			options: {
 				host: process.env.ACCOUNT_SERVICE_HOST,
-				port: process.env.ACCOUNT_SERVICE_PORT
+				port: process.env.ACCOUNT_SERVICE_PORT,
 			},
-		}
+		};
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

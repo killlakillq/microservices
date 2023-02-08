@@ -34,7 +34,7 @@ export class AuthController {
 	public async loginUser({ login, password }: CreateUserDto): Promise<UserResponseDto> {
 		try {
 			const { email } = await this.authService.validate(login, password);
-			const tokens = await this.authService.getTokens(email);
+			const tokens = await this.authService.loginUser(email);
 
 			return {
 				status: 202,
