@@ -36,7 +36,7 @@ export class AuthService {
 		return { email: user.email };
 	}
 
-	public async loginUser(email: string): Promise<[error: Error, result: unknown][]> {
+	public async loginUser(email: string): Promise<{ accessToken: unknown; refreshToken: unknown }> {
 		const id = await this.userRepository.findOneBy({ email });
 		await this.tokenService.saveTokens(id.id, email);
 		return await this.tokenService.getTokens(email);

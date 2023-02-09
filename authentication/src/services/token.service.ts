@@ -30,11 +30,15 @@ export class TokenService {
 			.exec();
 	}
 
-	public async getTokens(email: string): Promise<[error: Error, result: unknown][]> {
+	public async getTokens(email: string): Promise<{ accessToken: unknown, refreshToken: unknown }> {
 		const redis = this.redisService.pipeline();
-		return await redis
+		const tokens = await redis
 			.get(email + ' [access]')
 			.get(email + ' [refresh]')
 			.exec();
+		return {
+			accessToken: tokens[0][1],
+			refreshToken: tokens[1][1]
+		}
 	}
 }

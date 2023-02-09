@@ -105,7 +105,7 @@ export class AccountService {
 
 	public async addPhoneNumber(
 		addPhoneNumberToAccountDto: AddPhoneNumberToAccountDto,
-	): Promise<{ name: string; surname: string; mobile: string }> {
+	): Promise<{ name: string; surname: string; mobile: string, operator: string }> {
 		const mobile = await this.mobilePayment.findPhoneNumber(addPhoneNumberToAccountDto);
 		const dataSource = this.accountRepository.createQueryBuilder();
 		await dataSource
@@ -122,6 +122,7 @@ export class AccountService {
 			name: returnAccount.name,
 			surname: returnAccount.surname,
 			mobile: mobile.phoneNumber,
+			operator: mobile.operator,
 		};
 	}
 

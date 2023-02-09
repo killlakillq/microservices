@@ -1,5 +1,5 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Inject, Post } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { Body, Controller, Get, HttpStatus, Inject, Post } from '@nestjs/common';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { AddInternetClientDto } from './interfaces/dto/account/add-internet-client.dto';
 import { AddMobileClientDto } from './interfaces/dto/account/add-mobile-client.dto';
@@ -31,20 +31,18 @@ export class AccountController {
 			this.accountClient.send('create-account', createAccountDto),
 		);
 		if (createAccountResponse.status !== HttpStatus.CREATED) {
-			throw new HttpException(
-				{
-					message: createAccountResponse.message,
-					data: null,
-					errors: createAccountResponse.errors,
-				},
-				createAccountResponse.status,
-			);
+			throw new RpcException({
+				status: createAccountResponse.status,
+				message: createAccountResponse.message,
+				data: null,
+				errors: createAccountResponse.errors,
+			});
 		}
 
 		return {
 			message: createAccountResponse.message,
 			data: {
-				account: createAccountResponse.account,
+				account: createAccountResponse.data,
 			},
 			errors: null,
 		};
@@ -56,19 +54,17 @@ export class AccountController {
 			this.accountClient.send('new-internet-client', addInternetClientDto),
 		);
 		if (addInternetClientResponse.status !== HttpStatus.CREATED) {
-			throw new HttpException(
-				{
-					message: addInternetClientResponse.message,
-					data: null,
-					errors: addInternetClientResponse.errors,
-				},
-				addInternetClientResponse.status,
-			);
+			throw new RpcException({
+				status: addInternetClientResponse.status,
+				message: addInternetClientResponse.message,
+				data: null,
+				errors: addInternetClientResponse.errors,
+			});
 		}
 		return {
 			message: addInternetClientResponse.message,
 			data: {
-				internet: addInternetClientResponse.internet,
+				internet: addInternetClientResponse.data,
 			},
 			errors: null,
 		};
@@ -80,19 +76,17 @@ export class AccountController {
 			this.accountClient.send('new-mobile-client', addMobileClientDto),
 		);
 		if (addMobileClientResponse.status !== HttpStatus.CREATED) {
-			throw new HttpException(
-				{
-					message: addMobileClientResponse.message,
-					data: null,
-					errors: addMobileClientResponse.errors,
-				},
-				addMobileClientResponse.status,
-			);
+			throw new RpcException({
+				status: addMobileClientResponse.status,
+				message: addMobileClientResponse.message,
+				data: null,
+				errors: addMobileClientResponse.errors,
+			});
 		}
 		return {
 			message: addMobileClientResponse.message,
 			data: {
-				mobile: addMobileClientResponse.mobile,
+				mobile: addMobileClientResponse.data,
 			},
 			errors: null,
 		};
@@ -104,19 +98,17 @@ export class AccountController {
 			this.accountClient.send('new-utilities-tax', addTaxDto),
 		);
 		if (addUtilitiesTaxResponse.status !== HttpStatus.CREATED) {
-			throw new HttpException(
-				{
-					message: addUtilitiesTaxResponse.message,
-					data: null,
-					errors: addUtilitiesTaxResponse.errors,
-				},
-				addUtilitiesTaxResponse.status,
-			);
+			throw new RpcException({
+				status: addUtilitiesTaxResponse.status,
+				message: addUtilitiesTaxResponse.message,
+				data: null,
+				errors: addUtilitiesTaxResponse.errors,
+			});
 		}
 		return {
 			message: addUtilitiesTaxResponse.message,
 			data: {
-				utilities: addUtilitiesTaxResponse.utilities,
+				utilities: addUtilitiesTaxResponse.data,
 			},
 			errors: null,
 		};
@@ -125,22 +117,20 @@ export class AccountController {
 	@Get('checkaccountbalance')
 	public async checkAccountBalance(@Body() name: string, @Body() surname: string): Promise<AccountResponseDto> {
 		const checkAccountBalanceResponse: ServiceAccountResponse = await firstValueFrom(
-			this.accountClient.send('check-balance', { name, surname }),
+			this.accountClient.send('check-balance', { name: name, surname: surname }),
 		);
 		if (checkAccountBalanceResponse.status !== HttpStatus.ACCEPTED) {
-			throw new HttpException(
-				{
-					message: checkAccountBalanceResponse.message,
-					data: null,
-					errors: checkAccountBalanceResponse.errors,
-				},
-				checkAccountBalanceResponse.status,
-			);
+			throw new RpcException({
+				status: checkAccountBalanceResponse.status,
+				message: checkAccountBalanceResponse.message,
+				data: null,
+				errors: checkAccountBalanceResponse.errors,
+			});
 		}
 		return {
 			message: checkAccountBalanceResponse.message,
 			data: {
-				account: checkAccountBalanceResponse.account,
+				account: checkAccountBalanceResponse.data,
 			},
 			errors: null,
 		};
@@ -154,19 +144,17 @@ export class AccountController {
 			this.accountClient.send('balance-replenishment', incrementAccountBalanceDto),
 		);
 		if (balanceReplenishmentResponse.status !== HttpStatus.ACCEPTED) {
-			throw new HttpException(
-				{
-					message: balanceReplenishmentResponse.message,
-					data: null,
-					errors: balanceReplenishmentResponse.errors,
-				},
-				balanceReplenishmentResponse.status,
-			);
+			throw new RpcException({
+				status: balanceReplenishmentResponse.status,
+				message: balanceReplenishmentResponse.message,
+				data: null,
+				errors: balanceReplenishmentResponse.errors,
+			});
 		}
 		return {
 			message: balanceReplenishmentResponse.message,
 			data: {
-				account: balanceReplenishmentResponse.account,
+				account: balanceReplenishmentResponse.data,
 			},
 			errors: null,
 		};
@@ -177,24 +165,20 @@ export class AccountController {
 		@Body() addPersonalAccountDto: AddPersonalAccountDto,
 	): Promise<InternetResponseDto> {
 		const balanceReplenishmentResponse: ServiceInternetResponse = await firstValueFrom(
-			this.accountClient.send('add-internet-personal-account', {
-				addPersonalAccountDto,
-			}),
+			this.accountClient.send('add-internet-personal-account', addPersonalAccountDto),
 		);
 		if (balanceReplenishmentResponse.status !== HttpStatus.ACCEPTED) {
-			throw new HttpException(
-				{
-					message: balanceReplenishmentResponse.message,
-					data: null,
-					errors: balanceReplenishmentResponse.errors,
-				},
-				balanceReplenishmentResponse.status,
-			);
+			throw new RpcException({
+				status: balanceReplenishmentResponse.status,
+				message: balanceReplenishmentResponse.message,
+				data: null,
+				erros: balanceReplenishmentResponse.errors,
+			});
 		}
 		return {
 			message: balanceReplenishmentResponse.message,
 			data: {
-				internet: balanceReplenishmentResponse.internet,
+				internet: balanceReplenishmentResponse.data,
 			},
 			errors: null,
 		};
@@ -205,24 +189,20 @@ export class AccountController {
 		@Body() addPhoneNumberToAccountDto: AddPhoneNumberToAccountDto,
 	): Promise<MobileResponseDto> {
 		const addPhoneNumberResponse: ServiceMobileResponse = await firstValueFrom(
-			this.accountClient.send('add-phone-number', {
-				addPhoneNumberToAccountDto,
-			}),
+			this.accountClient.send('add-phone-number', addPhoneNumberToAccountDto),
 		);
 		if (addPhoneNumberResponse.status !== HttpStatus.ACCEPTED) {
-			throw new HttpException(
-				{
-					message: addPhoneNumberResponse.message,
-					data: null,
-					errors: addPhoneNumberResponse.errors,
-				},
-				addPhoneNumberResponse.status,
-			);
+			throw new RpcException({
+				status: addPhoneNumberResponse.status,
+				message: addPhoneNumberResponse.message,
+				data: null,
+				errors: addPhoneNumberResponse.errors,
+			});
 		}
 		return {
 			message: addPhoneNumberResponse.message,
 			data: {
-				mobile: addPhoneNumberResponse.mobile,
+				mobile: addPhoneNumberResponse.data,
 			},
 			errors: null,
 		};
@@ -233,24 +213,20 @@ export class AccountController {
 		@Body() addPersonalAccountDto: AddPersonalAccountDto,
 	): Promise<UtilitiesResponseDto> {
 		const addUtilitiesPersonalAccountResponse: ServiceUtilitiesResponse = await firstValueFrom(
-			this.accountClient.send('add-utilities-personal-account', {
-				addPersonalAccountDto,
-			}),
+			this.accountClient.send('add-utilities-personal-account', addPersonalAccountDto),
 		);
 		if (addUtilitiesPersonalAccountResponse.status !== HttpStatus.ACCEPTED) {
-			throw new HttpException(
-				{
-					message: addUtilitiesPersonalAccountResponse.message,
-					data: null,
-					errors: addUtilitiesPersonalAccountResponse.errors,
-				},
-				addUtilitiesPersonalAccountResponse.status,
-			);
+			throw new RpcException({
+				status: addUtilitiesPersonalAccountResponse.status,
+				message: addUtilitiesPersonalAccountResponse.message,
+				data: null,
+				errors: addUtilitiesPersonalAccountResponse.errors,
+			});
 		}
 		return {
 			message: addUtilitiesPersonalAccountResponse.message,
 			data: {
-				utilities: addUtilitiesPersonalAccountResponse.utilities,
+				utilities: addUtilitiesPersonalAccountResponse.data,
 			},
 			errors: null,
 		};
@@ -262,19 +238,17 @@ export class AccountController {
 			this.accountClient.send('check-internet-balance', personalAccount),
 		);
 		if (checkInternetBalanceResponse.status !== HttpStatus.ACCEPTED) {
-			throw new HttpException(
-				{
-					message: checkInternetBalanceResponse.message,
-					data: null,
-					errors: checkInternetBalanceResponse.errors,
-				},
-				checkInternetBalanceResponse.status,
-			);
+			throw new RpcException({
+				status: checkInternetBalanceResponse.status,
+				message: checkInternetBalanceResponse.message,
+				data: null,
+				errors: checkInternetBalanceResponse.errors,
+			});
 		}
 		return {
 			message: checkInternetBalanceResponse.message,
 			data: {
-				internet: checkInternetBalanceResponse.internet,
+				internet: checkInternetBalanceResponse.data,
 			},
 			errors: null,
 		};
@@ -287,24 +261,22 @@ export class AccountController {
 	): Promise<InternetResponseDto> {
 		const payForInternetResponse: ServiceInternetResponse = await firstValueFrom(
 			this.accountClient.send('check-internet-balance', {
-				decrementAccountBalanceDto,
-				incrementInternetBalanceDto,
+				decrementAccountBalanceDto: decrementAccountBalanceDto,
+				incrementInternetBalanceDto: incrementInternetBalanceDto,
 			}),
 		);
 		if (payForInternetResponse.status !== HttpStatus.ACCEPTED) {
-			throw new HttpException(
-				{
-					message: payForInternetResponse.message,
-					data: null,
-					errors: payForInternetResponse.errors,
-				},
-				payForInternetResponse.status,
-			);
+			throw new RpcException({
+				status: payForInternetResponse.status,
+				message: payForInternetResponse.message,
+				data: null,
+				errors: payForInternetResponse.errors,
+			});
 		}
 		return {
 			message: payForInternetResponse.message,
 			data: {
-				internet: payForInternetResponse.internet,
+				internet: payForInternetResponse.data,
 			},
 			errors: null,
 		};
@@ -316,19 +288,17 @@ export class AccountController {
 			this.accountClient.send('check-mobile-balance', phoneNumber),
 		);
 		if (checkMobileBalanceResponse.status !== HttpStatus.ACCEPTED) {
-			throw new HttpException(
-				{
-					message: checkMobileBalanceResponse.message,
-					data: null,
-					errors: checkMobileBalanceResponse.errors,
-				},
-				checkMobileBalanceResponse.status,
-			);
+			throw new RpcException({
+				status: checkMobileBalanceResponse.status,
+				message: checkMobileBalanceResponse.message,
+				data: null,
+				errors: checkMobileBalanceResponse.errors,
+			});
 		}
 		return {
 			message: checkMobileBalanceResponse.message,
 			data: {
-				mobile: checkMobileBalanceResponse.mobile,
+				mobile: checkMobileBalanceResponse.data,
 			},
 			errors: null,
 		};
@@ -341,24 +311,22 @@ export class AccountController {
 	): Promise<MobileResponseDto> {
 		const replenishMobileAccount: ServiceMobileResponse = await firstValueFrom(
 			this.accountClient.send('replenish-mobile-account', {
-				decrementAccountBalanceDto,
-				incrementInternetBalanceDto,
+				decrementAccountBalanceDto: decrementAccountBalanceDto,
+				incrementInternetBalanceDto: incrementInternetBalanceDto,
 			}),
 		);
 		if (replenishMobileAccount.status !== HttpStatus.ACCEPTED) {
-			throw new HttpException(
-				{
-					message: replenishMobileAccount.message,
-					data: null,
-					errors: replenishMobileAccount.errors,
-				},
-				replenishMobileAccount.status,
-			);
+			throw new RpcException({
+				status: replenishMobileAccount.status,
+				message: replenishMobileAccount.message,
+				data: null,
+				errors: replenishMobileAccount.errors,
+			});
 		}
 		return {
 			message: replenishMobileAccount.message,
 			data: {
-				mobile: replenishMobileAccount.mobile,
+				mobile: replenishMobileAccount.data,
 			},
 			errors: null,
 		};
@@ -371,24 +339,22 @@ export class AccountController {
 	): Promise<UtilitiesResponseDto> {
 		const checkUtilitiesTaxesResponse: ServiceUtilitiesResponse = await firstValueFrom(
 			this.accountClient.send('check-utilities-taxes', {
-				personalAccount,
-				type,
+				personalAccount: personalAccount,
+				type: type,
 			}),
 		);
 		if (checkUtilitiesTaxesResponse.status !== HttpStatus.ACCEPTED) {
-			throw new HttpException(
-				{
-					message: checkUtilitiesTaxesResponse.message,
-					data: null,
-					errors: checkUtilitiesTaxesResponse.errors,
-				},
-				checkUtilitiesTaxesResponse.status,
-			);
+			throw new RpcException({
+				status: checkUtilitiesTaxesResponse.status,
+				message: checkUtilitiesTaxesResponse.message,
+				data: null,
+				errors: checkUtilitiesTaxesResponse.errors,
+			});
 		}
 		return {
 			message: checkUtilitiesTaxesResponse.message,
 			data: {
-				utilities: checkUtilitiesTaxesResponse.utilities,
+				utilities: checkUtilitiesTaxesResponse.data,
 			},
 			errors: null,
 		};
@@ -401,24 +367,22 @@ export class AccountController {
 	): Promise<UtilitiesResponseDto> {
 		const payForUtilitiesResponse: ServiceUtilitiesResponse = await firstValueFrom(
 			this.accountClient.send('pay-for-utilities', {
-				decrementAccountBalanceDto,
-				payForTaxes,
+				decrementAccountBalanceDto: decrementAccountBalanceDto,
+				payForTaxes: payForTaxes,
 			}),
 		);
 		if (payForUtilitiesResponse.status !== HttpStatus.ACCEPTED) {
-			throw new HttpException(
-				{
-					message: payForUtilitiesResponse.message,
-					data: null,
-					errors: payForUtilitiesResponse.errors,
-				},
-				payForUtilitiesResponse.status,
-			);
+			throw new RpcException({
+				status: payForUtilitiesResponse.status,
+				message: payForUtilitiesResponse.message,
+				data: null,
+				errors: payForUtilitiesResponse.errors,
+			});
 		}
 		return {
 			message: payForUtilitiesResponse.message,
 			data: {
-				utilities: payForUtilitiesResponse.utilities,
+				utilities: payForUtilitiesResponse.data,
 			},
 			errors: null,
 		};

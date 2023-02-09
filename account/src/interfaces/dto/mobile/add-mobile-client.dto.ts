@@ -1,7 +1,7 @@
 import { IsNumber, IsString } from 'class-validator';
 
 export class AddMobileClientDto {
-	@IsNumber()
+	@IsString()
 	phoneNumber: string;
 
 	@IsString()

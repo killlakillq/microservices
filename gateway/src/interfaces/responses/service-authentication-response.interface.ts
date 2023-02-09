@@ -1,9 +1,9 @@
-import { User } from '../user.interface';
+import { Token } from '../token.interface';
 
 export interface ServiceAuthenticationResponse {
 	status: number;
 	message: string;
-	user: User | null;
+	data: Token | null;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	errors: { [key: string]: any };
 }
