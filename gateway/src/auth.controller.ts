@@ -1,5 +1,6 @@
 import { Body, Controller, HttpStatus, Inject, Post } from '@nestjs/common';
-import { ClientProxy, RpcException } from '@nestjs/microservices';
+import { HttpException } from '@nestjs/common/exceptions';
+import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { CreateUserDto } from './interfaces/dto/authentication/create-user.dto';
 import { UserResponseDto } from './interfaces/dto/authentication/user-response.dto';
@@ -15,13 +16,13 @@ export class AuthController {
 			this.authClient.send('register-user', createUserDto),
 		);
 		if (createUserResponse.status !== HttpStatus.CREATED) {
-			throw new RpcException(
+			throw new HttpException(
 				{
-					status: createUserResponse.status,
 					message: createUserResponse.message,
 					data: null,
 					errors: createUserResponse.errors,
 				},
+				createUserResponse.status,
 			);
 		}
 
@@ -38,13 +39,13 @@ export class AuthController {
 			this.authClient.send('login-user', createUserDto),
 		);
 		if (loginUserResponse.status !== HttpStatus.ACCEPTED) {
-			throw new RpcException(
+			throw new HttpException(
 				{
-					status: loginUserResponse.status,
 					message: loginUserResponse.message,
 					data: null,
 					errors: loginUserResponse.errors,
 				},
+				loginUserResponse.status,
 			);
 		}
 

@@ -11,7 +11,7 @@ export class TokenService {
 		private readonly configService: ConfigService,
 	) {}
 
-	public async saveTokens(id: string, email: string): Promise<void> {
+	public async saveTokens(id: string, email: string) {
 		const [accessToken, refreshToken] = await Promise.all([
 			this.jwtService.signAsync(
 				{ id, email },
@@ -30,7 +30,7 @@ export class TokenService {
 			.exec();
 	}
 
-	public async getTokens(email: string): Promise<{ accessToken: unknown, refreshToken: unknown }> {
+	public async getTokens(email: string): Promise<{ accessToken: unknown; refreshToken: unknown }> {
 		const redis = this.redisService.pipeline();
 		const tokens = await redis
 			.get(email + ' [access]')
@@ -38,7 +38,12 @@ export class TokenService {
 			.exec();
 		return {
 			accessToken: tokens[0][1],
-			refreshToken: tokens[1][1]
-		}
+			refreshToken: tokens[1][1],
+		};
+	}
+
+	public async verifyToken(jwt: string): Promise<string[]> {
+		const token = jwt.replace('Bearer', '').trim();
+		return this.jwtService.verify(token, { secret: this.configService.get('JWT_ACCESS_SECRET') });
 	}
 }

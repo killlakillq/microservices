@@ -3,10 +3,11 @@ import { MessagePattern } from '@nestjs/microservices';
 import { CreateUserDto } from './interfaces/dto/create-user.dto';
 import { UserResponseDto } from './interfaces/dto/user-response.dto';
 import { AuthService } from './services/auth.service';
+import { TokenService } from './services/token.service';
 
 @Controller('auth')
 export class AuthController {
-	constructor(private readonly authService: AuthService) {}
+	constructor(private readonly tokenService: TokenService, private readonly authService: AuthService) {}
 
 	@UsePipes(new ValidationPipe())
 	@MessagePattern('register-user')
@@ -50,5 +51,10 @@ export class AuthController {
 				errors: error,
 			};
 		}
+	}
+
+	@MessagePattern('verify-token')
+	public async verifyToken(token: string): Promise<string[]> {
+		return await this.tokenService.verifyToken(token);
 	}
 }

@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { request } from 'express';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../interfaces/dto/create-user.dto';
 import { UserEntity } from '../interfaces/entities/user.entity';
@@ -39,6 +40,8 @@ export class AuthService {
 	public async loginUser(email: string): Promise<{ accessToken: unknown; refreshToken: unknown }> {
 		const id = await this.userRepository.findOneBy({ email });
 		await this.tokenService.saveTokens(id.id, email);
-		return await this.tokenService.getTokens(email);
+		const tokens = await this.tokenService.getTokens(email);
+		request.headers.authorization = 'Bearer ' + tokens.accessToken;
+		return tokens;
 	}
 }
