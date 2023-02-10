@@ -8,7 +8,6 @@ import { firstValueFrom } from 'rxjs';
 export class AuthGuard implements CanActivate {
 	constructor(
 		private readonly reflector: Reflector,
-		@Inject('ACCOUNT_SERVICE') private readonly accountClient: ClientProxy,
 		@Inject('AUTH_SERVICE') private readonly authClient: ClientProxy,
 	) {}
 
@@ -24,7 +23,7 @@ export class AuthGuard implements CanActivate {
 			this.authClient.send('verify-token', request.headers.authorization),
 		);
 
-		if (!authLoginInfo) {
+		if (!authLoginInfo || !authLoginInfo.data) {
 			throw new UnauthorizedException();
 		}
 		return true;

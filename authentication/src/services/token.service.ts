@@ -11,7 +11,7 @@ export class TokenService {
 		private readonly configService: ConfigService,
 	) {}
 
-	public async saveTokens(id: string, email: string) {
+	public async saveTokens(id: string, email: string): Promise<void> {
 		const [accessToken, refreshToken] = await Promise.all([
 			this.jwtService.signAsync(
 				{ id, email },

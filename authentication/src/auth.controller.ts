@@ -54,7 +54,22 @@ export class AuthController {
 	}
 
 	@MessagePattern('verify-token')
-	public async verifyToken(token: string): Promise<string[]> {
-		return await this.tokenService.verifyToken(token);
+	public async verifyToken(token: string): Promise<UserResponseDto> {
+		try {
+			const verify = await this.tokenService.verifyToken(token);
+			return {
+				status: 202,
+				message: 'your token was veryfied.',
+				data: verify,
+				errors: null,
+			};
+		} catch (error) {
+			return {
+				status: 403,
+				message: 'oops, something went wrong',
+				data: null,
+				errors: error,
+			};
+		}
 	}
 }
