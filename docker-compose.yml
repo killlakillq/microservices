@@ -1,13 +1,17 @@
-version: '3'
+version: '3.8'
 services:
   gateway:
     build: ./gateway
     restart: always
     hostname: gateway
-    env_file:
-      - .env
+    environment:
+      - PORT=${GATEWAY_PORT}
+      - AUTH_SERVICE_HOST=${GATEWAY_AUTH_HOST}
+      - AUTH_SERVICE_PORT=${AUTH_SERVICE_PORT}
+      - ACCOUNT_SERVICE_HOST=${GATEWAY_ACCOUNT_HOST}
+      - ACCOUNT_SERVICE_PORT=${ACCOUNT_SERVICE_PORT}
     ports:
-      - "8000:8000"
+      - 3000:3000
     networks:
       - backend
       - frontend
@@ -15,49 +19,48 @@ services:
     build: ./authentication
     restart: always
     hostname: authentication
-    env_file:
-      - .env
+    environment:
+      - TYPEORM_HOST=${POSTGRES_HOST}
+      - TYPEORM_PORT=${POSTGRES_PORT}
+      - TYPEORM_USERNAME=${POSTGRES_USERNAME}
+      - TYPEORM_PASSWORD=${POSTGRES_PASSWORD}
+      - TYPEORM_DATABASE=${AUTH_POSTGRES_DATABASE}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_USERNAME=${REDIS_USERNAME}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_DATABASE=${REDIS_DATABASE}
+      - AUTH_SERVICE_HOST=${AUTH_SERVICE_HOST}
+      - AUTH_SERVICE_PORT=${AUTH_SERVICE_PORT}
+      - JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
     networks:
       - backend
     links:
-      - authenticationdb
+      - database
       - cache
   account:
     build: ./account
     restart: always
     hostname: account
-    env_file:
-      - .env
+    environment:
+      - TYPEORM_HOST=${POSTGRES_HOST}
+      - TYPEORM_PORT=${POSTGRES_PORT}
+      - TYPEORM_USERNAME=${POSTGRES_USERNAME}
+      - TYPEORM_PASSWORD=${POSTGRES_PASSWORD}
+      - TYPEORM_DATABASE=${ACCOUNT_POSTGRES_DATABASE}
+      - ACCOUNT_SERVICE_HOST=${ACCOUNT_SERVICE_HOST}
+      - ACCOUNT_SERVICE_PORT=${ACCOUNT_SERVICE_PORT}
     networks:
       - backend
     links:
-      - accountdb
-  accountdb:
+      - database
+  database:
     image: 'postgres:latest'
     restart: always
     environment:
-      - ACCOUNT_POSTGRES_HOST=${POSTGRES_HOST}
-      - ACCOUNT_POSTGRES_USERNAME=${POSTGRES_USERNAME}
-      - ACCOUNT_POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - ACCOUNT_POSTGRES_DATABASE=${ACCOUNT_POSTGRES_DATABASE}
-    volumes:
-      - "./db/data/db-files:/data/db"
-      - "./db/init/:/docker-entrypoint-initdb.d/"
-    ports:
-      - 5432:5432
-    networks:
-      - backend
-  authenticationdb:
-    image: 'postgres:latest'
-    restart: always
-    environment:
-      - AUTH_POSTGRES_HOST=$POSTGRES_HOST}
-      - AUTH_POSTGRES_USERNAME=${POSTGRES_USERNAME}
-      - AUTH_POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - AUTH_POSTGRES_DATABASE=${AUTH_POSTGRES_DATABASE}
-    volumes:
-      - "./db/data/db-files:/data/db"
-      - "./db/init/:/docker-entrypoint-initdb.d/"
+      - POSTGRES_USERNAME=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - 5432:5432
     networks:
@@ -67,11 +70,12 @@ services:
     restart: always
     environment:
       - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
       - REDIS_USERNAME=${REDIS_USERNAME}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - REDIS_DATABASE=${REDIS_DATABASE}
     ports:
-      - 32772:32772
+      - 6379:6379
     networks:
       - backend
 networks:

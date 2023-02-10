@@ -1,8 +1,8 @@
 
-FROM node:14.8.0-alpine
-RUN npm install -g npm@6.14.7
+FROM node:latest
+RUN npm install -g pnpm
 RUN mkdir -p /var/www/authentication
 WORKDIR /var/www/authentication
 ADD . /var/www/authentication
-RUN npm install
-CMD npm run build && npm run start:prod
+RUN pnpm install
+CMD pnpm build && pnpm start:prod
