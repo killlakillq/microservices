@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+export PGPASSWORD=$POSTGRES_PASSWORD;
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USERNAME" --dbname "$POSTGRES_DATABASE" <<-EOSQL
+  CREATE USER docker;
+  CREATE DATABASE authentication;
+  GRANT ALL PRIVILEGES ON DATABASE authentication TO docker;
+  CREATE DATABASE account;
+  GRANT ALL PRIVILEGES ON DATABASE account TO docker;
+EOSQL
