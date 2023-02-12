@@ -1,10 +1,9 @@
-import { Body, Controller, HttpStatus, Inject, Post } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Inject, Post, HttpException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { AddInternetClientDto } from './interfaces/dto/account/add-internet-client.dto';
 import { AddMobileClientDto } from './interfaces/dto/account/add-mobile-client.dto';
 import { AddTaxDto } from './interfaces/dto/account/add-utilities-tax.dto';
-import { CreateAccountDto } from './interfaces/dto/account/create-account.dto';
 import { ServiceAccountResponse } from './interfaces/responses/service-account-response.interface';
 import { ServiceInternetResponse } from './interfaces/responses/service-internet-response.interface';
 import { ServiceMobileResponse } from './interfaces/responses/service-mobile-add-client-response.interface';
@@ -21,37 +20,10 @@ import { InternetBalanceDto } from './interfaces/dto/account/internet-balance.dt
 import { MobileBalanceDto } from './interfaces/dto/account/mobile-balance.dto';
 import { UtilitiesTaxesDto } from './interfaces/dto/account/utilities-taxes.dto';
 import { Authorization } from './decorators/auth.decorator';
-import { HttpException } from '@nestjs/common/exceptions';
 
 @Controller('account')
 export class AccountController {
 	constructor(@Inject('ACCOUNT_SERVICE') private readonly accountClient: ClientProxy) {}
-
-	@Authorization(true)
-	@Post('createaccount')
-	public async createAccount(@Body() createAccountDto: CreateAccountDto): Promise<AccountResponseDto> {
-		const createAccountResponse: ServiceAccountResponse = await firstValueFrom(
-			this.accountClient.send('create-account', createAccountDto),
-		);
-		if (createAccountResponse.status !== HttpStatus.CREATED) {
-			throw new HttpException(
-				{
-					message: createAccountResponse.message,
-					data: null,
-					errors: createAccountResponse.errors,
-				},
-				createAccountResponse.status,
-			);
-		}
-
-		return {
-			message: createAccountResponse.message,
-			data: {
-				account: createAccountResponse.data,
-			},
-			errors: null,
-		};
-	}
 
 	@Authorization(true)
 	@Post('addinternetclient')

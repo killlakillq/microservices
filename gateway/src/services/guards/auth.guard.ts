@@ -12,20 +12,19 @@ export class AuthGuard implements CanActivate {
 	) {}
 
 	public async canActivate(context: ExecutionContext): Promise<boolean> {
-		const secured = this.reflector.get<string[]>('secured', context.getHandler());
+		try {
+			const secured = this.reflector.get<string[]>('secured', context.getHandler());
 
-		if (!secured) {
+			if (!secured) {
+				return true;
+			}
+
+			const request = context.switchToHttp().getRequest();
+			await firstValueFrom(this.authClient.send('verify-token', request.headers.authorization));
+
 			return true;
+		} catch (error) {
+			throw new UnauthorizedException('you are unauthorized.');
 		}
-
-		const request = context.switchToHttp().getRequest();
-		const authLoginInfo = await firstValueFrom(
-			this.authClient.send('verify-token', request.headers.authorization),
-		);
-
-		if (!authLoginInfo || !authLoginInfo.data) {
-			throw new UnauthorizedException();
-		}
-		return true;
 	}
 }

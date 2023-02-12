@@ -1,10 +1,7 @@
-import { Token } from '../../token.interface';
-
-export class UserResponseDto {
+export class AuthResponseDto {
 	message: string;
-	data: {
-		tokens: Token;
-	} | null;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	data: any | null;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	errors: { [key: string]: any };
 }

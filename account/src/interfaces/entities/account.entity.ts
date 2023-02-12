@@ -14,7 +14,7 @@ export class AccountEntity extends BaseEntity {
 	@Column()
 	surname: string;
 
-	@Column()
+	@Column({ nullable: true, default: 0 })
 	balance: number;
 
 	@OneToOne(() => InternetEntity, (internet) => internet.personalAccount)

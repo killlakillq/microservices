@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CreateAccountDto {
 	@IsString()
@@ -6,8 +6,5 @@ export class CreateAccountDto {
 
 	@IsString()
 	surname: string;
-
-	@IsNumber()
-	balance: number;
 }
 
