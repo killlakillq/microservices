@@ -18,7 +18,10 @@ export class AuthController {
 	@Post('signup')
 	public async registerUser(@Body() registerUserDto: RegisterUserDto): Promise<AuthResponseDto> {
 		const registerUserResponse: ServiceAuthenticationResponse = await firstValueFrom(
-			this.authClient.send('register-user', registerUserDto),
+			this.authClient.send('register-user', {
+				login: registerUserDto.login,
+				password: registerUserDto.password,
+			}),
 		);
 		if (registerUserResponse.status !== HttpStatus.CREATED) {
 			throw new HttpException(
