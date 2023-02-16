@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { request } from 'express';
 import { CreateUserDto } from '../interfaces/dto/create-user.dto';
 import { UserEntity } from '../interfaces/entities/user.entity';
 import { CryptoConfigService } from './config/crypto-config.service';
@@ -40,9 +39,6 @@ export class AuthService {
 	public async loginUser(email: string): Promise<{ accessToken: unknown; refreshToken: unknown }> {
 		const id = await this.userRepository.findOneBy({ email });
 		await this.tokenService.saveTokens(id.id, email);
-		const tokens = await this.tokenService.getTokens(email);
-		const req = request.headers.authorization = `Bearer ${tokens.accessToken}`;
-		console.log(req);
-		return tokens;
+		return await this.tokenService.getTokens(email);
 	}
 }
