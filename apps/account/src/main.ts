@@ -1,8 +1,9 @@
-import { Logger } from '@nestjs/common';
+import { HttpException, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, TcpOptions, Transport } from '@nestjs/microservices';
 import { AccountModule } from './account.module';
-import { ConfigService } from './services/config/config.service';
+import { ConfigService } from './common/config/config';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
 
 async function bootstrap() {
 	Logger.log('[NestFactory] Account service started');
@@ -13,6 +14,7 @@ async function bootstrap() {
 			port: new ConfigService().get('PORT'),
 		},
 	} as TcpOptions);
+	app.useGlobalFilters(new HttpExceptionFilter<HttpException>());
 	await app.listen();
 }
 bootstrap();

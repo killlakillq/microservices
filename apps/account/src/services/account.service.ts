@@ -7,7 +7,6 @@ import { CreateAccountDto } from '../interfaces/dto/account/create-account.dto';
 import { Repository } from 'typeorm';
 import { AccountEntity } from './../interfaces/entities/account.entity';
 import { UtilitiesType } from './../interfaces/enums/utilities-type.enum';
-import { InternetPayment, MobilePayment, UtilitiesPayment } from './payment.service';
 import { InternetEntity } from '../interfaces/entities/internet.entity';
 import { MobileEntity } from '../interfaces/entities/mobile.entity';
 import { UtilitiesEntity } from '../interfaces/entities/utilities.entity';
@@ -18,14 +17,17 @@ import { MobileBalanceDto } from '../interfaces/dto/mobile/mobile-balance.dto';
 import { UtilitiesTaxesDto } from '../interfaces/dto/utilities/utilities-taxes.dto';
 import { AddPhoneNumberToAccountDto } from '../interfaces/dto/account/add-phone-number-to-account.dto';
 import { AddPersonalAccountDto } from '../interfaces/dto/account/add-personal-account.dto';
+import { InternetPaymentService } from './payments/internet-payment.service';
+import { MobilePaymentService } from './payments/mobile-payment.service';
+import { UtilitiesPaymentService } from './payments/utilities-payment.service';
 
 @Injectable()
 export class AccountService {
 	constructor(
 		@InjectRepository(AccountEntity) private readonly accountRepository: Repository<AccountEntity>,
-		private readonly internetPayment: InternetPayment,
-		private readonly mobilePayment: MobilePayment,
-		private readonly utilitiesPayment: UtilitiesPayment,
+		private readonly internetPaymentService: InternetPaymentService,
+		private readonly mobilePaymentService: MobilePaymentService,
+		private readonly utilitiesPaymentService: UtilitiesPaymentService,
 	) {}
 
 	public async createAccount(createAccountDto: CreateAccountDto): Promise<CreateAccountDto> {
@@ -33,15 +35,15 @@ export class AccountService {
 	}
 
 	public async addInternetClient(addInternetClientDto: AddInternetClientDto): Promise<AddInternetClientDto> {
-		return await this.internetPayment.addInternetClient(addInternetClientDto);
+		return await this.internetPaymentService.addClient(addInternetClientDto);
 	}
 
 	public async addMobileClient(addMobileClientDto: AddMobileClientDto): Promise<AddMobileClientDto> {
-		return await this.mobilePayment.addMobileClient(addMobileClientDto);
+		return await this.mobilePaymentService.addClient(addMobileClientDto);
 	}
 
 	public async addTax(addTaxDto: AddTaxDto): Promise<AddTaxDto> {
-		return await this.utilitiesPayment.addTax(addTaxDto);
+		return await this.utilitiesPaymentService.addClient(addTaxDto);
 	}
 
 	public async checkAccountBalance(name: string, surname: string): Promise<AccountEntity> {
@@ -84,7 +86,7 @@ export class AccountService {
 	public async addInternetPersonalAccount(
 		addPersonalAccountDto: AddPersonalAccountDto,
 	): Promise<{ name: string; surname: string; internet: number }> {
-		const internet = await this.internetPayment.findPersonalAccount(addPersonalAccountDto);
+		const internet = await this.internetPaymentService.findAccount(addPersonalAccountDto);
 		const dataSource = this.accountRepository.createQueryBuilder();
 		await dataSource
 			.update(AccountEntity)
@@ -105,8 +107,8 @@ export class AccountService {
 
 	public async addPhoneNumber(
 		addPhoneNumberToAccountDto: AddPhoneNumberToAccountDto,
-	): Promise<{ name: string; surname: string; mobile: string, operator: string }> {
-		const mobile = await this.mobilePayment.findPhoneNumber(addPhoneNumberToAccountDto);
+	): Promise<{ name: string; surname: string; mobile: string; operator: string }> {
+		const mobile = await this.mobilePaymentService.findAccount(addPhoneNumberToAccountDto);
 		const dataSource = this.accountRepository.createQueryBuilder();
 		await dataSource
 			.update(AccountEntity)
@@ -129,7 +131,7 @@ export class AccountService {
 	public async addUtilitiesPersonalAccount(
 		addPersonalAccountDto: AddPersonalAccountDto,
 	): Promise<{ name: string; surname: string; utilities: number }> {
-		const utilities = await this.utilitiesPayment.findPersonalAccount(addPersonalAccountDto);
+		const utilities = await this.utilitiesPaymentService.findAccount(addPersonalAccountDto);
 		const dataSource = this.accountRepository.createQueryBuilder();
 		await dataSource
 			.update(AccountEntity)
@@ -149,7 +151,7 @@ export class AccountService {
 	}
 
 	public async checkInternetBalance(personalAccount: number): Promise<InternetEntity> {
-		return await this.internetPayment.checkInternetBalance(personalAccount);
+		return await this.internetPaymentService.checkBalance(personalAccount);
 	}
 
 	public async payForInternet(
@@ -157,11 +159,11 @@ export class AccountService {
 		incrementInternetBalanceDto: InternetBalanceDto,
 	): Promise<{ balance: number }> {
 		await this.withdrawalFromTheBalance(decrementAccountBalanceDto);
-		return await this.internetPayment.internetPay(incrementInternetBalanceDto);
+		return await this.internetPaymentService.payForBills(incrementInternetBalanceDto);
 	}
 
 	public async checkMobileBalance(phoneNumber: string): Promise<MobileEntity> {
-		return await this.mobilePayment.checkMobileBalance(phoneNumber);
+		return await this.mobilePaymentService.checkBalance(phoneNumber);
 	}
 
 	public async replenishMobileAccount(
@@ -169,11 +171,11 @@ export class AccountService {
 		incrementInternetBalanceDto: MobileBalanceDto,
 	): Promise<{ balance: number }> {
 		await this.withdrawalFromTheBalance(decrementAccountBalanceDto);
-		return await this.mobilePayment.replenishMobileAccount(incrementInternetBalanceDto);
+		return await this.mobilePaymentService.payForBills(incrementInternetBalanceDto);
 	}
 
 	public async checkUtilitiesTaxes(personalAccount: number, type: UtilitiesType): Promise<UtilitiesEntity> {
-		return await this.utilitiesPayment.checkUtilitiesTaxes(personalAccount, type);
+		return await this.utilitiesPaymentService.checkBalance(personalAccount, type);
 	}
 
 	public async payForUtilities(
@@ -181,6 +183,6 @@ export class AccountService {
 		payForTaxes: UtilitiesTaxesDto,
 	): Promise<{ personalAccount: number; type: UtilitiesType; message: string }> {
 		await this.withdrawalFromTheBalance(decrementAccountBalanceDto);
-		return await this.utilitiesPayment.payForUtilities(payForTaxes);
+		return await this.utilitiesPaymentService.payForBills(payForTaxes);
 	}
 }
