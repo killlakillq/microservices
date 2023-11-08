@@ -6,7 +6,7 @@ import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
-	Logger.log('[NestFactory] Account service started');
+	Logger.log('[NestFactory] Bills service started');
 	const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
 		transport: Transport.TCP,
 		options: {
