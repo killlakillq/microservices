@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
-import { AuthController } from './controllers/auth.controller';
+import { AuthController } from './controllers/auth/auth.controller';
 import { AuthGuard } from './common/guards/auth.guard';
-import { AccountController } from './controllers/account.controller';
-import { InternetController } from './controllers/internet.controller';
-import { MobileController } from './controllers/mobile.controller';
-import { UtilitiesController } from './controllers/utilities.controller';
+import { AccountController } from './controllers/bills/account.controller';
+import { InternetController } from './controllers/bills/internet.controller';
+import { MobileController } from './controllers/bills/mobile.controller';
+import { UtilitiesController } from './controllers/bills/utilities.controller';
 
 @Module({
 	imports: [ConfigModule.forRoot()],

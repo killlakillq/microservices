@@ -1,14 +1,14 @@
 import { Inject, Post, Body, HttpStatus, HttpException, Controller, Get } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { Authorization } from '../common/decorators/auth.decorator';
-import { AddTaxDto } from '../common/interfaces/dtos/bills/add-utilities-tax.dto';
-import { AccountBalanceDto } from '../common/interfaces/dtos/bills/account-balance.dto';
-import { AddPersonalAccountDto } from '../common/interfaces/dtos/bills/add-personal-account.dto';
-import { UtilitiesTaxesDto } from '../common/interfaces/dtos/bills/utilities-taxes.dto';
-import { UtilitiesType } from '../common/interfaces/enums/utilities-type.enum';
-import { ServicesResponse } from '../common/interfaces/responses/services-response.interface';
-import { Utilities } from '../common/interfaces/utilities.interface';
+import { Authorization } from '../../common/decorators/auth.decorator';
+import { AddTaxDto } from '../../common/interfaces/dtos/bills/add-utilities-tax.dto';
+import { AccountBalanceDto } from '../../common/interfaces/dtos/bills/account-balance.dto';
+import { AddPersonalAccountDto } from '../../common/interfaces/dtos/bills/add-personal-account.dto';
+import { UtilitiesTaxesDto } from '../../common/interfaces/dtos/bills/utilities-taxes.dto';
+import { UtilitiesType } from '../../common/interfaces/enums/utilities-type.enum';
+import { ServicesResponse } from '../../common/interfaces/responses/services-response.interface';
+import { Utilities } from '../../common/interfaces/utilities.interface';
 
 @Controller('utilities')
 export class UtilitiesController {

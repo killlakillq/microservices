@@ -1,10 +1,10 @@
 import { Controller, Inject, Post, Body, HttpStatus, HttpException, Get, Req } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { Authorization } from '../common/decorators/auth.decorator';
-import { AccountBalanceDto } from '../common/interfaces/dtos/bills/account-balance.dto';
-import { ServicesResponse } from '../common/interfaces/responses/services-response.interface';
-import { Account } from '../common/interfaces/account.interface';
+import { Authorization } from '../../common/decorators/auth.decorator';
+import { AccountBalanceDto } from '../../common/interfaces/dtos/bills/account-balance.dto';
+import { ServicesResponse } from '../../common/interfaces/responses/services-response.interface';
+import { Account } from '../../common/interfaces/account.interface';
 
 @Controller('account')
 export class AccountController {

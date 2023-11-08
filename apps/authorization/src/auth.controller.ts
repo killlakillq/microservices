@@ -11,8 +11,8 @@ export class AuthController {
 
 	@UsePipes(new ValidationPipe())
 	@MessagePattern('register-user')
-	public async registerUser(createUserDto: CreateUserDto): Promise<UserResponseDto> {
-		await this.authService.registerUser(createUserDto);
+	public async registerUser(dto: CreateUserDto): Promise<UserResponseDto> {
+		await this.authService.registerUser(dto);
 		return {
 			status: 201,
 			message: 'account was successfully registered.',

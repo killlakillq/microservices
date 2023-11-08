@@ -2,11 +2,11 @@ import { Body, Controller, HttpStatus, Inject, Post } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { RegisterUserDto } from '../common/interfaces/dtos/authorization/register-user.dto';
-import { LoginUserDto } from '../common/interfaces/dtos/authorization/login-user.dto';
-import { ServicesResponse } from '../common/interfaces/responses/services-response.interface';
-import { Token } from '../common/interfaces/token.interface';
-import { Account } from '../common/interfaces/account.interface';
+import { RegisterUserDto } from '../../common/interfaces/dtos/authorization/register-user.dto';
+import { LoginUserDto } from '../../common/interfaces/dtos/authorization/login-user.dto';
+import { ServicesResponse } from '../../common/interfaces/responses/services-response.interface';
+import { Token } from '../../common/interfaces/token.interface';
+import { Account } from '../../common/interfaces/account.interface';
 
 @Controller('auth')
 export class AuthController {

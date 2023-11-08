@@ -1,12 +1,13 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import Redis from 'ioredis';
+import { RedisAdapter } from '../common/adapters/redis.adapter';
+import { Tokens } from '../common/interfaces/tokens.interface';
 
 @Injectable()
 export class TokenService {
 	constructor(
-		@Inject('REDIS') private readonly redisService: Redis,
+		private readonly redisAdapter: RedisAdapter,
 		private readonly jwtService: JwtService,
 		private readonly configService: ConfigService,
 	) {}
@@ -23,22 +24,17 @@ export class TokenService {
 			),
 		]);
 
-		const redis = this.redisService.pipeline();
-		await redis
-			.set(email + ' [access]', accessToken)
-			.set(email + ' [refresh]', refreshToken)
-			.exec();
+		await this.redisAdapter.set('access', accessToken, 20);
+		await this.redisAdapter.set('refresh', refreshToken, 20);
 	}
 
-	public async getTokens(email: string): Promise<{ accessToken: unknown; refreshToken: unknown }> {
-		const redis = this.redisService.pipeline();
-		const tokens = await redis
-			.get(email + ' [access]')
-			.get(email + ' [refresh]')
-			.exec();
+	public async getTokens(): Promise<Tokens> {
+		const accessToken = await this.redisAdapter.get('access');
+		const refreshToken = await this.redisAdapter.get('refresh');
+
 		return {
-			accessToken: tokens[0][1],
-			refreshToken: tokens[1][1],
+			accessToken,
+			refreshToken,
 		};
 	}
 

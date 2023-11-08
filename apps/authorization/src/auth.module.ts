@@ -10,8 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { RefreshTokenStrategy } from './services/strategies/refresh-token.strategy';
 import { TokenService } from './services/token.service';
 import { TypeOrmConfig } from './common/configs/typeorm';
-import { CryptoConfig } from './common/configs/crypto';
-import { RedisConfig } from './common/configs/redis';
+import { CryptoHelper } from './helpers/crypto.helper';
 
 @Module({
 	imports: [
@@ -24,18 +23,7 @@ import { RedisConfig } from './common/configs/redis';
 			useClass: TypeOrmConfig,
 		}),
 	],
-	providers: [
-		AuthService,
-		JwtService,
-		AccessTokenStrategy,
-		RefreshTokenStrategy,
-		CryptoConfig,
-		TokenService,
-		{
-			provide: 'REDIS',
-			useValue: RedisConfig,
-		},
-	],
+	providers: [AuthService, JwtService, AccessTokenStrategy, RefreshTokenStrategy, CryptoHelper, TokenService],
 	controllers: [AuthController],
 })
 export class AuthModule {}

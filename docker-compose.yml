@@ -39,10 +39,10 @@ services:
     links:
       - database
       - cache
-  account:
-    build: ./account
+  bills:
+    build: ./bills
     restart: always
-    hostname: account
+    hostname: bills
     environment:
       - TYPEORM_HOST=${POSTGRES_HOST}
       - TYPEORM_PORT=${POSTGRES_PORT}

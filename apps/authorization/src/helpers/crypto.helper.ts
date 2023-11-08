@@ -4,7 +4,7 @@ const algorithm = 'aes-256-cbc';
 const key = randomBytes(32);
 const iv = randomBytes(16);
 
-export class CryptoConfig {
+export class CryptoHelper {
 	public encrypt(text: string) {
 		const cipher = createCipheriv(algorithm, key, iv);
 		let encryptedData = cipher.update(text, 'utf-8', 'hex');
