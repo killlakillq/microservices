@@ -6,7 +6,7 @@ import { AddPhoneNumberToAccountDto } from '../../account/entities/dtos/add-phon
 import { AddMobileClientDto } from '../entities/dtos/add-mobile-client.dto';
 import { MobileBalanceDto } from '../entities/dtos/mobile-balance.dto';
 import { MobileEntity } from '../entities/mobile.entity';
-import { Payments } from '../../../common/interfaces/generics/payments.generic';
+import { Payments } from '../../common/interfaces/generics/payments.generic';
 
 export class MobilePaymentService
 	implements

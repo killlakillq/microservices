@@ -6,7 +6,7 @@ import { AddPersonalAccountDto } from '../../account/entities/dtos/add-personal-
 import { AddInternetClientDto } from '../entities/dtos/add-internet-client.dto';
 import { InternetBalanceDto } from '../entities/dtos/internet-balance.dto';
 import { InternetEntity } from '../entities/internet.entity';
-import { Payments } from '../../../common/interfaces/generics/payments.generic';
+import { Payments } from '../../common/interfaces/generics/payments.generic';
 
 export class InternetPaymentService
 	implements

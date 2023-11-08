@@ -6,14 +6,14 @@ import { AddTaxDto } from '../entities/dtos/add-tax.dto';
 import { UtilitiesTaxesDto } from '../entities/dtos/utilities-taxes.dto';
 import { AccountEntity } from '../../account/entities/account.entity';
 import { UtilitiesEntity } from '../entities/utilities.entity';
-import { UtilitiesType } from '../../../common/interfaces/enums/utilities-type.enum';
+import { UtilitiesType } from '../../common/interfaces/enums/utilities-type.enum';
 import {
 	Bills,
 	BalanceDtos,
 	ReturnTypes,
 	UtilitiesAccount,
 	UtilitiesPaid,
-} from '../../../common/interfaces/generics/bills.generic';
+} from '../../common/interfaces/generics/bills.generic';
 import { AccountService } from '../../account/services/account.service';
 import { UtilitiesPaymentService } from './utilities-payment.service';
 

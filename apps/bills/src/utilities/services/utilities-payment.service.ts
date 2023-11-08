@@ -5,8 +5,8 @@ import { AddPersonalAccountDto } from '../../account/entities/dtos/add-personal-
 import { AddTaxDto } from '../entities/dtos/add-tax.dto';
 import { UtilitiesTaxesDto, UtilitiesBills } from '../entities/dtos/utilities-taxes.dto';
 import { UtilitiesEntity } from '../entities/utilities.entity';
-import { UtilitiesType } from '../../../common/interfaces/enums/utilities-type.enum';
-import { Payments } from '../../../common/interfaces/generics/payments.generic';
+import { UtilitiesType } from '../../common/interfaces/enums/utilities-type.enum';
+import { Payments } from '../../common/interfaces/generics/payments.generic';
 
 export class UtilitiesPaymentService
 	implements Payments<AddTaxDto, UtilitiesEntity, UtilitiesTaxesDto, AddPersonalAccountDto, number, UtilitiesBills>

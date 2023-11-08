@@ -7,7 +7,7 @@ import { AddMobileClientDto } from '../entities/dtos/add-mobile-client.dto';
 import { MobileBalanceDto } from '../entities/dtos/mobile-balance.dto';
 import { AccountEntity } from '../../account/entities/account.entity';
 import { MobileEntity } from '../entities/mobile.entity';
-import { Bills, BalanceDtos, ReturnTypes, MobileAccount } from '../../../common/interfaces/generics/bills.generic';
+import { Bills, BalanceDtos, ReturnTypes, MobileAccount } from '../../common/interfaces/generics/bills.generic';
 import { MobilePaymentService } from './mobile-payment.service';
 
 export class MobileService

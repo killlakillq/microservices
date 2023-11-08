@@ -5,7 +5,7 @@ import { AccountResponseDto } from '../account/entities/dtos/account-reponse.dto
 import { AddPersonalAccountDto } from '../account/entities/dtos/add-personal-account.dto';
 import { AddTaxDto } from './entities/dtos/add-tax.dto';
 import { UtilitiesTaxesDto } from './entities/dtos/utilities-taxes.dto';
-import { UtilitiesType } from '../../common/interfaces/enums/utilities-type.enum';
+import { UtilitiesType } from '../common/interfaces/enums/utilities-type.enum';
 import { UtilitiesService } from './services/utilities.service';
 
 @Controller('utilities')

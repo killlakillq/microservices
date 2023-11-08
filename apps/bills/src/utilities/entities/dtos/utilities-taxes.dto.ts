@@ -1,5 +1,5 @@
 import { IsEnum, IsNumber } from 'class-validator';
-import { UtilitiesType } from '../../../../common/interfaces/enums/utilities-type.enum';
+import { UtilitiesType } from '../../../common/interfaces/enums/utilities-type.enum';
 
 export class UtilitiesTaxesDto {
 	@IsNumber()

@@ -6,7 +6,7 @@ import { AddInternetClientDto } from '../entities/dtos/add-internet-client.dto';
 import { InternetBalanceDto } from '../entities/dtos/internet-balance.dto';
 import { AccountEntity } from '../../account/entities/account.entity';
 import { InternetEntity } from '../entities/internet.entity';
-import { Bills, BalanceDtos, ReturnTypes, InternetAccount } from '../../../common/interfaces/generics/bills.generic';
+import { Bills, BalanceDtos, ReturnTypes, InternetAccount } from '../../common/interfaces/generics/bills.generic';
 import { AccountService } from '../../account/services/account.service';
 import { InternetPaymentService } from './internet-payment.service';
 
