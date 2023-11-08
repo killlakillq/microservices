@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
-import { ClientProxyFactory } from '@nestjs/microservices';
+import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { AuthController } from './controllers/auth.controller';
 import { AuthGuard } from './common/guards/auth.guard';
 import { AccountController } from './controllers/account.controller';
@@ -17,16 +17,26 @@ import { UtilitiesController } from './controllers/utilities.controller';
 		{
 			provide: 'AUTH_SERVICE',
 			useFactory: (configService: ConfigService) => {
-				const authServiceOptions = configService.get('authService');
-				return ClientProxyFactory.create(authServiceOptions);
+				return ClientProxyFactory.create({
+					transport: Transport.TCP,
+					options: {
+						host: configService.get('AUTH_SERVICE_HOST'),
+						port: configService.get('AUTH_SERVICE_PORT'),
+					},
+				});
 			},
 			inject: [ConfigService],
 		},
 		{
-			provide: 'ACCOUNT_SERVICE',
+			provide: 'BILLS_SERVICE',
 			useFactory: (configService: ConfigService) => {
-				const accountServiceOptions = configService.get('accountService');
-				return ClientProxyFactory.create(accountServiceOptions);
+				return ClientProxyFactory.create({
+					transport: Transport.TCP,
+					options: {
+						host: configService.get('BILLS_SERVICE_HOST'),
+						port: configService.get('BILLS_SERVICE_PORT'),
+					},
+				});
 			},
 			inject: [ConfigService],
 		},

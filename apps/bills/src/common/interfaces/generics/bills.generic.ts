@@ -1,15 +1,15 @@
-import { AccountBalanceDto, Balance } from '../../../modules/account/entities/dtos/account-balance.dto';
-import { AddPersonalAccountDto } from '../../../modules/account/entities/dtos/add-personal-account.dto';
-import { AddPhoneNumberToAccountDto } from '../../../modules/account/entities/dtos/add-phone-number-to-account.dto';
-import { AddInternetClientDto } from '../../../modules/internet/entities/dtos/add-internet-client.dto';
-import { InternetBalanceDto } from '../../../modules/internet/entities/dtos/internet-balance.dto';
-import { AddMobileClientDto } from '../../../modules/mobile/entities/dtos/add-mobile-client.dto';
-import { MobileBalanceDto } from '../../../modules/mobile/entities/dtos/mobile-balance.dto';
-import { AddTaxDto } from '../../../modules/utilities/entities/dtos/add-tax.dto';
-import { UtilitiesTaxesDto } from '../../../modules/utilities/entities/dtos/utilities-taxes.dto';
-import { InternetEntity } from '../../../modules/internet/entities/internet.entity';
-import { MobileEntity } from '../../../modules/mobile/entities/mobile.entity';
-import { UtilitiesEntity } from '../../../modules/utilities/entities/utilities.entity';
+import { AccountBalanceDto, Balance } from '../../../account/entities/dtos/account-balance.dto';
+import { AddPersonalAccountDto } from '../../../account/entities/dtos/add-personal-account.dto';
+import { AddPhoneNumberToAccountDto } from '../../../account/entities/dtos/add-phone-number-to-account.dto';
+import { AddInternetClientDto } from '../../../internet/entities/dtos/add-internet-client.dto';
+import { InternetBalanceDto } from '../../../internet/entities/dtos/internet-balance.dto';
+import { InternetEntity } from '../../../internet/entities/internet.entity';
+import { AddMobileClientDto } from '../../../mobile/entities/dtos/add-mobile-client.dto';
+import { MobileBalanceDto } from '../../../mobile/entities/dtos/mobile-balance.dto';
+import { MobileEntity } from '../../../mobile/entities/mobile.entity';
+import { AddTaxDto } from '../../../utilities/entities/dtos/add-tax.dto';
+import { UtilitiesTaxesDto } from '../../../utilities/entities/dtos/utilities-taxes.dto';
+import { UtilitiesEntity } from '../../../utilities/entities/utilities.entity';
 import { UtilitiesType } from '../enums/utilities-type.enum';
 
 export type InternetAccount = { name: string; surname: string; internet: number };

@@ -7,11 +7,12 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
 	Logger.log('[NestFactory] Bills service started');
+	const config = new ConfigService();
 	const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
 		transport: Transport.TCP,
 		options: {
-			host: new ConfigService().get('HOST'),
-			port: new ConfigService().get('PORT'),
+			host: config.get('HOST'),
+			port: config.get('PORT'),
 		},
 	} as TcpOptions);
 	app.useGlobalFilters(new HttpExceptionFilter<HttpException>());

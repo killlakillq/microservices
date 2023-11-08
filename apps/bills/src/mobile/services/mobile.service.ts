@@ -44,8 +44,8 @@ export class MobileService
 		};
 	}
 
-	public async checkBalance(data: string): Promise<MobileEntity> {
-		return await this.mobilePaymentService.checkBalance(data);
+	public async checkBalance(account: string): Promise<MobileEntity> {
+		return await this.mobilePaymentService.checkBalance(account);
 	}
 
 	public async payForBills(decrement: AccountBalanceDto, increment: MobileBalanceDto): Promise<Balance> {

@@ -3,10 +3,10 @@ import { HttpException } from '@nestjs/common/exceptions';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { RegisterUserDto } from '../common/interfaces/dtos/authorization/register-user.dto';
-import { AuthResponseDto } from '../common/interfaces/dtos/authorization/auth-user-respose.dto';
-import { ServiceAccountResponse } from '../common/interfaces/responses/service-account-response.interface';
-import { ServiceAuthenticationResponse } from '../common/interfaces/responses/service-authentication-response.interface';
 import { LoginUserDto } from '../common/interfaces/dtos/authorization/login-user.dto';
+import { ServicesResponse } from '../common/interfaces/responses/services-response.interface';
+import { Token } from '../common/interfaces/token.interface';
+import { Account } from '../common/interfaces/account.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -16,11 +16,11 @@ export class AuthController {
 	) {}
 
 	@Post('sign-up')
-	public async registerUser(@Body() registerUserDto: RegisterUserDto): Promise<AuthResponseDto> {
-		const registerUserResponse: ServiceAuthenticationResponse = await firstValueFrom(
+	public async registerUser(@Body() dto: RegisterUserDto): Promise<ServicesResponse<Token>> {
+		const registerUserResponse: ServicesResponse<Token> = await firstValueFrom(
 			this.authClient.send('register-user', {
-				login: registerUserDto.login,
-				password: registerUserDto.password,
+				login: dto.login,
+				password: dto.password,
 			}),
 		);
 		if (registerUserResponse.status !== HttpStatus.CREATED) {
@@ -33,10 +33,10 @@ export class AuthController {
 				registerUserResponse.status,
 			);
 		}
-		const createAccountResponse: ServiceAccountResponse = await firstValueFrom(
+		const createAccountResponse: ServicesResponse<Account> = await firstValueFrom(
 			this.accountClient.send('create-account', {
-				name: registerUserDto.name,
-				surname: registerUserDto.surname,
+				name: dto.name,
+				surname: dto.surname,
 			}),
 		);
 		if (createAccountResponse.status !== HttpStatus.CREATED) {
@@ -50,6 +50,7 @@ export class AuthController {
 			);
 		}
 		return {
+			status: registerUserResponse.status,
 			message: registerUserResponse.message,
 			data: null,
 			errors: null,
@@ -57,9 +58,9 @@ export class AuthController {
 	}
 
 	@Post('sign-in')
-	public async loginUser(@Body() loginUserDto: LoginUserDto): Promise<AuthResponseDto> {
-		const loginUserResponse: ServiceAuthenticationResponse = await firstValueFrom(
-			this.authClient.send('login-user', loginUserDto),
+	public async loginUser(@Body() dto: LoginUserDto): Promise<ServicesResponse<Token>> {
+		const loginUserResponse: ServicesResponse<Token> = await firstValueFrom(
+			this.authClient.send('login-user', dto),
 		);
 		if (loginUserResponse.status !== HttpStatus.ACCEPTED) {
 			throw new HttpException(
@@ -73,10 +74,9 @@ export class AuthController {
 		}
 
 		return {
+			status: loginUserResponse.status,
 			message: loginUserResponse.message,
-			data: {
-				tokens: loginUserResponse.data,
-			},
+			data: loginUserResponse.data,
 			errors: null,
 		};
 	}

@@ -23,8 +23,8 @@ export class AccountController {
 
 	@UsePipes(new ValidationPipe())
 	@MessagePattern('check-balance')
-	public async checkBalance(name: string, surname: string): Promise<AccountResponseDto> {
-		const check = await this.accountService.checkBalance(name, surname);
+	public async checkBalance(id: string): Promise<AccountResponseDto> {
+		const check = await this.accountService.checkBalance(id);
 		return {
 			status: 202,
 			message: 'the tax was successfully added.',

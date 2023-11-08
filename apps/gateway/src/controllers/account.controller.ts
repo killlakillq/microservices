@@ -1,62 +1,58 @@
-import { Controller, Inject, Post, Body, HttpStatus, HttpException, Get } from '@nestjs/common';
+import { Controller, Inject, Post, Body, HttpStatus, HttpException, Get, Req } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { Authorization } from '../common/decorators/auth.decorator';
-import { AccountBalanceDto } from '../common/interfaces/dtos/account/account-balance.dto';
-import { AccountResponseDto } from '../common/interfaces/dtos/account/responses/account-response.dto';
-import { ServiceAccountResponse } from '../common/interfaces/responses/service-account-response.interface';
+import { AccountBalanceDto } from '../common/interfaces/dtos/bills/account-balance.dto';
+import { ServicesResponse } from '../common/interfaces/responses/services-response.interface';
+import { Account } from '../common/interfaces/account.interface';
 
 @Controller('account')
 export class AccountController {
-	constructor(@Inject('ACCOUNT_SERVICE') private readonly accountClient: ClientProxy) {}
+	constructor(@Inject('ACCOUNT_SERVICE') private readonly client: ClientProxy) {}
 
 	@Get('balance')
-	public async checkAccountBalance(@Body() name: string, @Body() surname: string): Promise<AccountResponseDto> {
-		const checkAccountBalanceResponse: ServiceAccountResponse = await firstValueFrom(
-			this.accountClient.send('check-balance', { name: name, surname: surname }),
+	public async checkBalance(@Req() id: string): Promise<ServicesResponse<Account>> {
+		const { status, message, data, errors }: ServicesResponse<Account> = await firstValueFrom(
+			this.client.send('check-balance', id),
 		);
-		if (checkAccountBalanceResponse.status !== HttpStatus.ACCEPTED) {
+		if (status !== HttpStatus.ACCEPTED) {
 			throw new HttpException(
 				{
-					message: checkAccountBalanceResponse.message,
+					message: message,
 					data: null,
-					errors: checkAccountBalanceResponse.errors,
+					errors: errors,
 				},
-				checkAccountBalanceResponse.status,
+				status,
 			);
 		}
 		return {
-			message: checkAccountBalanceResponse.message,
-			data: {
-				account: checkAccountBalanceResponse.data,
-			},
+			status: status,
+			message: message,
+			data: data,
 			errors: null,
 		};
 	}
 
 	@Authorization(true)
 	@Post('balance/replenish')
-	public async balanceReplenishment(
-		@Body() incrementAccountBalanceDto: AccountBalanceDto,
-	): Promise<AccountResponseDto> {
-		const balanceReplenishmentResponse: ServiceAccountResponse = await firstValueFrom(
-			this.accountClient.send('balance-replenishment', incrementAccountBalanceDto),
+	public async replenishBalance(@Body() dto: AccountBalanceDto): Promise<ServicesResponse<Account>> {
+		const { status, message, data, errors }: ServicesResponse<Account> = await firstValueFrom(
+			this.client.send('balance-replenishment', dto),
 		);
-		if (balanceReplenishmentResponse.status !== HttpStatus.ACCEPTED) {
+		if (status !== HttpStatus.ACCEPTED) {
 			throw new HttpException(
 				{
-					message: balanceReplenishmentResponse.message,
+					message: message,
 					data: null,
-					errors: balanceReplenishmentResponse.errors,
+					errors,
 				},
-				balanceReplenishmentResponse.status,
+				status,
 			);
 		}
 		return {
-			message: balanceReplenishmentResponse.message,
-			data: {
-				account: balanceReplenishmentResponse.data,
-			},
+			status: status,
+			message: message,
+			data: data,
 			errors: null,
 		};
 	}

@@ -2,120 +2,114 @@ import { Inject, Post, Body, HttpStatus, HttpException, Controller, Get } from '
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { Authorization } from '../common/decorators/auth.decorator';
-import { AddInternetClientDto } from '../common/interfaces/dtos/account/add-internet-client.dto';
-import { InternetResponseDto } from '../common/interfaces/dtos/account/responses/internet-response.dto';
-import { ServiceInternetResponse } from '../common/interfaces/responses/service-internet-response.interface';
-import { AccountBalanceDto } from '../common/interfaces/dtos/account/account-balance.dto';
-import { AddPersonalAccountDto } from '../common/interfaces/dtos/account/add-personal-account.dto';
-import { InternetBalanceDto } from '../common/interfaces/dtos/account/internet-balance.dto';
+import { AddInternetClientDto } from '../common/interfaces/dtos/bills/add-internet-client.dto';
+import { AccountBalanceDto } from '../common/interfaces/dtos/bills/account-balance.dto';
+import { AddPersonalAccountDto } from '../common/interfaces/dtos/bills/add-personal-account.dto';
+import { InternetBalanceDto } from '../common/interfaces/dtos/bills/internet-balance.dto';
+import { ServicesResponse } from '../common/interfaces/responses/services-response.interface';
+import { Internet } from '../common/interfaces/Internet.interface';
 
 @Controller('internet')
 export class InternetController {
-	public constructor(@Inject('ACCOUNT_SERVICE') private readonly accountClient: ClientProxy) {}
+	public constructor(@Inject('ACCOUNT_SERVICE') private readonly client: ClientProxy) {}
 
 	@Authorization(true)
 	@Post('client')
-	public async addInternetClient(@Body() addInternetClientDto: AddInternetClientDto): Promise<InternetResponseDto> {
-		const addInternetClientResponse: ServiceInternetResponse = await firstValueFrom(
-			this.accountClient.send('new-internet-client', addInternetClientDto),
+	public async addClient(@Body() dto: AddInternetClientDto): Promise<ServicesResponse<Internet>> {
+		const { status, message, data, errors }: ServicesResponse<Internet> = await firstValueFrom(
+			this.client.send('new-internet-client', dto),
 		);
-		if (addInternetClientResponse.status !== HttpStatus.CREATED) {
+		if (status !== HttpStatus.CREATED) {
 			throw new HttpException(
 				{
-					message: addInternetClientResponse.message,
+					message: message,
 					data: null,
-					errors: addInternetClientResponse.errors,
+					errors: errors,
 				},
-				addInternetClientResponse.status,
+				status,
 			);
 		}
 		return {
-			message: addInternetClientResponse.message,
-			data: {
-				internet: addInternetClientResponse.data,
-			},
+			status: status,
+			message: message,
+			data: data,
 			errors: null,
 		};
 	}
 
 	@Authorization(true)
 	@Post('account')
-	public async addInternetPersonalAccount(
-		@Body() addPersonalAccountDto: AddPersonalAccountDto,
-	): Promise<InternetResponseDto> {
-		const balanceReplenishmentResponse: ServiceInternetResponse = await firstValueFrom(
-			this.accountClient.send('add-internet-personal-account', addPersonalAccountDto),
+	public async addAccount(@Body() dto: AddPersonalAccountDto): Promise<ServicesResponse<Internet>> {
+		const { status, message, data, errors }: ServicesResponse<Internet> = await firstValueFrom(
+			this.client.send('add-internet-personal-account', dto),
 		);
-		if (balanceReplenishmentResponse.status !== HttpStatus.ACCEPTED) {
+		if (status !== HttpStatus.ACCEPTED) {
 			throw new HttpException(
 				{
-					message: balanceReplenishmentResponse.message,
+					message: message,
 					data: null,
-					erros: balanceReplenishmentResponse.errors,
+					erros: errors,
 				},
-				balanceReplenishmentResponse.status,
+				status,
 			);
 		}
 		return {
-			message: balanceReplenishmentResponse.message,
-			data: {
-				internet: balanceReplenishmentResponse.data,
-			},
+			status: status,
+			message: message,
+			data: data,
 			errors: null,
 		};
 	}
 
 	@Get('balance')
-	public async checkInternetBalance(@Body() personalAccount: number): Promise<InternetResponseDto> {
-		const checkInternetBalanceResponse: ServiceInternetResponse = await firstValueFrom(
-			this.accountClient.send('check-internet-balance', personalAccount),
+	public async checkBalance(@Body() account: number): Promise<ServicesResponse<Internet>> {
+		const { status, message, data, errors }: ServicesResponse<Internet> = await firstValueFrom(
+			this.client.send('check-internet-balance', account),
 		);
-		if (checkInternetBalanceResponse.status !== HttpStatus.ACCEPTED) {
+		if (status !== HttpStatus.ACCEPTED) {
 			throw new HttpException(
 				{
-					message: checkInternetBalanceResponse.message,
+					message: message,
 					data: null,
-					errors: checkInternetBalanceResponse.errors,
+					errors: errors,
 				},
-				checkInternetBalanceResponse.status,
+				status,
 			);
 		}
 		return {
-			message: checkInternetBalanceResponse.message,
-			data: {
-				internet: checkInternetBalanceResponse.data,
-			},
+			status: status,
+			message: message,
+			data: data,
 			errors: null,
 		};
 	}
 
 	@Authorization(true)
 	@Post('pay')
-	public async payForInternet(
-		@Body() decrementAccountBalanceDto: AccountBalanceDto,
-		@Body() incrementInternetBalanceDto: InternetBalanceDto,
-	): Promise<InternetResponseDto> {
-		const payForInternetResponse: ServiceInternetResponse = await firstValueFrom(
-			this.accountClient.send('check-internet-balance', {
-				decrementAccountBalanceDto: decrementAccountBalanceDto,
-				incrementInternetBalanceDto: incrementInternetBalanceDto,
+	public async payForBills(
+		@Body() decrement: AccountBalanceDto,
+		@Body() increment: InternetBalanceDto,
+	): Promise<ServicesResponse<Internet>> {
+		const { status, message, data, errors }: ServicesResponse<Internet> = await firstValueFrom(
+			this.client.send('check-internet-balance', {
+				decrement: decrement,
+				increment: increment,
 			}),
 		);
-		if (payForInternetResponse.status !== HttpStatus.ACCEPTED) {
+		if (status !== HttpStatus.ACCEPTED) {
 			throw new HttpException(
 				{
-					message: payForInternetResponse.message,
+					message: message,
 					data: null,
-					errors: payForInternetResponse.errors,
+					errors: errors,
 				},
-				payForInternetResponse.status,
+				status,
 			);
 		}
 		return {
-			message: payForInternetResponse.message,
-			data: {
-				internet: payForInternetResponse.data,
-			},
+			status: status,
+			message: message,
+			data: data,
 			errors: null,
 		};
 	}

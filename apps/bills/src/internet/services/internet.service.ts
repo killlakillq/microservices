@@ -43,8 +43,8 @@ export class InternetService
 		};
 	}
 
-	public async checkBalance(data: number): Promise<InternetEntity> {
-		return await this.internetPaymentService.checkBalance(data);
+	public async checkBalance(account: number): Promise<InternetEntity> {
+		return await this.internetPaymentService.checkBalance(account);
 	}
 
 	public async payForBills(decrement: AccountBalanceDto, increment: InternetBalanceDto): Promise<Balance> {

@@ -14,8 +14,8 @@ export class AccountService {
 		return await this.accountRepository.save({ ...dto });
 	}
 
-	public async checkBalance(name: string, surname: string): Promise<AccountEntity> {
-		return await this.accountRepository.findOneBy({ name, surname });
+	public async checkBalance(id: string): Promise<AccountEntity> {
+		return await this.accountRepository.findOneBy({ id });
 	}
 
 	public async replenishBalance(dto: AccountBalanceDto): Promise<Balance> {
