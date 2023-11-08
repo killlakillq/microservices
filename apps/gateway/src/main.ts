@@ -7,6 +7,6 @@ async function bootstrap() {
 	Logger.log('[NestFactory] Gateway started');
 	const config = new ConfigService();
 	const app = await NestFactory.create(AppModule);
-	await app.listen(config.get('port'));
+	await app.listen(config.get('PORT'));
 }
 bootstrap();

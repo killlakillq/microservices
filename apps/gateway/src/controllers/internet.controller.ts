@@ -1,4 +1,4 @@
-import { Inject, Post, Body, HttpStatus, HttpException, Controller } from '@nestjs/common';
+import { Inject, Post, Body, HttpStatus, HttpException, Controller, Get } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { Authorization } from '../common/decorators/auth.decorator';
@@ -65,7 +65,7 @@ export class InternetController {
 		};
 	}
 
-	@Post('balance')
+	@Get('balance')
 	public async checkInternetBalance(@Body() personalAccount: number): Promise<InternetResponseDto> {
 		const checkInternetBalanceResponse: ServiceInternetResponse = await firstValueFrom(
 			this.accountClient.send('check-internet-balance', personalAccount),

@@ -1,4 +1,4 @@
-import { Controller, Inject, Post, Body, HttpStatus, HttpException } from '@nestjs/common';
+import { Controller, Inject, Post, Body, HttpStatus, HttpException, Get } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { Authorization } from '../common/decorators/auth.decorator';
@@ -10,7 +10,7 @@ import { ServiceAccountResponse } from '../common/interfaces/responses/service-a
 export class AccountController {
 	constructor(@Inject('ACCOUNT_SERVICE') private readonly accountClient: ClientProxy) {}
 
-	@Post('balance')
+	@Get('balance')
 	public async checkAccountBalance(@Body() name: string, @Body() surname: string): Promise<AccountResponseDto> {
 		const checkAccountBalanceResponse: ServiceAccountResponse = await firstValueFrom(
 			this.accountClient.send('check-balance', { name: name, surname: surname }),

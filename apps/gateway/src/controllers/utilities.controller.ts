@@ -1,4 +1,4 @@
-import { Inject, Post, Body, HttpStatus, HttpException, Controller } from '@nestjs/common';
+import { Inject, Post, Body, HttpStatus, HttpException, Controller, Get } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { Authorization } from '../common/decorators/auth.decorator';
@@ -66,7 +66,7 @@ export class UtilitiesController {
 		};
 	}
 
-	@Post('balance')
+	@Get('balance')
 	public async checkUtilitiesTaxes(
 		@Body() personalAccount: number,
 		@Body() type: UtilitiesType,
