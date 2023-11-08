@@ -3,10 +3,11 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
+import { UserPayload } from '../../common/interfaces/user.interface';
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
-	constructor(private readonly configService: ConfigService) {
+	public constructor(configService: ConfigService) {
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 			passReqToCallback: true,
@@ -14,8 +15,7 @@ export class RefreshTokenStrategy extends PassportStrategy(Strategy, 'jwt-refres
 		});
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	async validate(req: Request, payload: any) {
+	async validate(req: Request, payload: UserPayload) {
 		const refreshToken = req.get('Authorization').replace('Bearer', '').trim();
 		return { ...payload, refreshToken };
 	}

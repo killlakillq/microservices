@@ -2,11 +2,11 @@ import { Body, Controller, HttpStatus, Inject, Post } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { RegisterUserDto } from './interfaces/dto/authentication/register-user.dto';
-import { AuthResponseDto } from './interfaces/dto/authentication/auth-user-respose.dto';
-import { ServiceAccountResponse } from './interfaces/responses/service-account-response.interface';
-import { ServiceAuthenticationResponse } from './interfaces/responses/service-authentication-response.interface';
-import { LoginUserDto } from './interfaces/dto/authentication/login-user.dto';
+import { RegisterUserDto } from '../common/interfaces/dtos/authorization/register-user.dto';
+import { AuthResponseDto } from '../common/interfaces/dtos/authorization/auth-user-respose.dto';
+import { ServiceAccountResponse } from '../common/interfaces/responses/service-account-response.interface';
+import { ServiceAuthenticationResponse } from '../common/interfaces/responses/service-authentication-response.interface';
+import { LoginUserDto } from '../common/interfaces/dtos/authorization/login-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -15,7 +15,7 @@ export class AuthController {
 		@Inject('ACCOUNT_SERVICE') private readonly accountClient: ClientProxy,
 	) {}
 
-	@Post('signup')
+	@Post('sign-up')
 	public async registerUser(@Body() registerUserDto: RegisterUserDto): Promise<AuthResponseDto> {
 		const registerUserResponse: ServiceAuthenticationResponse = await firstValueFrom(
 			this.authClient.send('register-user', {
@@ -56,7 +56,7 @@ export class AuthController {
 		};
 	}
 
-	@Post('signin')
+	@Post('sign-in')
 	public async loginUser(@Body() loginUserDto: LoginUserDto): Promise<AuthResponseDto> {
 		const loginUserResponse: ServiceAuthenticationResponse = await firstValueFrom(
 			this.authClient.send('login-user', loginUserDto),

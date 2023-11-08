@@ -1,4 +1,4 @@
-import { UtilitiesType } from "./enums/utilities-type.enum";
+import { UtilitiesType } from './enums/utilities-type.enum';
 
 export interface Utilities {
 	id: string;

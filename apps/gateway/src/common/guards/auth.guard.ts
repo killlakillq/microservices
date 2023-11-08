@@ -8,7 +8,7 @@ import { firstValueFrom } from 'rxjs';
 export class AuthGuard implements CanActivate {
 	constructor(
 		private readonly reflector: Reflector,
-		@Inject('AUTH_SERVICE') private readonly authClient: ClientProxy,
+		@Inject('AUTH_SERVICE') private readonly client: ClientProxy,
 	) {}
 
 	public async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
 			}
 
 			const request = context.switchToHttp().getRequest();
-			await firstValueFrom(this.authClient.send('verify-token', request.headers.authorization));
+			await firstValueFrom(this.client.send('verify-token', request.headers.authorization));
 
 			return true;
 		} catch (error) {

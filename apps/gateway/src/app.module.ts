@@ -1,15 +1,17 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ClientProxyFactory } from '@nestjs/microservices';
-import { AccountController } from './account.controller';
-import { AuthController } from './auth.controller';
-import { ConfigService } from './services/config/config.service';
-import { AuthGuard } from './services/guards/auth.guard';
+import { AuthController } from './controllers/auth.controller';
+import { AuthGuard } from './common/guards/auth.guard';
+import { AccountController } from './controllers/account.controller';
+import { InternetController } from './controllers/internet.controller';
+import { MobileController } from './controllers/mobile.controller';
+import { UtilitiesController } from './controllers/utilities.controller';
 
 @Module({
 	imports: [ConfigModule.forRoot()],
-	controllers: [AuthController, AccountController],
+	controllers: [AuthController, AccountController, InternetController, MobileController, UtilitiesController],
 	providers: [
 		ConfigService,
 		{
@@ -31,7 +33,7 @@ import { AuthGuard } from './services/guards/auth.guard';
 		{
 			provide: APP_GUARD,
 			useClass: AuthGuard,
-		}
+		},
 	],
 })
 export class AppModule {}

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common/decorators';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
-import { UserEntity } from '../../interfaces/entities/user.entity';
+import { UserEntity } from '../interfaces/entities/user.entity';
 
 @Injectable()
-export class TypeOrmConfigService implements TypeOrmOptionsFactory {
+export class TypeOrmConfig implements TypeOrmOptionsFactory {
 	constructor(private readonly configService: ConfigService) {}
 
 	createTypeOrmOptions(): TypeOrmModuleOptions | Promise<TypeOrmModuleOptions> {

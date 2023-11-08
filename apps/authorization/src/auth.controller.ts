@@ -1,7 +1,7 @@
 import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
-import { CreateUserDto } from './interfaces/dto/create-user.dto';
-import { UserResponseDto } from './interfaces/dto/user-response.dto';
+import { CreateUserDto } from './common/interfaces/entities/dtos/create-user.dto';
+import { UserResponseDto } from './common/interfaces/entities/dtos/user-response.dto';
 import { AuthService } from './services/auth.service';
 import { TokenService } from './services/token.service';
 

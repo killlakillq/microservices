@@ -2,10 +2,11 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { UserPayload } from '../../common/interfaces/user.interface';
 
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
-	constructor(private readonly configService: ConfigService) {
+	public constructor(configService: ConfigService) {
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 			ignoreExpiration: false,
@@ -13,8 +14,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
 		});
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	async validate(payload: any) {
+	async validate(payload: UserPayload) {
 		return { email: payload.email };
 	}
 }

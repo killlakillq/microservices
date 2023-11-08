@@ -1,4 +1,4 @@
-import { Internet } from '../../../internet.interface'
+import { Internet } from '../../../internet.interface';
 
 export interface InternetResponseDto {
 	message: string;
