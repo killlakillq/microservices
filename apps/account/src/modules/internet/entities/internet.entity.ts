@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToOne } from 'typeorm';
-import { AccountEntity } from './account.entity';
+import { AccountEntity } from '../../account/entities/account.entity';
 
 @Entity({ name: 'Internet' })
 export class InternetEntity extends BaseEntity {
@@ -20,7 +20,7 @@ export class InternetEntity extends BaseEntity {
 
 	@Column()
 	address: string;
-	
+
 	@OneToOne(() => AccountEntity, (account) => account.internet)
-	account: AccountEntity; 
+	account: AccountEntity;
 }

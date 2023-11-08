@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToOne, JoinColumn } from 'typeorm';
-import { InternetEntity } from './internet.entity';
-import { MobileEntity } from './mobile.entity';
-import { UtilitiesEntity } from './utilities.entity';
+import { InternetEntity } from '../../internet/entities/internet.entity';
+import { MobileEntity } from '../../mobile/entities/mobile.entity';
+import { UtilitiesEntity } from '../../utilities/entities/utilities.entity';
 
 @Entity({ name: 'Account' })
 export class AccountEntity extends BaseEntity {

@@ -10,3 +10,7 @@ export class AccountBalanceDto {
 	@IsNumber()
 	sum: number;
 }
+
+export type Balance = {
+	balance: number;
+};

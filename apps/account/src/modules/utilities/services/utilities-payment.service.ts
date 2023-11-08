@@ -1,12 +1,12 @@
 import { NotAcceptableException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AddPersonalAccountDto } from '../../interfaces/dto/account/add-personal-account.dto';
-import { AddTaxDto } from '../../interfaces/dto/utilities/add-tax.dto';
-import { UtilitiesTaxesDto } from '../../interfaces/dto/utilities/utilities-taxes.dto';
-import { UtilitiesEntity } from '../../interfaces/entities/utilities.entity';
-import { UtilitiesType } from '../../interfaces/enums/utilities-type.enum';
-import { Payments, UtilitiesBills } from '../../interfaces/generics/payments.interface';
+import { AddPersonalAccountDto } from '../../account/entities/dtos/add-personal-account.dto';
+import { AddTaxDto } from '../entities/dtos/add-tax.dto';
+import { UtilitiesTaxesDto, UtilitiesBills } from '../entities/dtos/utilities-taxes.dto';
+import { UtilitiesEntity } from '../entities/utilities.entity';
+import { UtilitiesType } from '../../../common/interfaces/enums/utilities-type.enum';
+import { Payments } from '../../../common/interfaces/generics/payments.generic';
 
 export class UtilitiesPaymentService
 	implements Payments<AddTaxDto, UtilitiesEntity, UtilitiesTaxesDto, AddPersonalAccountDto, number, UtilitiesBills>

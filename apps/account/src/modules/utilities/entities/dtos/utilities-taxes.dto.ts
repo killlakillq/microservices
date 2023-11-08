@@ -1,5 +1,5 @@
 import { IsEnum, IsNumber } from 'class-validator';
-import { UtilitiesType } from '../../enums/utilities-type.enum';
+import { UtilitiesType } from '../../../../common/interfaces/enums/utilities-type.enum';
 
 export class UtilitiesTaxesDto {
 	@IsNumber()
@@ -11,3 +11,5 @@ export class UtilitiesTaxesDto {
 	@IsNumber()
 	sum: number;
 }
+
+export type UtilitiesBills = { personalAccount: number; type: UtilitiesType; message: string };

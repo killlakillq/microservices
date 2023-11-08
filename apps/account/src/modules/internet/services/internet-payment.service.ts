@@ -1,11 +1,12 @@
 import { NotAcceptableException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AddPersonalAccountDto } from '../../interfaces/dto/account/add-personal-account.dto';
-import { AddInternetClientDto } from '../../interfaces/dto/internet/add-internet-client.dto';
-import { InternetBalanceDto } from '../../interfaces/dto/internet/internet-balance.dto';
-import { InternetEntity } from '../../interfaces/entities/internet.entity';
-import { Payments, Balance } from '../../interfaces/generics/payments.interface';
+import { Balance } from '../../account/entities/dtos/account-balance.dto';
+import { AddPersonalAccountDto } from '../../account/entities/dtos/add-personal-account.dto';
+import { AddInternetClientDto } from '../entities/dtos/add-internet-client.dto';
+import { InternetBalanceDto } from '../entities/dtos/internet-balance.dto';
+import { InternetEntity } from '../entities/internet.entity';
+import { Payments } from '../../../common/interfaces/generics/payments.generic';
 
 export class InternetPaymentService
 	implements

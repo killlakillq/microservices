@@ -1,13 +1,13 @@
 import { HttpException, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, TcpOptions, Transport } from '@nestjs/microservices';
-import { AccountModule } from './account.module';
 import { ConfigService } from './common/config/config';
-import { HttpExceptionFilter } from './filters/http-exception.filter';
+import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
 	Logger.log('[NestFactory] Account service started');
-	const app = await NestFactory.createMicroservice<MicroserviceOptions>(AccountModule, {
+	const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
 		transport: Transport.TCP,
 		options: {
 			host: new ConfigService().get('HOST'),

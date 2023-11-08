@@ -1,0 +1,53 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { NotAcceptableException } from '@nestjs/common/exceptions';
+import { Repository } from 'typeorm';
+import { AccountBalanceDto, Balance } from '../entities/dtos/account-balance.dto';
+import { CreateAccountDto } from '../entities/dtos/create-account.dto';
+import { AccountEntity } from '../entities/account.entity';
+
+@Injectable()
+export class AccountService {
+	constructor(@InjectRepository(AccountEntity) private readonly accountRepository: Repository<AccountEntity>) {}
+
+	public async createAccount(dto: CreateAccountDto): Promise<CreateAccountDto> {
+		return await this.accountRepository.save({ ...dto });
+	}
+
+	public async checkBalance(name: string, surname: string): Promise<AccountEntity> {
+		return await this.accountRepository.findOneBy({ name, surname });
+	}
+
+	public async replenishBalance(dto: AccountBalanceDto): Promise<Balance> {
+		const dataSource = this.accountRepository.createQueryBuilder();
+		await dataSource
+			.update(AccountEntity)
+			.set({ balance: () => 'balance + :sum' })
+			.setParameter('sum', dto.sum)
+			.where({ name: dto.name, surname: dto.surname })
+			.execute();
+
+		const returnBalance = await this.accountRepository.findOneBy({ name: dto.name, surname: dto.surname });
+		return { balance: returnBalance.balance };
+	}
+
+	public async withdrawalFromTheBalance(dto: AccountBalanceDto): Promise<Balance> {
+		const account = await this.accountRepository.find();
+		const findBalance = account.find((index) => index.balance);
+
+		if (findBalance.balance < 0 || dto.sum < 0) {
+			throw new NotAcceptableException();
+		}
+
+		const dataSource = this.accountRepository.createQueryBuilder();
+		await dataSource
+			.update(AccountEntity)
+			.set({ balance: () => 'balance - :sum' })
+			.setParameter('sum', dto.sum)
+			.where({ name: dto.name, surname: dto.surname })
+			.execute();
+
+		const returnBalance = await this.accountRepository.findOneBy({ name: dto.name, surname: dto.surname });
+		return { balance: returnBalance.balance };
+	}
+}

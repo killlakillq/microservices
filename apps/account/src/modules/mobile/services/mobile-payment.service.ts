@@ -1,11 +1,12 @@
 import { NotAcceptableException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AddPhoneNumberToAccountDto } from '../../interfaces/dto/account/add-phone-number-to-account.dto';
-import { AddMobileClientDto } from '../../interfaces/dto/mobile/add-mobile-client.dto';
-import { MobileBalanceDto } from '../../interfaces/dto/mobile/mobile-balance.dto';
-import { MobileEntity } from '../../interfaces/entities/mobile.entity';
-import { Payments, Balance } from '../../interfaces/generics/payments.interface';
+import { Balance } from '../../account/entities/dtos/account-balance.dto';
+import { AddPhoneNumberToAccountDto } from '../../account/entities/dtos/add-phone-number-to-account.dto';
+import { AddMobileClientDto } from '../entities/dtos/add-mobile-client.dto';
+import { MobileBalanceDto } from '../entities/dtos/mobile-balance.dto';
+import { MobileEntity } from '../entities/mobile.entity';
+import { Payments } from '../../../common/interfaces/generics/payments.generic';
 
 export class MobilePaymentService
 	implements
@@ -21,7 +22,7 @@ export class MobilePaymentService
 		return await this.mobileRepository.findOneBy({ phoneNumber: data });
 	}
 
-	public async payForBills(dto: MobileBalanceDto): Promise<{ balance: number }> {
+	public async payForBills(dto: MobileBalanceDto): Promise<Balance> {
 		const mobile = await this.mobileRepository.find();
 		const findBalance = mobile.find((index) => index.balance);
 

@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, BaseEntity, Column, OneToOne } from 'typeorm';
-import { UtilitiesType } from '../enums/utilities-type.enum';
-import { AccountEntity } from './account.entity';
+import { UtilitiesType } from '../../../common/interfaces/enums/utilities-type.enum';
+import { AccountEntity } from '../../account/entities/account.entity';
 
 @Entity({ name: 'Utilities' })
 export class UtilitiesEntity extends BaseEntity {
