@@ -28,13 +28,13 @@ import { UtilitiesController } from './controllers/bills/utilities.controller';
 			inject: [ConfigService],
 		},
 		{
-			provide: 'BILLS_SERVICE',
+			provide: 'ACCOUNT_SERVICE',
 			useFactory: (configService: ConfigService) => {
 				return ClientProxyFactory.create({
 					transport: Transport.TCP,
 					options: {
-						host: configService.get('BILLS_SERVICE_HOST'),
-						port: configService.get('BILLS_SERVICE_PORT'),
+						host: configService.get('ACCOUNT_SERVICE_HOST'),
+						port: configService.get('ACCOUNT_SERVICE_PORT'),
 					},
 				});
 			},
