@@ -5,8 +5,8 @@ const BLOCK_SIZE = 16;
 
 export function decrypt(text: string, key: string) {
 	const contents = Buffer.from(text, 'hex');
-	const iv = contents.slice(0, BLOCK_SIZE);
-	const textBytes = contents.slice(BLOCK_SIZE);
+	const iv = contents.subarray(0, BLOCK_SIZE);
+	const textBytes = contents.subarray(BLOCK_SIZE);
 
 	const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
 	let decrypted = decipher.update(textBytes.toString(), 'hex', 'utf8');
