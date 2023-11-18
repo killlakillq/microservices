@@ -1,12 +1,9 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AddTaxDto } from '../entities/dtos/add-tax.dto';
-import { UtilitiesTaxesDto } from '../entities/dtos/utilities-taxes.dto';
-import { UtilitiesEntity } from '../entities/utilities.entity';
 import { UtilitiesPaymentService } from './utilities-payment.service';
-import { AccountEntity } from '../../../account/src/entities/account.entity';
-import { AccountBalanceDto } from '../../../account/src/entities/dtos/account-balance.dto';
 import { AccountService } from '../../../account/src/services/account.service';
+import { Bills, AddTaxDto, UtilitiesEntity, AddPersonalAccountDto, AccountEntity, UtilitiesType, AccountBalanceDto, UtilitiesTaxesDto } from '@microservices/models';
+import { BalanceDtos, ReturnTypes, UtilitiesAccount, UtilitiesPaid } from '@microservices/models/interfaces/generics/bills.generic';
 
 export class UtilitiesService
 	implements Bills<AddTaxDto, UtilitiesEntity, BalanceDtos, AddPersonalAccountDto, number, ReturnTypes>

@@ -26,6 +26,7 @@
     "@nestjs/core": "^9.0.0",
     "@nestjs/microservices": "^9.3.2",
     "@nestjs/platform-express": "^9.0.0",
+    "@microservices/models": "*",
     "class-validator": "^0.14.0",
     "ioredis": "^5.3.0",
     "reflect-metadata": "^0.1.13",

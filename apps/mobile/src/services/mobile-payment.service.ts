@@ -1,9 +1,14 @@
+import {
+	AddMobileClientDto,
+	AddPhoneNumberToAccountDto,
+	Balance,
+	MobileBalanceDto,
+	MobileEntity,
+	Payments,
+} from '@microservices/models';
 import { NotAcceptableException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AddMobileClientDto } from '../entities/dtos/add-mobile-client.dto';
-import { MobileBalanceDto } from '../entities/dtos/mobile-balance.dto';
-import { MobileEntity } from '../entities/mobile.entity';
 
 export class MobilePaymentService
 	implements

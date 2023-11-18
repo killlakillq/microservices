@@ -1,12 +1,14 @@
+import {
+	Payments,
+	AddInternetClientDto,
+	InternetEntity,
+	InternetBalanceDto,
+	AddPersonalAccountDto,
+	Balance,
+} from '@microservices/models';
 import { NotAcceptableException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Balance } from '../../account/entities/dtos/account-balance.dto';
-import { AddPersonalAccountDto } from '../../account/entities/dtos/add-personal-account.dto';
-import { AddInternetClientDto } from '../entities/dtos/add-internet-client.dto';
-import { InternetBalanceDto } from '../entities/dtos/internet-balance.dto';
-import { InternetEntity } from '../../entities/internet.entity';
-import { Payments } from '../../common/interfaces/generics/payments.generic';
 
 export class InternetPaymentService
 	implements

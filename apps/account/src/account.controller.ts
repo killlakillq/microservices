@@ -1,9 +1,7 @@
 import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
-import { AccountBalanceDto, Balance } from './entities/dtos/account-balance.dto';
-import { CreateAccountDto } from './entities/dtos/create-account.dto';
 import { AccountService } from './services/account.service';
-import { ServicesResponse } from './common/interfaces/responses/services-response.interface';
+import { CreateAccountDto, ServicesResponse, Balance, AccountBalanceDto } from '@microservices/models';
 
 @Controller('account')
 export class AccountController {

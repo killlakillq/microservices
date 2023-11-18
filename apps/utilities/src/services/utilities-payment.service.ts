@@ -1,9 +1,8 @@
+import { Payments, AddTaxDto, UtilitiesEntity, UtilitiesTaxesDto, AddPersonalAccountDto, UtilitiesType } from '@microservices/models';
+import { UtilitiesBills } from '@microservices/models/entities/dtos/utilities/utilities-taxes.dto';
 import { NotAcceptableException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AddTaxDto } from '../entities/dtos/add-tax.dto';
-import { UtilitiesTaxesDto, UtilitiesBills } from '../entities/dtos/utilities-taxes.dto';
-import { UtilitiesEntity } from '../entities/utilities.entity';
 
 export class UtilitiesPaymentService
 	implements Payments<AddTaxDto, UtilitiesEntity, UtilitiesTaxesDto, AddPersonalAccountDto, number, UtilitiesBills>

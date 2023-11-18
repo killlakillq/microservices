@@ -1,0 +1,1 @@
+export { ExceptionFilter } from './src/rpc-exception.filter';

@@ -1,16 +1,22 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { InternetPaymentService } from './internet-payment.service';
-import { AddInternetClientDto } from '../entities/dtos/add-internet-client.dto';
-import { InternetBalanceDto } from '../entities/dtos/internet-balance.dto';
-import { InternetEntity } from '../entities/internet.entity';
+import {
+	Bills,
+	AddInternetClientDto,
+	InternetEntity,
+	AddPersonalAccountDto,
+	AccountEntity,
+	InternetBalanceDto,
+	Balance,
+} from '@microservices/models';
+import { BalanceDtos, ReturnTypes, InternetAccount } from '@microservices/models/interfaces/generics/bills.generic';
 
 export class InternetService
 	implements Bills<AddInternetClientDto, InternetEntity, BalanceDtos, AddPersonalAccountDto, number, ReturnTypes>
 {
 	public constructor(
 		@InjectRepository(AccountEntity) private readonly accountRepository: Repository<AccountEntity>,
-		private readonly accountService: AccountService,
 		private readonly internetPaymentService: InternetPaymentService,
 	) {}
 
@@ -42,8 +48,7 @@ export class InternetService
 		return await this.internetPaymentService.checkBalance(account);
 	}
 
-	public async payForBills(decrement: AccountBalanceDto, increment: InternetBalanceDto): Promise<Balance> {
-		await this.accountService.withdrawalFromTheBalance(decrement);
+	public async payForBills(increment: InternetBalanceDto): Promise<Balance> {
 		return await this.internetPaymentService.payForBills(increment);
 	}
 }

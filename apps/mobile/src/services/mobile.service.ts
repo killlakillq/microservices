@@ -1,14 +1,17 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AccountService } from '../../account/services/account.service';
-import { AccountBalanceDto, Balance } from '../../account/entities/dtos/account-balance.dto';
-import { AddPhoneNumberToAccountDto } from '../../account/entities/dtos/add-phone-number-to-account.dto';
-import { AddMobileClientDto } from '../entities/dtos/add-mobile-client.dto';
-import { MobileBalanceDto } from '../entities/dtos/mobile-balance.dto';
-import { AccountEntity } from '../../account/entities/account.entity';
-import { MobileEntity } from '../entities/mobile.entity';
-import { Bills, BalanceDtos, ReturnTypes, MobileAccount } from '../../common/interfaces/generics/bills.generic';
 import { MobilePaymentService } from './mobile-payment.service';
+import {
+	Bills,
+	AddMobileClientDto,
+	MobileEntity,
+	AddPhoneNumberToAccountDto,
+	AccountEntity,
+	AccountBalanceDto,
+	MobileBalanceDto,
+	Balance,
+} from '@microservices/models';
+import { BalanceDtos, ReturnTypes, MobileAccount } from '@microservices/models/interfaces/generics/bills.generic';
 
 export class MobileService
 	implements Bills<AddMobileClientDto, MobileEntity, BalanceDtos, AddPhoneNumberToAccountDto, string, ReturnTypes>

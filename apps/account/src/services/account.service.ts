@@ -2,9 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { NotAcceptableException } from '@nestjs/common/exceptions';
 import { Repository } from 'typeorm';
-import { AccountBalanceDto, Balance } from '../entities/dtos/account-balance.dto';
-import { CreateAccountDto } from '../entities/dtos/create-account.dto';
-import { AccountEntity } from '../entities/account.entity';
+import { AccountEntity, Balance, CreateAccountDto, AccountBalanceDto } from '@microservices/models';
 
 @Injectable()
 export class AccountService {

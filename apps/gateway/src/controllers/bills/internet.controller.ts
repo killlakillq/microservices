@@ -2,12 +2,8 @@ import { Inject, Post, Body, HttpStatus, HttpException, Controller, Get } from '
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { Authorization } from '../../common/decorators/auth.decorator';
-import { AddInternetClientDto } from '../../common/interfaces/dtos/bills/add-internet-client.dto';
-import { AccountBalanceDto } from '../../common/interfaces/dtos/bills/account-balance.dto';
-import { AddPersonalAccountDto } from '../../common/interfaces/dtos/bills/add-personal-account.dto';
-import { InternetBalanceDto } from '../../common/interfaces/dtos/bills/internet-balance.dto';
-import { ServicesResponse } from '../../common/interfaces/responses/services-response.interface';
 import { Internet } from '../../common/interfaces/Internet.interface';
+import { AddInternetClientDto, ServicesResponse, AddPersonalAccountDto, AccountBalanceDto, InternetBalanceDto } from '@microservices/models';
 
 @Controller('internet')
 export class InternetController {

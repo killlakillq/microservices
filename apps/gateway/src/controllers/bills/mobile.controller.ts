@@ -2,12 +2,8 @@ import { Inject, Post, Body, HttpStatus, HttpException, Controller, Get } from '
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { Authorization } from '../../common/decorators/auth.decorator';
-import { AddMobileClientDto } from '../../common/interfaces/dtos/bills/add-mobile-client.dto';
-import { AccountBalanceDto } from '../../common/interfaces/dtos/bills/account-balance.dto';
-import { AddPhoneNumberToAccountDto } from '../../common/interfaces/dtos/bills/add-phone-number-to-account.dto';
-import { MobileBalanceDto } from '../../common/interfaces/dtos/bills/mobile-balance.dto';
-import { ServicesResponse } from '../../common/interfaces/responses/services-response.interface';
 import { Mobile } from '../../common/interfaces/mobile.interface';
+import { AddMobileClientDto, ServicesResponse, AddPhoneNumberToAccountDto, AccountBalanceDto, MobileBalanceDto } from '@microservices/models';
 
 @Controller('mobile')
 export class MobileController {
