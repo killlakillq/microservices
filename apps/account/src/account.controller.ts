@@ -32,12 +32,24 @@ export class AccountController {
 	}
 
 	@UsePipes(new ValidationPipe())
-	@MessagePattern('balance-replenishment')
+	@MessagePattern('replenish-balance')
 	public async replenishBalance(dto: AccountBalanceDto): Promise<ServicesResponse<Balance>> {
 		const balance = await this.accountService.replenishBalance(dto);
 		return {
 			status: 202,
 			message: 'the account balance was successfully replenished.',
+			data: balance,
+			errors: null,
+		};
+	}
+
+	@UsePipes(new ValidationPipe())
+	@MessagePattern('withdrawal-from-the-balance')
+	public async withdrawalFromTheBalance(decrement: AccountBalanceDto) {
+		const balance = await this.accountService.withdrawalFromTheBalance(decrement);
+		return {
+			status: 202,
+			message: 'the account balance was successfully decrement.',
 			data: balance,
 			errors: null,
 		};

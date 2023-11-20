@@ -6,7 +6,7 @@ import { Config } from '@microservices/config';
 
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
-	public constructor(config: Config) {
+	public constructor(private readonly config: Config) {
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 			ignoreExpiration: false,

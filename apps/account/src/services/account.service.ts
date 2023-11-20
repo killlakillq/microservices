@@ -30,10 +30,9 @@ export class AccountService {
 	}
 
 	public async withdrawalFromTheBalance(dto: AccountBalanceDto): Promise<Balance> {
-		const account = await this.accountRepository.find();
-		const findBalance = account.find((index) => index.balance);
+		const account = await this.accountRepository.findOneBy({ name: dto.name, surname: dto.surname });
 
-		if (findBalance.balance < 0 || dto.sum < 0) {
+		if (account.balance < 0 || dto.sum < 0) {
 			throw new NotAcceptableException();
 		}
 
@@ -45,7 +44,6 @@ export class AccountService {
 			.where({ name: dto.name, surname: dto.surname })
 			.execute();
 
-		const returnBalance = await this.accountRepository.findOneBy({ name: dto.name, surname: dto.surname });
-		return { balance: returnBalance.balance };
+		return { balance: account.balance };
 	}
 }

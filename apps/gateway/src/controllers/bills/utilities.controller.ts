@@ -2,17 +2,28 @@ import { Inject, Post, Body, HttpStatus, HttpException, Controller, Get } from '
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { Authorization } from '../../common/decorators/auth.decorator';
-import { AddTaxDto, ServicesResponse, AddPersonalAccountDto, UtilitiesType, AccountBalanceDto, UtilitiesTaxesDto, Utilities } from '@microservices/models';
+import {
+	AddTaxDto,
+	ServicesResponse,
+	AddPersonalAccountDto,
+	UtilitiesType,
+	AccountBalanceDto,
+	UtilitiesTaxesDto,
+	Utilities,
+} from '@microservices/models';
 
 @Controller('utilities')
 export class UtilitiesController {
-	public constructor(@Inject('ACCOUNT_SERVICE') private readonly client: ClientProxy) {}
+	public constructor(
+		@Inject('UTILITIES_SERVICE') private readonly utilitiesClient: ClientProxy,
+		@Inject('ACCOUNT_SERVICE') private readonly accountClient: ClientProxy,
+	) {}
 
 	@Authorization(true)
 	@Post('client')
 	public async addClient(@Body() dto: AddTaxDto): Promise<ServicesResponse<Utilities>> {
 		const { status, message, data, errors }: ServicesResponse<Utilities> = await firstValueFrom(
-			this.client.send('new-utilities-tax', dto),
+			this.utilitiesClient.send('new-utilities-tax', dto),
 		);
 		if (status !== HttpStatus.CREATED) {
 			throw new HttpException(
@@ -36,7 +47,7 @@ export class UtilitiesController {
 	@Post('account')
 	public async addAccount(@Body() dto: AddPersonalAccountDto): Promise<ServicesResponse<Utilities>> {
 		const { status, message, data, errors }: ServicesResponse<Utilities> = await firstValueFrom(
-			this.client.send('add-utilities-personal-account', dto),
+			this.utilitiesClient.send('add-utilities-personal-account', dto),
 		);
 		if (status !== HttpStatus.ACCEPTED) {
 			throw new HttpException(
@@ -62,7 +73,7 @@ export class UtilitiesController {
 		@Body() type: UtilitiesType,
 	): Promise<ServicesResponse<Utilities>> {
 		const { status, message, data, errors }: ServicesResponse<Utilities> = await firstValueFrom(
-			this.client.send('check-utilities-taxes', {
+			this.utilitiesClient.send('check-utilities-taxes', {
 				account: account,
 				type: type,
 			}),
@@ -91,26 +102,41 @@ export class UtilitiesController {
 		@Body() decrement: AccountBalanceDto,
 		@Body() increment: UtilitiesTaxesDto,
 	): Promise<ServicesResponse<Utilities>> {
-		const { status, message, data, errors }: ServicesResponse<Utilities> = await firstValueFrom(
-			this.client.send('pay-for-utilities', {
-				decrement: decrement,
-				increment: increment,
-			}),
-		);
-		if (status !== HttpStatus.ACCEPTED) {
+		let utilities: ServicesResponse<Utilities>;
+
+		const account = await firstValueFrom(this.accountClient.send('withdrawal-from-the-balance', decrement));
+
+		if (account) {
+			utilities = await firstValueFrom(
+				this.utilitiesClient.send('pay-for-utilities', {
+					increment: increment,
+				}),
+			);
+		} else {
 			throw new HttpException(
 				{
-					message: message,
+					message: account.message,
 					data: null,
-					errors: errors,
+					errors: account.errors,
 				},
-				status,
+				account.status,
+			);
+		}
+
+		if (utilities.status !== HttpStatus.ACCEPTED) {
+			throw new HttpException(
+				{
+					message: utilities.message,
+					data: null,
+					errors: utilities.errors,
+				},
+				utilities.status,
 			);
 		}
 		return {
-			status: status,
-			message: message,
-			data: data,
+			status: utilities.status,
+			message: utilities.message,
+			data: utilities.data,
 			errors: null,
 		};
 	}

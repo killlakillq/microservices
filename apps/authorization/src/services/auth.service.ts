@@ -1,21 +1,21 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from '../common/interfaces/entities/dtos/create-user.dto';
 import { UserEntity } from '../../../../libs/models/entities/user.entity';
-import { CryptoHelper } from '../helpers/crypto.helper';
 import { TokenService } from './token.service';
+import { CreateUserDto, Tokens } from '@microservices/models';
+import { Crypto } from '@microservices/crypto';
 
 @Injectable()
 export class AuthService {
 	constructor(
 		@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>,
-		private readonly cryptoHelper: CryptoHelper,
+		private readonly crypto: Crypto,
 		private readonly tokenService: TokenService,
 	) {}
 
 	public async registerUser(createUserDto: CreateUserDto): Promise<UserEntity> {
-		const encrypted = this.cryptoHelper.encrypt(createUserDto.password);
+		const encrypted = this.crypto.encrypt(createUserDto.password);
 
 		const newUser = {
 			email: createUserDto.login,
@@ -29,14 +29,14 @@ export class AuthService {
 		if (!user) {
 			throw new NotFoundException();
 		}
-		const decrypted = this.cryptoHelper.decrypt(password);
+		const decrypted = this.crypto.decrypt(password);
 		if (decrypted !== password) {
 			throw new UnauthorizedException();
 		}
 		return { email: user.email };
 	}
 
-	public async loginUser(email: string): Promise<{ accessToken: unknown; refreshToken: unknown }> {
+	public async loginUser(email: string): Promise<Tokens> {
 		const id = await this.userRepository.findOneBy({ email });
 		await this.tokenService.saveTokens(id.id, email);
 		return await this.tokenService.getTokens();

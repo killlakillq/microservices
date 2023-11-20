@@ -135,6 +135,9 @@ importers:
       '@microservices/config':
         specifier: '*'
         version: link:../../libs/config
+      '@microservices/crypto':
+        specifier: '*'
+        version: link:../../libs/crypto
       '@microservices/filters':
         specifier: '*'
         version: link:../../libs/filters
