@@ -5,5 +5,4 @@ export interface Mobile {
 	phoneNumber: string;
 	operator: string;
 	balance: number;
-
 }

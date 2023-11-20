@@ -2,11 +2,7 @@ import { Body, Controller, HttpStatus, Inject, Post } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { RegisterUserDto } from '../../common/interfaces/dtos/authorization/register-user.dto';
-import { LoginUserDto } from '../../common/interfaces/dtos/authorization/login-user.dto';
-import { Token } from '../../common/interfaces/token.interface';
-import { Account } from '../../common/interfaces/account.interface';
-import { ServicesResponse } from '@microservices/models';
+import { ServicesResponse, Tokens, Account, RegisterUserDto, LoginUserDto } from '@microservices/models';
 
 @Controller('auth')
 export class AuthController {
@@ -16,8 +12,8 @@ export class AuthController {
 	) {}
 
 	@Post('sign-up')
-	public async registerUser(@Body() dto: RegisterUserDto): Promise<ServicesResponse<Token>> {
-		const registerUserResponse: ServicesResponse<Token> = await firstValueFrom(
+	public async registerUser(@Body() dto: RegisterUserDto): Promise<ServicesResponse<Tokens>> {
+		const registerUserResponse: ServicesResponse<Tokens> = await firstValueFrom(
 			this.authClient.send('register-user', {
 				login: dto.login,
 				password: dto.password,
@@ -58,8 +54,8 @@ export class AuthController {
 	}
 
 	@Post('sign-in')
-	public async loginUser(@Body() dto: LoginUserDto): Promise<ServicesResponse<Token>> {
-		const loginUserResponse: ServicesResponse<Token> = await firstValueFrom(
+	public async loginUser(@Body() dto: LoginUserDto): Promise<ServicesResponse<Tokens>> {
+		const loginUserResponse: ServicesResponse<Tokens> = await firstValueFrom(
 			this.authClient.send('login-user', dto),
 		);
 		if (loginUserResponse.status !== HttpStatus.ACCEPTED) {

@@ -2,8 +2,7 @@ import { Inject, Post, Body, HttpStatus, HttpException, Controller, Get } from '
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { Authorization } from '../../common/decorators/auth.decorator';
-import { Utilities } from '../../common/interfaces/utilities.interface';
-import { AddTaxDto, ServicesResponse, AddPersonalAccountDto, UtilitiesType, AccountBalanceDto, UtilitiesTaxesDto } from '@microservices/models';
+import { AddTaxDto, ServicesResponse, AddPersonalAccountDto, UtilitiesType, AccountBalanceDto, UtilitiesTaxesDto, Utilities } from '@microservices/models';
 
 @Controller('utilities')
 export class UtilitiesController {

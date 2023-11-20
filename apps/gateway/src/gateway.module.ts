@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { AuthController } from './controllers/auth/auth.controller';
@@ -8,37 +7,38 @@ import { AccountController } from './controllers/bills/account.controller';
 import { InternetController } from './controllers/bills/internet.controller';
 import { MobileController } from './controllers/bills/mobile.controller';
 import { UtilitiesController } from './controllers/bills/utilities.controller';
+import { Config } from '@microservices/config';
 
 @Module({
-	imports: [ConfigModule.forRoot()],
+	imports: [],
 	controllers: [AuthController, AccountController, InternetController, MobileController, UtilitiesController],
 	providers: [
-		ConfigService,
+		Config,
 		{
 			provide: 'AUTH_SERVICE',
-			useFactory: (configService: ConfigService) => {
+			useFactory: (config: Config) => {
 				return ClientProxyFactory.create({
 					transport: Transport.TCP,
 					options: {
-						host: configService.get('AUTH_SERVICE_HOST'),
-						port: configService.get('AUTH_SERVICE_PORT'),
+						host: config.get('AUTH_SERVICE_HOST'),
+						port: parseInt(config.get('AUTH_SERVICE_PORT')),
 					},
 				});
 			},
-			inject: [ConfigService],
+			inject: [Config],
 		},
 		{
 			provide: 'ACCOUNT_SERVICE',
-			useFactory: (configService: ConfigService) => {
+			useFactory: (config: Config) => {
 				return ClientProxyFactory.create({
 					transport: Transport.TCP,
 					options: {
-						host: configService.get('ACCOUNT_SERVICE_HOST'),
-						port: configService.get('ACCOUNT_SERVICE_PORT'),
+						host: config.get('ACCOUNT_SERVICE_HOST'),
+						port: parseInt(config.get('ACCOUNT_SERVICE_PORT')),
 					},
 				});
 			},
-			inject: [ConfigService],
+			inject: [Config],
 		},
 		{
 			provide: APP_GUARD,
@@ -46,4 +46,4 @@ import { UtilitiesController } from './controllers/bills/utilities.controller';
 		},
 	],
 })
-export class AppModule {}
+export class GatewayModule {}

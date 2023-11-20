@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../common/interfaces/entities/dtos/create-user.dto';
-import { UserEntity } from '../common/interfaces/entities/user.entity';
+import { UserEntity } from '../../../../libs/models/entities/user.entity';
 import { CryptoHelper } from '../helpers/crypto.helper';
 import { TokenService } from './token.service';
 

@@ -7,7 +7,6 @@ import {
 	MobileEntity,
 	AddPhoneNumberToAccountDto,
 	AccountEntity,
-	AccountBalanceDto,
 	MobileBalanceDto,
 	Balance,
 } from '@microservices/models';
@@ -18,7 +17,6 @@ export class MobileService
 {
 	constructor(
 		@InjectRepository(AccountEntity) private readonly accountRepository: Repository<AccountEntity>,
-		private readonly accountService: AccountService,
 		private readonly mobilePaymentService: MobilePaymentService,
 	) {}
 
@@ -51,8 +49,7 @@ export class MobileService
 		return await this.mobilePaymentService.checkBalance(account);
 	}
 
-	public async payForBills(decrement: AccountBalanceDto, increment: MobileBalanceDto): Promise<Balance> {
-		await this.accountService.withdrawalFromTheBalance(decrement);
+	public async payForBills(increment: MobileBalanceDto): Promise<Balance> {
 		return await this.mobilePaymentService.payForBills(increment);
 	}
 }

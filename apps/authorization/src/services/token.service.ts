@@ -1,26 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { RedisAdapter } from '../common/adapters/redis.adapter';
-import { Tokens } from '../common/interfaces/tokens.interface';
+import { Config } from '@microservices/config';
+import { Tokens } from '@microservices/models';
 
 @Injectable()
 export class TokenService {
 	constructor(
+		private readonly config: Config,
 		private readonly redisAdapter: RedisAdapter,
 		private readonly jwtService: JwtService,
-		private readonly configService: ConfigService,
 	) {}
 
 	public async saveTokens(id: string, email: string): Promise<void> {
 		const [accessToken, refreshToken] = await Promise.all([
 			this.jwtService.signAsync(
 				{ id, email },
-				{ secret: this.configService.get('JWT_ACCESS_SECRET'), expiresIn: '15m' },
+				{ secret: this.config.get('JWT_ACCESS_SECRET'), expiresIn: '15m' },
 			),
 			this.jwtService.signAsync(
 				{ id, email },
-				{ secret: this.configService.get('JWT_REFRESH_SECRET'), expiresIn: '7d' },
+				{ secret: this.config.get('JWT_REFRESH_SECRET'), expiresIn: '7d' },
 			),
 		]);
 
@@ -40,6 +40,6 @@ export class TokenService {
 
 	public async verifyToken(jwt: string): Promise<string[]> {
 		const token = jwt.replace('Bearer', '').trim();
-		return this.jwtService.verify(token, { secret: this.configService.get('JWT_ACCESS_SECRET') });
+		return this.jwtService.verify(token, { secret: this.config.get('JWT_ACCESS_SECRET') });
 	}
 }

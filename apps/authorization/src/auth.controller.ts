@@ -1,9 +1,8 @@
 import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
-import { CreateUserDto } from './common/interfaces/entities/dtos/create-user.dto';
-import { UserResponseDto } from './common/interfaces/entities/dtos/user-response.dto';
 import { AuthService } from './services/auth.service';
 import { TokenService } from './services/token.service';
+import { CreateAccountDto, ServicesResponse, Tokens, CreateUserDto } from '@microservices/models';
 
 @Controller('auth')
 export class AuthController {
@@ -11,7 +10,7 @@ export class AuthController {
 
 	@UsePipes(new ValidationPipe())
 	@MessagePattern('register-user')
-	public async registerUser(dto: CreateUserDto): Promise<UserResponseDto> {
+	public async registerUser(dto: CreateAccountDto): Promise<ServicesResponse<null>> {
 		await this.authService.registerUser(dto);
 		return {
 			status: 201,
@@ -23,7 +22,7 @@ export class AuthController {
 
 	@UsePipes(new ValidationPipe())
 	@MessagePattern('login-user')
-	public async loginUser({ login, password }: CreateUserDto): Promise<UserResponseDto> {
+	public async loginUser({ login, password }: CreateUserDto): Promise<ServicesResponse<Tokens>> {
 		const { email } = await this.authService.validate(login, password);
 		const tokens = await this.authService.loginUser(email);
 
@@ -36,7 +35,7 @@ export class AuthController {
 	}
 
 	@MessagePattern('verify-token')
-	public async verifyToken(token: string): Promise<UserResponseDto> {
+	public async verifyToken(token: string): Promise<ServicesResponse<string[]>> {
 		const verify = await this.tokenService.verifyToken(token);
 		return {
 			status: 202,

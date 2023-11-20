@@ -1,9 +1,15 @@
 import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
-import { MobileService } from './src/services/mobile.service';
-import { AddMobileClientDto } from './src/entities/dtos/add-mobile-client.dto';
-import { MobileBalanceDto } from './src/entities/dtos/mobile-balance.dto';
-import { MobileEntity } from './src/entities/mobile.entity';
+import { MobileService } from './services/mobile.service';
+import {
+	AddMobileClientDto,
+	ServicesResponse,
+	AddPhoneNumberToAccountDto,
+	MobileEntity,
+	MobileBalanceDto,
+	Balance,
+	MobileAccount,
+} from '@microservices/models';
 
 @Controller('mobile')
 export class MobileController {
@@ -47,11 +53,8 @@ export class MobileController {
 
 	@UsePipes(new ValidationPipe())
 	@MessagePattern('replenish-mobile-account')
-	public async payForBills(
-		decrement: AccountBalanceDto,
-		increment: MobileBalanceDto,
-	): Promise<ServicesResponse<Balance>> {
-		const mobileAccount = await this.mobileService.payForBills(decrement, increment);
+	public async payForBills(increment: MobileBalanceDto): Promise<ServicesResponse<Balance>> {
+		const mobileAccount = await this.mobileService.payForBills(increment);
 		return {
 			status: 202,
 			message: `the mobile balance was successfully replenished.`,

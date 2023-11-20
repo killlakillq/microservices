@@ -14,6 +14,9 @@ importers:
 
   apps/account:
     dependencies:
+      '@microservices/config':
+        specifier: '*'
+        version: link:../../libs/config
       '@microservices/filters':
         specifier: '*'
         version: link:../../libs/filters
@@ -129,6 +132,15 @@ importers:
 
   apps/authorization:
     dependencies:
+      '@microservices/config':
+        specifier: '*'
+        version: link:../../libs/config
+      '@microservices/filters':
+        specifier: '*'
+        version: link:../../libs/filters
+      '@microservices/models':
+        specifier: '*'
+        version: link:../../libs/models
       '@nestjs/class-validator':
         specifier: ^0.13.4
         version: 0.13.4
@@ -259,6 +271,9 @@ importers:
 
   apps/gateway:
     dependencies:
+      '@microservices/config':
+        specifier: '*'
+        version: link:../../libs/config
       '@microservices/models':
         specifier: '*'
         version: link:../../libs/models
@@ -359,6 +374,12 @@ importers:
 
   apps/internet:
     dependencies:
+      '@microservices/config':
+        specifier: '*'
+        version: link:../../libs/config
+      '@microservices/filters':
+        specifier: '*'
+        version: link:../../libs/filters
       '@microservices/models':
         specifier: '*'
         version: link:../../libs/models
@@ -471,6 +492,12 @@ importers:
 
   apps/mobile:
     dependencies:
+      '@microservices/config':
+        specifier: '*'
+        version: link:../../libs/config
+      '@microservices/filters':
+        specifier: '*'
+        version: link:../../libs/filters
       '@microservices/models':
         specifier: '*'
         version: link:../../libs/models
@@ -583,6 +610,12 @@ importers:
 
   apps/utilities:
     dependencies:
+      '@microservices/config':
+        specifier: '*'
+        version: link:../../libs/config
+      '@microservices/filters':
+        specifier: '*'
+        version: link:../../libs/filters
       '@microservices/models':
         specifier: '*'
         version: link:../../libs/models
@@ -680,6 +713,82 @@ importers:
       ts-jest:
         specifier: 28.0.8
         version: 28.0.8(@babel/core@7.23.3)(jest@28.1.3)(typescript@4.9.5)
+      ts-loader:
+        specifier: ^9.2.3
+        version: 9.5.0(typescript@4.9.5)(webpack@5.89.0)
+      ts-node:
+        specifier: ^10.0.0
+        version: 10.9.1(@types/node@16.18.60)(typescript@4.9.5)
+      tsconfig-paths:
+        specifier: 4.1.0
+        version: 4.1.0
+      typescript:
+        specifier: ^4.7.4
+        version: 4.9.5
+
+  libs/config:
+    dependencies:
+      '@nestjs/class-validator':
+        specifier: ^0.13.4
+        version: 0.13.4
+      '@nestjs/common':
+        specifier: ^9.0.0
+        version: 9.4.3(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nestjs/config':
+        specifier: ^2.2.0
+        version: 2.3.4(@nestjs/common@9.4.3)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nestjs/core':
+        specifier: ^9.0.0
+        version: 9.4.3(@nestjs/common@9.4.3)(@nestjs/microservices@9.4.3)(@nestjs/platform-express@9.4.3)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nestjs/microservices':
+        specifier: ^9.2.1
+        version: 9.4.3(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(ioredis@5.3.2)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nestjs/platform-express':
+        specifier: ^9.0.0
+        version: 9.4.3(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)
+      reflect-metadata:
+        specifier: ^0.1.13
+        version: 0.1.13
+      rimraf:
+        specifier: ^3.0.2
+        version: 3.0.2
+      rxjs:
+        specifier: ^7.2.0
+        version: 7.8.1
+    devDependencies:
+      '@nestjs/cli':
+        specifier: ^9.0.0
+        version: 9.5.0
+      '@nestjs/schematics':
+        specifier: ^9.0.0
+        version: 9.2.0(chokidar@3.5.3)(typescript@4.9.5)
+      '@types/express':
+        specifier: ^4.17.13
+        version: 4.17.21
+      '@types/node':
+        specifier: ^16.18.60
+        version: 16.18.60
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^5.0.0
+        version: 5.62.0(@typescript-eslint/parser@5.62.0)(eslint@8.53.0)(typescript@4.9.5)
+      '@typescript-eslint/parser':
+        specifier: ^5.0.0
+        version: 5.62.0(eslint@8.53.0)(typescript@4.9.5)
+      eslint:
+        specifier: ^8.0.1
+        version: 8.53.0
+      eslint-config-prettier:
+        specifier: ^8.3.0
+        version: 8.10.0(eslint@8.53.0)
+      eslint-plugin-prettier:
+        specifier: ^4.0.0
+        version: 4.2.1(eslint-config-prettier@8.10.0)(eslint@8.53.0)(prettier@2.8.8)
+      prettier:
+        specifier: ^2.3.2
+        version: 2.8.8
+      source-map-support:
+        specifier: ^0.5.20
+        version: 0.5.21
       ts-loader:
         specifier: ^9.2.3
         version: 9.5.0(typescript@4.9.5)(webpack@5.89.0)
@@ -795,6 +904,9 @@ importers:
       '@nestjs/platform-express':
         specifier: ^9.0.0
         version: 9.4.3(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)
+      class-validator:
+        specifier: ^0.14.0
+        version: 0.14.0
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.13
@@ -804,6 +916,9 @@ importers:
       rxjs:
         specifier: ^7.2.0
         version: 7.8.1
+      typeorm:
+        specifier: ^0.3.11
+        version: 0.3.17(ioredis@5.3.2)(pg@8.11.3)(ts-node@10.9.1)
     devDependencies:
       '@nestjs/cli':
         specifier: ^9.0.0
@@ -4225,10 +4340,6 @@ packages:
     resolution: {integrity: sha512-7dFHNmqeFSEt2ZBsCriorKnn3Z2pj+fd9kmI6QoWw4//DL+icEBfc0U7qJCisqrTsKTjw4fNFy2pW9OqStD84g==}
     dependencies:
       is-arrayish: 0.2.1
-    dev: true
-
-  /es-module-lexer@1.3.1:
-    resolution: {integrity: sha512-JUFAyicQV9mXc3YRxPnDlrfBKpqt6hUYzz9/boprUJHs4e4KVr3XwOF70doO6gwXUor6EWZJAyWAfKki84t20Q==}
     dev: true
 
   /es-module-lexer@1.4.1:
@@ -9005,7 +9116,7 @@ packages:
       browserslist: 4.22.1
       chrome-trace-event: 1.0.3
       enhanced-resolve: 5.15.0
-      es-module-lexer: 1.3.1
+      es-module-lexer: 1.4.1
       eslint-scope: 5.1.1
       events: 3.3.0
       glob-to-regexp: 0.4.1

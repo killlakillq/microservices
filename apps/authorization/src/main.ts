@@ -1,21 +1,21 @@
-import { HttpException, Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { Transport, MicroserviceOptions, TcpOptions } from '@nestjs/microservices';
 import { AuthModule } from './auth.module';
-import { HttpExceptionFilter } from './common/filters/http-exception.filter';
-import { ConfigService } from '@nestjs/config';
+import { ExceptionFilter } from '@microservices/filters';
+import { Config } from '@microservices/config';
 
 async function bootstrap() {
 	Logger.log('[NestFactory] Authorization service started');
-	const config = new ConfigService();
+	const config = new Config();
 	const app = await NestFactory.createMicroservice<MicroserviceOptions>(AuthModule, {
 		transport: Transport.TCP,
 		options: {
-			host: config.get('HOST'),
-			port: config.get('PORT'),
+			host: config.get('AUTH_SERVICE_HOST'),
+			port: parseInt(config.get('AUTH_SERVICE_PORT')),
 		},
 	} as TcpOptions);
-	app.useGlobalFilters(new HttpExceptionFilter<HttpException>());
+	app.useGlobalFilters(new ExceptionFilter());
 	await app.listen();
 }
 bootstrap();

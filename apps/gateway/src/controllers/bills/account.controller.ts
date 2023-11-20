@@ -2,8 +2,7 @@ import { Controller, Inject, Post, Body, HttpStatus, HttpException, Get, Req } f
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { Authorization } from '../../common/decorators/auth.decorator';
-import { Account } from '../../common/interfaces/account.interface';
-import { ServicesResponse, AccountBalanceDto } from '@microservices/models';
+import { ServicesResponse, AccountBalanceDto, Account } from '@microservices/models';
 
 @Controller('account')
 export class AccountController {

@@ -17,12 +17,12 @@ export function decrypt(text: string, key: string) {
 export function encrypt(plainText: string, key: string) {
 	const iv = crypto.randomBytes(BLOCK_SIZE);
 	const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
-	let cipherText;
+	let cipherText: string;
 	try {
 		cipherText = cipher.update(plainText, 'utf8', 'hex');
 		cipherText += cipher.final('hex');
 		cipherText = iv.toString('hex') + cipherText;
-	} catch (e) {
+	} catch (error) {
 		cipherText = null;
 	}
 	return cipherText;

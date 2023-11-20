@@ -1,14 +1,16 @@
+import {
+	AddTaxDto,
+	ServicesResponse,
+	AddPersonalAccountDto,
+	UtilitiesAccount,
+	UtilitiesType,
+	UtilitiesEntity,
+	UtilitiesTaxesDto,
+} from '@microservices/models';
+import { UtilitiesPaid } from '@microservices/models/interfaces/generics/bills.generic';
 import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
-import { AccountBalanceDto } from '../account/entities/dtos/account-balance.dto';
-import { AddPersonalAccountDto } from '../account/entities/dtos/add-personal-account.dto';
-import { AddTaxDto } from './src/entities/dtos/add-tax.dto';
-import { UtilitiesTaxesDto } from './src/entities/dtos/utilities-taxes.dto';
-import { UtilitiesType } from '../common/interfaces/enums/utilities-type.enum';
-import { UtilitiesService } from './src/services/utilities.service';
-import { ServicesResponse } from '../common/interfaces/responses/services-response.interface';
-import { UtilitiesAccount, UtilitiesPaid } from '../common/interfaces/generics/bills.generic';
-import { UtilitiesEntity } from './src/entities/utilities.entity';
+import { UtilitiesService } from './services/utilities.service';
 
 @Controller('utilities')
 export class UtilitiesController {
@@ -60,11 +62,8 @@ export class UtilitiesController {
 
 	@UsePipes(new ValidationPipe())
 	@MessagePattern('pay-for-utilities')
-	public async payForBills(
-		decrement: AccountBalanceDto,
-		increment: UtilitiesTaxesDto,
-	): Promise<ServicesResponse<UtilitiesPaid>> {
-		const billing = await this.utilitiesService.payForBills(decrement, increment);
+	public async payForBills(increment: UtilitiesTaxesDto): Promise<ServicesResponse<UtilitiesPaid>> {
+		const billing = await this.utilitiesService.payForBills(increment);
 		return {
 			status: 202,
 			message: `your taxes was successfully paid.`,

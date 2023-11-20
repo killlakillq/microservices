@@ -1,16 +1,25 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UtilitiesPaymentService } from './utilities-payment.service';
-import { AccountService } from '../../../account/src/services/account.service';
-import { Bills, AddTaxDto, UtilitiesEntity, AddPersonalAccountDto, AccountEntity, UtilitiesType, AccountBalanceDto, UtilitiesTaxesDto } from '@microservices/models';
-import { BalanceDtos, ReturnTypes, UtilitiesAccount, UtilitiesPaid } from '@microservices/models/interfaces/generics/bills.generic';
+import {
+	Bills,
+	AddTaxDto,
+	UtilitiesEntity,
+	AddPersonalAccountDto,
+	AccountEntity,
+	UtilitiesType,
+	UtilitiesTaxesDto,
+	BalanceDtos,
+	ReturnTypes,
+	UtilitiesAccount,
+	UtilitiesPaid,
+} from '@microservices/models';
 
 export class UtilitiesService
 	implements Bills<AddTaxDto, UtilitiesEntity, BalanceDtos, AddPersonalAccountDto, number, ReturnTypes>
 {
 	constructor(
 		@InjectRepository(AccountEntity) private readonly accountRepository: Repository<AccountEntity>,
-		private readonly accountService: AccountService,
 		private readonly utilitiesPaymentService: UtilitiesPaymentService,
 	) {}
 
@@ -42,8 +51,7 @@ export class UtilitiesService
 		return await this.utilitiesPaymentService.checkBalance(account, type);
 	}
 
-	public async payForBills(decrement: AccountBalanceDto, increment: UtilitiesTaxesDto): Promise<UtilitiesPaid> {
-		await this.accountService.withdrawalFromTheBalance(decrement);
+	public async payForBills(increment: UtilitiesTaxesDto): Promise<UtilitiesPaid> {
 		return await this.utilitiesPaymentService.payForBills(increment);
 	}
 }

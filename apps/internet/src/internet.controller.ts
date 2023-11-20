@@ -1,9 +1,15 @@
 import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
-import { AddInternetClientDto } from './src/entities/dtos/add-internet-client.dto';
-import { InternetBalanceDto } from './src/entities/dtos/internet-balance.dto';
-import { InternetEntity } from './src/entities/internet.entity';
-import { InternetService } from './src/services/internet.service';
+import { InternetService } from './services/internet.service';
+import {
+	AddInternetClientDto,
+	AddPersonalAccountDto,
+	Balance,
+	InternetBalanceDto,
+	InternetEntity,
+	ServicesResponse,
+	InternetAccount,
+} from '@microservices/models';
 
 @Controller('internet')
 export class InternetController {
@@ -47,11 +53,8 @@ export class InternetController {
 
 	@UsePipes(new ValidationPipe())
 	@MessagePattern('pay-for-internet')
-	public async payForBills(
-		decrement: AccountBalanceDto,
-		increment: InternetBalanceDto,
-	): Promise<ServicesResponse<Balance>> {
-		const internetAccount = await this.internetService.payForBills(decrement, increment);
+	public async payForBills(increment: InternetBalanceDto): Promise<ServicesResponse<Balance>> {
+		const internetAccount = await this.internetService.payForBills(increment);
 		return {
 			status: 202,
 			message: 'the internet balance was successfully paid.',

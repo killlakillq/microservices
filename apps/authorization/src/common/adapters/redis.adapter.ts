@@ -1,11 +1,11 @@
 import Redis from 'ioredis';
-import { redisConfig } from '../configs/redis';
+import { redisOptions } from '../databases/redis.config';
 
 export class RedisAdapter {
 	private redis: Redis;
 
 	public constructor() {
-		this.redis = new Redis(redisConfig);
+		this.redis = new Redis(redisOptions);
 	}
 
 	public async set(key: string, data: string, ttl: number) {
